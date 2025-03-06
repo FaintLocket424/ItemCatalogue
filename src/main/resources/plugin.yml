@@ -1,0 +1,6 @@
+name: BlockTracking
+version: '1.0-SNAPSHOT'
+main: org.example.faintlocket.blockTracking.BlockTracking
+api-version: '1.21'
+prefix: BlockTracking
+authors: [ FaintLocket424 ]
