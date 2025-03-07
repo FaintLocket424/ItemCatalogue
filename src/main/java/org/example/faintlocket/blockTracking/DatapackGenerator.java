@@ -9,13 +9,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
+import org.example.faintlocket.blockTracking.tree.MaterialTree;
+import org.example.faintlocket.blockTracking.tree.nodes.TreeNode;
 
 public class DatapackGenerator {
 
@@ -27,18 +35,19 @@ public class DatapackGenerator {
     private static final String datapackDescription = "This is the description of your data pack";
     private static final String datapackNamespace = "item_tracking";
     private static final int packFormat = 61;
-    private static Logger LOGGER;
+    private static Logger LOGGER = null;
 
     public static String GetDatapackNamespace() {
         return datapackNamespace;
     }
 
     public static void GenerateJSON(CommandSender sender, BlockTracking plugin) {
+        LOGGER = plugin.getLogger();
+
         sender.sendPlainMessage("Generating JSON");
 
         // Create the datapack folder and put it in the plugin folder.
         // Then delete any existing files there.
-        DatapackGenerator.LOGGER = plugin.getLogger();
         File pluginDataPackFolder = new File(plugin.getDataFolder(), dataPackName);
         if (pluginDataPackFolder.exists()) {
             try {
@@ -46,7 +55,7 @@ public class DatapackGenerator {
             } catch (IOException e) {
                 String errMsg = "Failed to delete data pack folder: %s".formatted(e.getMessage());
                 sender.sendMessage(errMsg);
-                plugin.getLogger().severe(errMsg);
+                LOGGER.severe(errMsg);
                 return;
             }
         }
@@ -63,36 +72,40 @@ public class DatapackGenerator {
         } catch (IOException e) {
             String errMsg = "Error generating pack.mcmeta: %s".formatted(e.getMessage());
             sender.sendMessage(errMsg);
-            plugin.getLogger().severe(errMsg);
+            LOGGER.severe(errMsg);
             return;
         }
 
         AtomicInteger advancementsCreated = new AtomicInteger();
-//        MATERIAL_TREE.getRoot().traverse(node -> {
-////            Material material = node.getData();
-////            TreeNode parent = node.getParent();
-////
-////            WriteMaterialJSON(material, parent.getData(), advancementFolder, sender);
-//
-//            var options = new AdvancementOptions();
-//
-//            WriteMaterialJSON(options, advancementFolder, sender);
-//            advancementsCreated.getAndIncrement();
-//        });
-//
-//        Set<Material> missing = findMissingMaterials(MATERIAL_TREE.getRoot());
-//
-//        if (!missing.isEmpty()) {
-//            int maxSize = 10;
-//
-//            plugin.getLogger().info("Found %d missing materials.".formatted(missing.size()));
-//            plugin.getLogger().info("Here are the first %d:".formatted(maxSize));
-//
-//            for (Material material : missing.stream().sorted(Comparator.comparing(Enum::ordinal))
-//                .limit(maxSize).toList()) {
-//                plugin.getLogger().info("\t- %s".formatted(material.name()));
-//            }
-//        }
+        MATERIAL_TREE.getRoot().traverse(node -> {
+            try {
+                node.writeAdvancementJSON(advancementFolder);
+            } catch (IOException e) {
+                String errMsg = "Error generating advancement for: %s".formatted("TODO");
+                sender.sendMessage(errMsg);
+                LOGGER.severe(errMsg);
+            }
+
+            advancementsCreated.getAndIncrement();
+        });
+
+        Set<Material> missing = findMissingMaterials(MATERIAL_TREE.getRoot());
+
+        if (!missing.isEmpty()) {
+            int maxSize = 10;
+
+            LOGGER.severe("=============================================================");
+            LOGGER.severe("================= MISSING MATERIAL DETECTED =================");
+            LOGGER.severe("=============================================================");
+
+            LOGGER.info("Found %d missing materials.".formatted(missing.size()));
+            LOGGER.info("Here are the first %d:".formatted(maxSize));
+
+            for (Material material : missing.stream().sorted(Comparator.comparing(Enum::ordinal))
+                .limit(maxSize).toList()) {
+                LOGGER.info("\t- %s".formatted(material.name()));
+            }
+        }
 
         sender.sendMessage(
             "Generated %s advancements in %s".formatted(
@@ -102,43 +115,110 @@ public class DatapackGenerator {
         );
 
         try {
-            WriteDataPackToWorld(plugin.getServer(), pluginDataPackFolder);
-            sender.sendPlainMessage("Datapack saved successfully.");
+            Server server = plugin.getServer();
+            String worldName = server.getWorlds().getFirst().getName();
+            File worldFolder = new File(server.getWorldContainer(), worldName);
+            WriteDataPackToWorld(pluginDataPackFolder, worldFolder);
+            sender.sendPlainMessage("Datapack saved successfully. Reloading server resources.");
+            server.dispatchCommand(
+                server.getConsoleSender(),
+                "minecraft:reload"
+            );
         } catch (IOException e) {
             String errMsg = "Error copying datapack to world folder";
             sender.sendMessage(errMsg);
-            plugin.getLogger().severe(errMsg);
+            LOGGER.severe(errMsg);
             return;
         }
     }
 
+    public static Set<Material> findMissingMaterials(TreeNode root) {
+        Set<Material> allMaterials = new HashSet<>(
+            Arrays.asList(Material.values())); // All Materials
+        Set<Material> presentMaterials = new HashSet<>(); // Materials in the tree
+
+        Set<Material> duplicates = new HashSet<>();
+
+        // Traverse the tree and add all present materials to the set
+        root.traverse(node -> {
+            if (!(node instanceof MaterialNode materialNode)) {
+                return;
+            }
+
+            Material targetMaterial = materialNode.getTargetMaterial();
+            if (presentMaterials.contains(targetMaterial)) {
+                duplicates.add(targetMaterial);
+            }
+            presentMaterials.add(targetMaterial);
+        });
+
+        if (!duplicates.isEmpty()) {
+
+        }
+
+        if (!duplicates.isEmpty()) {
+            int maxSize = 10;
+            LOGGER.severe("=============================================================");
+            LOGGER.severe("==================== DUPLICATES DETECTED ====================");
+            LOGGER.severe("=============================================================");
+
+            LOGGER.info("Found %d duplicate materials.".formatted(duplicates.size()));
+            LOGGER.info("Here are the first %d:".formatted(maxSize));
+            for (Material material : duplicates.stream().sorted(Comparator.comparing(Enum::ordinal))
+                .limit(maxSize).toList()) {
+                LOGGER.info("\t- %s".formatted(material.name()));
+            }
+        }
+
+        // Find the difference (missing materials)
+        allMaterials.removeAll(presentMaterials);
+        allMaterials.removeAll(MaterialTree.UNOBTAINIUM());
+
+        allMaterials = allMaterials.stream()
+            .filter(m -> !m.isLegacy())
+            .filter(Material::isItem)
+            .collect(Collectors.toSet());
+
+        return allMaterials;
+    }
+
+    /**
+     * Copies the datapack into the world files to be loaded.
+     *
+     * @param oldDataPackFolder The folder that currently contains the datapack.
+     * @param worldFolder       The folder which contains all the world files. Should contain a
+     *                          "datapacks" folder.
+     * @throws IOException Throws an IOException if any of the file copies fail.
+     */
     private static void WriteDataPackToWorld(
-        Server server,
-        File pluginDataPackFolder
+        File oldDataPackFolder,
+        File worldFolder
     ) throws IOException {
-        String worldName = server.getWorlds().getFirst().getName();
-        File worldFolder = new File(server.getWorldContainer(), worldName);
         File worldDataPacksFolder = new File(worldFolder, "datapacks");
-        File dataPackFolder = new File(worldDataPacksFolder, pluginDataPackFolder.getName());
+        File dataPackFolder = new File(worldDataPacksFolder, oldDataPackFolder.getName());
 
         if (dataPackFolder.exists()) {
             DeleteFolder(dataPackFolder);
         }
 
         CopyFolder(
-            pluginDataPackFolder.toPath(),
+            oldDataPackFolder.toPath(),
             dataPackFolder.toPath()
         );
-
-        server.dispatchCommand(server.getConsoleSender(), "minecraft:reload");
     }
 
+    /**
+     * Copies all the files recursively from one directory to another.
+     *
+     * @param source The source directory to copy from.
+     * @param target The target directory to copy to.
+     * @throws IOException Throws an IOException if it fails to copy a file, or if the source/target
+     *                     directories don't exist.
+     */
     private static void CopyFolder(Path source, Path target) throws IOException {
         try (Stream<Path> paths = Files.walk(source)) {
             for (var sourcePath : paths.filter(Files::isRegularFile).toList()) {
                 Path targetPath = target.resolve(source.relativize(sourcePath));
-
-                LOGGER.info("Copying %s to %s".formatted(sourcePath.toString(), targetPath.toString()));
 
                 Files.createDirectories(targetPath.getParent());
                 Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
@@ -146,8 +226,15 @@ public class DatapackGenerator {
         }
     }
 
-    private static void DeleteFolder(File dataPackFolder) throws IOException {
-        try (Stream<Path> paths = Files.walk(dataPackFolder.toPath())) {
+    /**
+     * Deletes a directory, along with all the files within it.
+     *
+     * @param folder The folder which will be deleted.
+     * @throws IOException Throws an exception if it fails to delete a file, of if the target
+     *                     directory doesn't exist.
+     */
+    private static void DeleteFolder(File folder) throws IOException {
+        try (Stream<Path> paths = Files.walk(folder.toPath())) {
             List<File> fileStream = paths.sorted(Comparator.reverseOrder())
                 .map(Path::toFile).toList();
 
@@ -199,7 +286,7 @@ public class DatapackGenerator {
      * @param fileName  A {@link String}, the file name to be used.
      * @throws IOException Throws an IO Exception if it fails to write the JSON file.
      */
-    private static void WriteJSONFile(
+    public static void WriteJSONFile(
         JsonObject root,
         File targetDir,
         String fileName

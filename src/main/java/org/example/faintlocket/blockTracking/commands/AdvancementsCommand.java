@@ -1,32 +1,14 @@
-package org.example.faintlocket.blockTracking;
+package org.example.faintlocket.blockTracking.commands;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.example.faintlocket.blockTracking.BlockTracking;
+import org.example.faintlocket.blockTracking.DatapackGenerator;
 
 @SuppressWarnings("ALL")
 public class AdvancementsCommand {
@@ -138,6 +120,7 @@ public class AdvancementsCommand {
 //        rootAdv.add("display", display);
 //
 //        JsonObject criteria = new JsonObject();
+
 //        JsonObject tick = new JsonObject();
 //        tick.addProperty("trigger", "minecraft:tick");
 //        criteria.add("tick", tick);

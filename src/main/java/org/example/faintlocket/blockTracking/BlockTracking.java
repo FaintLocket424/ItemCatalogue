@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.example.faintlocket.blockTracking.commands.AdvancementsCommand;
 
 public class BlockTracking extends JavaPlugin implements Listener {
 
@@ -13,12 +14,12 @@ public class BlockTracking extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getLogger().info("Starting %s".formatted(pluginName));
-        
+
         AdvancementsCommand.RegisterCommand(this);
         getLogger().info("Registered commands");
 
-        getServer().getPluginManager().registerEvents(this, this);
-        getLogger().info("Registered listeners");
+//        getServer().getPluginManager().registerEvents(this, this);
+//        getLogger().info("Registered listeners");
 
         DatapackGenerator.GenerateJSON(getServer().getConsoleSender(), this);
         getLogger().info("Generated JSON");
