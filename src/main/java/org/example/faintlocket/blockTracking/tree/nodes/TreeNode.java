@@ -1,5 +1,7 @@
 package org.example.faintlocket.blockTracking.tree.nodes;
 
+import static org.bukkit.Material.ORANGE_STAINED_GLASS_PANE;
+
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
@@ -9,9 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.example.faintlocket.blockTracking.DatapackGenerator;
 
-import static org.example.faintlocket.blockTracking.tree.MaterialTree.END_CARD_MATERIAL;
-
 public interface TreeNode {
+    Material END_CARD_MATERIAL = ORANGE_STAINED_GLASS_PANE;
 
     default TreeNode addChild(TreeNode child) {
         if (child == null) {
@@ -34,7 +35,6 @@ public interface TreeNode {
     private static MaterialNode createTreeFromMaterials(List<Material> materials) {
         if (materials == null || materials.isEmpty()) {
             return new MaterialNode(Material.AIR);
-//            return null; // Handle empty list case
         }
 
         MaterialNode root = new MaterialNode(materials.getFirst());

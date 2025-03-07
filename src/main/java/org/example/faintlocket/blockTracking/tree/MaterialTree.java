@@ -1,6 +1,7 @@
 package org.example.faintlocket.blockTracking.tree;
 
 import org.bukkit.Bukkit;
+
 import static org.bukkit.Material.*;
 
 import java.util.List;
@@ -8,12 +9,11 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.example.faintlocket.blockTracking.tree.nodes.CategoryNode;
 import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
+import org.example.faintlocket.blockTracking.tree.nodes.PlaceholderNode;
 import org.example.faintlocket.blockTracking.tree.nodes.TreeNode;
 
 @SuppressWarnings("DuplicatedCode")
 public class MaterialTree {
-
-    public static final Material END_CARD_MATERIAL = ORANGE_STAINED_GLASS_PANE;
 
     public static Set<Material> UNOBTAINIUM() {
         return Set.of(
@@ -228,56 +228,43 @@ public class MaterialTree {
             "Coloured",
             "Yes I'm british, get over it."
         )
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "wool_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_WOOL,
-                        LIGHT_GRAY_WOOL,
-                        GRAY_WOOL,
-                        BLACK_WOOL,
-                        BROWN_WOOL,
-                        RED_WOOL,
-                        ORANGE_WOOL,
-                        YELLOW_WOOL,
-                        LIME_WOOL,
-                        GREEN_WOOL,
-                        CYAN_WOOL,
-                        LIGHT_BLUE_WOOL,
-                        BLUE_WOOL,
-                        PURPLE_WOOL,
-                        MAGENTA_WOOL,
-                        PINK_WOOL
-                    ))
-            )
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "carpet_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_CARPET,
-                        LIGHT_GRAY_CARPET,
-                        GRAY_CARPET,
-                        BLACK_CARPET,
-                        BROWN_CARPET,
-                        RED_CARPET,
-                        ORANGE_CARPET,
-                        YELLOW_CARPET,
-                        LIME_CARPET,
-                        GREEN_CARPET,
-                        CYAN_CARPET,
-                        LIGHT_BLUE_CARPET,
-                        BLUE_CARPET,
-                        PURPLE_CARPET,
-                        MAGENTA_CARPET,
-                        PINK_CARPET
-                    ))
-            )
+            .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
+                new MaterialNode(WHITE_WOOL),
+                new MaterialNode(LIGHT_GRAY_WOOL),
+                new MaterialNode(GRAY_WOOL),
+                new MaterialNode(BLACK_WOOL),
+                new MaterialNode(BROWN_WOOL),
+                new MaterialNode(RED_WOOL),
+                new MaterialNode(ORANGE_WOOL),
+                new MaterialNode(YELLOW_WOOL),
+                new MaterialNode(LIME_WOOL),
+                new MaterialNode(GREEN_WOOL),
+                new MaterialNode(CYAN_WOOL),
+                new MaterialNode(LIGHT_BLUE_WOOL),
+                new MaterialNode(BLUE_WOOL),
+                new MaterialNode(PURPLE_WOOL),
+                new MaterialNode(MAGENTA_WOOL),
+                new MaterialNode(PINK_WOOL)
+            ))
+            .addChildrenFromMaterials(List.of(
+                WHITE_CARPET,
+                LIGHT_GRAY_CARPET,
+                GRAY_CARPET,
+                BLACK_CARPET,
+                BROWN_CARPET,
+                RED_CARPET,
+                ORANGE_CARPET,
+                YELLOW_CARPET,
+                LIME_CARPET,
+                GREEN_CARPET,
+                CYAN_CARPET,
+                LIGHT_BLUE_CARPET,
+                BLUE_CARPET,
+                PURPLE_CARPET,
+                MAGENTA_CARPET,
+                PINK_CARPET
+            ))
             .addChildrenFromMaterials(List.of(
                 TERRACOTTA,
                 WHITE_TERRACOTTA,
@@ -297,81 +284,62 @@ public class MaterialTree {
                 MAGENTA_TERRACOTTA,
                 PINK_TERRACOTTA
             ))
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "glazed_terracotta_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_GLAZED_TERRACOTTA,
-                        LIGHT_GRAY_GLAZED_TERRACOTTA,
-                        GRAY_GLAZED_TERRACOTTA,
-                        BLACK_GLAZED_TERRACOTTA,
-                        BROWN_GLAZED_TERRACOTTA,
-                        RED_GLAZED_TERRACOTTA,
-                        ORANGE_GLAZED_TERRACOTTA,
-                        YELLOW_GLAZED_TERRACOTTA,
-                        LIME_GLAZED_TERRACOTTA,
-                        GREEN_GLAZED_TERRACOTTA,
-                        CYAN_GLAZED_TERRACOTTA,
-                        LIGHT_BLUE_GLAZED_TERRACOTTA,
-                        BLUE_GLAZED_TERRACOTTA,
-                        PURPLE_GLAZED_TERRACOTTA,
-                        MAGENTA_GLAZED_TERRACOTTA,
-                        PINK_GLAZED_TERRACOTTA
-                    ))
-            )
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "concrete_powder_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_CONCRETE_POWDER,
-                        LIGHT_GRAY_CONCRETE_POWDER,
-                        GRAY_CONCRETE_POWDER,
-                        BLACK_CONCRETE_POWDER,
-                        BROWN_CONCRETE_POWDER,
-                        RED_CONCRETE_POWDER,
-                        ORANGE_CONCRETE_POWDER,
-                        YELLOW_CONCRETE_POWDER,
-                        LIME_CONCRETE_POWDER,
-                        GREEN_CONCRETE_POWDER,
-                        CYAN_CONCRETE_POWDER,
-                        LIGHT_BLUE_CONCRETE_POWDER,
-                        BLUE_CONCRETE_POWDER,
-                        PURPLE_CONCRETE_POWDER,
-                        MAGENTA_CONCRETE_POWDER,
-                        PINK_CONCRETE_POWDER
-                    ))
-            )
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "concrete_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_CONCRETE,
-                        LIGHT_GRAY_CONCRETE,
-                        GRAY_CONCRETE,
-                        BLACK_CONCRETE,
-                        BROWN_CONCRETE,
-                        RED_CONCRETE,
-                        ORANGE_CONCRETE,
-                        YELLOW_CONCRETE,
-                        LIME_CONCRETE,
-                        GREEN_CONCRETE,
-                        CYAN_CONCRETE,
-                        LIGHT_BLUE_CONCRETE,
-                        BLUE_CONCRETE,
-                        PURPLE_CONCRETE,
-                        MAGENTA_CONCRETE,
-                        PINK_CONCRETE
-                    ))
-            )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(WHITE_GLAZED_TERRACOTTA),
+                new MaterialNode(LIGHT_GRAY_GLAZED_TERRACOTTA),
+                new MaterialNode(GRAY_GLAZED_TERRACOTTA),
+                new MaterialNode(BLACK_GLAZED_TERRACOTTA),
+                new MaterialNode(BROWN_GLAZED_TERRACOTTA),
+                new MaterialNode(RED_GLAZED_TERRACOTTA),
+                new MaterialNode(ORANGE_GLAZED_TERRACOTTA),
+                new MaterialNode(YELLOW_GLAZED_TERRACOTTA),
+                new MaterialNode(LIME_GLAZED_TERRACOTTA),
+                new MaterialNode(GREEN_GLAZED_TERRACOTTA),
+                new MaterialNode(CYAN_GLAZED_TERRACOTTA),
+                new MaterialNode(LIGHT_BLUE_GLAZED_TERRACOTTA),
+                new MaterialNode(BLUE_GLAZED_TERRACOTTA),
+                new MaterialNode(PURPLE_GLAZED_TERRACOTTA),
+                new MaterialNode(MAGENTA_GLAZED_TERRACOTTA),
+                new MaterialNode(PINK_GLAZED_TERRACOTTA)
+            ))
+            .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
+                new MaterialNode(WHITE_CONCRETE_POWDER),
+                new MaterialNode(LIGHT_GRAY_CONCRETE_POWDER),
+                new MaterialNode(GRAY_CONCRETE_POWDER),
+                new MaterialNode(BLACK_CONCRETE_POWDER),
+                new MaterialNode(BROWN_CONCRETE_POWDER),
+                new MaterialNode(RED_CONCRETE_POWDER),
+                new MaterialNode(ORANGE_CONCRETE_POWDER),
+                new MaterialNode(YELLOW_CONCRETE_POWDER),
+                new MaterialNode(LIME_CONCRETE_POWDER),
+                new MaterialNode(GREEN_CONCRETE_POWDER),
+                new MaterialNode(CYAN_CONCRETE_POWDER),
+                new MaterialNode(LIGHT_BLUE_CONCRETE_POWDER),
+                new MaterialNode(BLUE_CONCRETE_POWDER),
+                new MaterialNode(PURPLE_CONCRETE_POWDER),
+                new MaterialNode(MAGENTA_CONCRETE_POWDER),
+                new MaterialNode(PINK_CONCRETE_POWDER)
+            ))
+            .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
+                new MaterialNode(WHITE_CONCRETE),
+                new MaterialNode(LIGHT_GRAY_CONCRETE),
+                new MaterialNode(GRAY_CONCRETE),
+                new MaterialNode(BLACK_CONCRETE),
+                new MaterialNode(BROWN_CONCRETE),
+                new MaterialNode(RED_CONCRETE),
+                new MaterialNode(ORANGE_CONCRETE),
+                new MaterialNode(YELLOW_CONCRETE),
+                new MaterialNode(LIME_CONCRETE),
+                new MaterialNode(GREEN_CONCRETE),
+                new MaterialNode(CYAN_CONCRETE),
+                new MaterialNode(LIGHT_BLUE_CONCRETE),
+                new MaterialNode(BLUE_CONCRETE),
+                new MaterialNode(PURPLE_CONCRETE),
+                new MaterialNode(MAGENTA_CONCRETE),
+                new MaterialNode(PINK_CONCRETE)
+            ))
             .addChildrenFromMaterials(List.of(
                 GLASS,
                 WHITE_STAINED_GLASS,
@@ -411,56 +379,44 @@ public class MaterialTree {
                 MAGENTA_STAINED_GLASS_PANE,
                 PINK_STAINED_GLASS_PANE
             ))
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "bed_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_BED,
-                        LIGHT_GRAY_BED,
-                        GRAY_BED,
-                        BLACK_BED,
-                        BROWN_BED,
-                        RED_BED,
-                        ORANGE_BED,
-                        YELLOW_BED,
-                        LIME_BED,
-                        GREEN_BED,
-                        CYAN_BED,
-                        LIGHT_BLUE_BED,
-                        BLUE_BED,
-                        PURPLE_BED,
-                        MAGENTA_BED,
-                        PINK_BED
-                    ))
-            )
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "banner_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_BANNER,
-                        LIGHT_GRAY_BANNER,
-                        GRAY_BANNER,
-                        BLACK_BANNER,
-                        BROWN_BANNER,
-                        RED_BANNER,
-                        ORANGE_BANNER,
-                        YELLOW_BANNER,
-                        LIME_BANNER,
-                        GREEN_BANNER,
-                        CYAN_BANNER,
-                        LIGHT_BLUE_BANNER,
-                        BLUE_BANNER,
-                        PURPLE_BANNER,
-                        MAGENTA_BANNER,
-                        PINK_BANNER
-                    ))
-            )
+            .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
+                new MaterialNode(WHITE_BED),
+                new MaterialNode(LIGHT_GRAY_BED),
+                new MaterialNode(GRAY_BED),
+                new MaterialNode(BLACK_BED),
+                new MaterialNode(BROWN_BED),
+                new MaterialNode(RED_BED),
+                new MaterialNode(ORANGE_BED),
+                new MaterialNode(YELLOW_BED),
+                new MaterialNode(LIME_BED),
+                new MaterialNode(GREEN_BED),
+                new MaterialNode(CYAN_BED),
+                new MaterialNode(LIGHT_BLUE_BED),
+                new MaterialNode(BLUE_BED),
+                new MaterialNode(PURPLE_BED),
+                new MaterialNode(MAGENTA_BED),
+                new MaterialNode(PINK_BED)
+            ))
+            .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
+                new MaterialNode(WHITE_BANNER),
+                new MaterialNode(LIGHT_GRAY_BANNER),
+                new MaterialNode(GRAY_BANNER),
+                new MaterialNode(BLACK_BANNER),
+                new MaterialNode(BROWN_BANNER),
+                new MaterialNode(RED_BANNER),
+                new MaterialNode(ORANGE_BANNER),
+                new MaterialNode(YELLOW_BANNER),
+                new MaterialNode(LIME_BANNER),
+                new MaterialNode(GREEN_BANNER),
+                new MaterialNode(CYAN_BANNER),
+                new MaterialNode(LIGHT_BLUE_BANNER),
+                new MaterialNode(BLUE_BANNER),
+                new MaterialNode(PURPLE_BANNER),
+                new MaterialNode(MAGENTA_BANNER),
+                new MaterialNode(PINK_BANNER)
+            ))
             .addChildrenFromMaterials(List.of(
                 CANDLE,
                 WHITE_CANDLE,
@@ -480,31 +436,25 @@ public class MaterialTree {
                 MAGENTA_CANDLE,
                 PINK_CANDLE
             ))
-            .addChild(new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "dye_placeholder",
-                    "",
-                    ""
-                )
-                    .addChildrenFromMaterials(List.of(
-                        WHITE_DYE,
-                        LIGHT_GRAY_DYE,
-                        GRAY_DYE,
-                        BLACK_DYE,
-                        BROWN_DYE,
-                        RED_DYE,
-                        ORANGE_DYE,
-                        YELLOW_DYE,
-                        LIME_DYE,
-                        GREEN_DYE,
-                        CYAN_DYE,
-                        LIGHT_BLUE_DYE,
-                        BLUE_DYE,
-                        PURPLE_DYE,
-                        MAGENTA_DYE,
-                        PINK_DYE
-                    ))
-            )
+            .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
+                new MaterialNode(WHITE_DYE),
+                new MaterialNode(LIGHT_GRAY_DYE),
+                new MaterialNode(GRAY_DYE),
+                new MaterialNode(BLACK_DYE),
+                new MaterialNode(BROWN_DYE),
+                new MaterialNode(RED_DYE),
+                new MaterialNode(ORANGE_DYE),
+                new MaterialNode(YELLOW_DYE),
+                new MaterialNode(LIME_DYE),
+                new MaterialNode(GREEN_DYE),
+                new MaterialNode(CYAN_DYE),
+                new MaterialNode(LIGHT_BLUE_DYE),
+                new MaterialNode(BLUE_DYE),
+                new MaterialNode(PURPLE_DYE),
+                new MaterialNode(MAGENTA_DYE),
+                new MaterialNode(PINK_DYE)
+            ))
             .addChildrenFromMaterials(List.of(
                 BUNDLE,
                 WHITE_BUNDLE,
@@ -572,12 +522,7 @@ public class MaterialTree {
                 new MaterialNode(DEEPSLATE_COPPER_ORE),
                 new MaterialNode(COPPER_INGOT),
                 new MaterialNode(COPPER_BLOCK),
-                new CategoryNode(
-                    END_CARD_MATERIAL,
-                    "copper_placeholder",
-                    "",
-                    ""
-                ),
+                new PlaceholderNode(),
                 new MaterialNode(RAW_COPPER),
                 new MaterialNode(RAW_COPPER_BLOCK)
             ))
@@ -858,15 +803,15 @@ public class MaterialTree {
             ))
             .addChildrenFromNodes(List.of(
                 new MaterialNode(BAMBOO_BLOCK),
-                new CategoryNode(END_CARD_MATERIAL, "bamboo_placeholder_1", "", ""),
+                new PlaceholderNode(),
                 new MaterialNode(STRIPPED_BAMBOO_BLOCK)
                     .addChildrenFromNodes(List.of(
-                        new CategoryNode(END_CARD_MATERIAL, "bamboo_placeholder_2", "", ""),
+                        new PlaceholderNode(),
                         new MaterialNode(BAMBOO_MOSAIC),
                         new MaterialNode(BAMBOO_MOSAIC_STAIRS),
                         new MaterialNode(BAMBOO_MOSAIC_SLAB)
                     )),
-                new CategoryNode(END_CARD_MATERIAL, "bamboo_placeholder_3", "", ""),
+                new PlaceholderNode(),
                 new MaterialNode(BAMBOO_PLANKS),
                 new MaterialNode(BAMBOO_STAIRS),
                 new MaterialNode(BAMBOO_SLAB),
@@ -876,7 +821,7 @@ public class MaterialTree {
                 new MaterialNode(BAMBOO_TRAPDOOR),
                 new MaterialNode(BAMBOO_PRESSURE_PLATE),
                 new MaterialNode(BAMBOO_BUTTON),
-                new CategoryNode(END_CARD_MATERIAL, "bamboo_placeholder_4", "", ""),
+                new PlaceholderNode(),
                 new MaterialNode(BAMBOO),
                 new MaterialNode(BAMBOO_SIGN),
                 new MaterialNode(BAMBOO_HANGING_SIGN),
@@ -923,10 +868,11 @@ public class MaterialTree {
                 new MaterialNode(STONE),
                 new MaterialNode(STONE_STAIRS),
                 new MaterialNode(STONE_SLAB),
-                new CategoryNode(END_CARD_MATERIAL, "stone_placeholder_1", "", ""),
+                new PlaceholderNode(),
                 new MaterialNode(SMOOTH_STONE),
-                new CategoryNode(END_CARD_MATERIAL, "stone_placeholder_2", "", ""),
-                new MaterialNode(SMOOTH_STONE_SLAB)
+                new PlaceholderNode(),
+                new MaterialNode(SMOOTH_STONE_SLAB),
+                new MaterialNode(ANDESITE)
             ))
             ;
     }

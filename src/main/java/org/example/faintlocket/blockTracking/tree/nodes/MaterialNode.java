@@ -3,7 +3,9 @@ package org.example.faintlocket.blockTracking.tree.nodes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -17,8 +19,14 @@ public class MaterialNode implements TreeNode {
     private TreeNode parent = null;
     private final List<TreeNode> children = new ArrayList<>();
 
+    private static final Map<Material, Integer> MATERIAL_MAP = new HashMap<>();
+    private final int id;
+
     public MaterialNode(Material targetMaterial) {
         this.targetMaterial = targetMaterial;
+        this.id = MATERIAL_MAP.getOrDefault(targetMaterial, 0) + 1;
+
+        MATERIAL_MAP.put(targetMaterial, this.id);
     }
 
     public List<TreeNode> getChildren() {
@@ -41,7 +49,8 @@ public class MaterialNode implements TreeNode {
     public NamespacedKey getAdvancementKey() {
         return new NamespacedKey(
             DatapackGenerator.GetDatapackNamespace(),
-            targetMaterial.getKey().getKey()
+            targetMaterial.getKey().getKey() +
+                (id > 1 ? "_"+id : "")
         );
     }
 
