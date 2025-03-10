@@ -21,12 +21,22 @@ public class MaterialNode implements TreeNode {
 
     private static final Map<Material, Integer> MATERIAL_MAP = new HashMap<>();
     private final int id;
+    private final boolean allowDuplicates;
 
-    public MaterialNode(Material targetMaterial) {
+    public MaterialNode(Material targetMaterial, boolean allowDuplicates) {
         this.targetMaterial = targetMaterial;
         this.id = MATERIAL_MAP.getOrDefault(targetMaterial, 0) + 1;
+        this.allowDuplicates = allowDuplicates;
 
         MATERIAL_MAP.put(targetMaterial, this.id);
+    }
+
+    public MaterialNode(Material targetMaterial) {
+        this(targetMaterial, false);
+    }
+
+    public boolean duplicatesAllowed() {
+        return allowDuplicates;
     }
 
     public List<TreeNode> getChildren() {
@@ -50,7 +60,7 @@ public class MaterialNode implements TreeNode {
         return new NamespacedKey(
             DatapackGenerator.GetDatapackNamespace(),
             targetMaterial.getKey().getKey() +
-                (id > 1 ? "_"+id : "")
+                (id > 1 ? "_" + id : "")
         );
     }
 

@@ -1,11 +1,18 @@
 package org.example.faintlocket.blockTracking.tree;
 
-import org.bukkit.Bukkit;
-
 import static org.bukkit.Material.*;
 
+import static org.example.faintlocket.blockTracking.BlockTracking.LOGGER;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.example.faintlocket.blockTracking.tree.nodes.CategoryNode;
 import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
@@ -15,7 +22,11 @@ import org.example.faintlocket.blockTracking.tree.nodes.TreeNode;
 @SuppressWarnings("DuplicatedCode")
 public class MaterialTree {
 
-    public static Set<Material> UNOBTAINIUM() {
+    private static final int MaxErrorListLength = 20;
+    private static final int ErrorPrintWidth = 42;
+    private static final String HeaderCharacter = "=";
+
+    public static Set<Material> CREATE_UNOBTAINIUM() {
         return Set.of(
             AIR,
             BEDROCK,
@@ -153,72 +164,108 @@ public class MaterialTree {
             "Weaponry",
             ""
         )
-            .addChildrenFromMaterials(List.of(
-                WOODEN_SHOVEL,
-                WOODEN_PICKAXE,
-                WOODEN_AXE,
-                WOODEN_HOE,
-                WOODEN_SWORD,
-                LEATHER_HELMET,
-                LEATHER_CHESTPLATE,
-                LEATHER_LEGGINGS,
-                LEATHER_BOOTS
-            ))
-            .addChildrenFromMaterials(List.of(
-                STONE_SHOVEL,
-                STONE_PICKAXE,
-                STONE_AXE,
-                STONE_HOE,
-                STONE_SWORD,
-                CHAINMAIL_HELMET,
-                CHAINMAIL_CHESTPLATE,
-                CHAINMAIL_LEGGINGS,
-                CHAINMAIL_BOOTS
-            ))
-            .addChildrenFromMaterials(List.of(
-                IRON_SHOVEL,
-                IRON_PICKAXE,
-                IRON_AXE,
-                IRON_HOE,
-                IRON_SWORD,
-                IRON_HELMET,
-                IRON_CHESTPLATE,
-                IRON_LEGGINGS,
-                IRON_BOOTS
-            ))
-            .addChildrenFromMaterials(List.of(
-                GOLDEN_SHOVEL,
-                GOLDEN_PICKAXE,
-                GOLDEN_AXE,
-                GOLDEN_HOE,
-                GOLDEN_SWORD,
-                GOLDEN_HELMET,
-                GOLDEN_CHESTPLATE,
-                GOLDEN_LEGGINGS,
-                GOLDEN_BOOTS
-            ))
-            .addChildrenFromMaterials(List.of(
-                DIAMOND_SHOVEL,
-                DIAMOND_PICKAXE,
-                DIAMOND_AXE,
-                DIAMOND_HOE,
-                DIAMOND_SWORD,
-                DIAMOND_HELMET,
-                DIAMOND_CHESTPLATE,
-                DIAMOND_LEGGINGS,
-                DIAMOND_BOOTS
-            ))
-            .addChildrenFromMaterials(List.of(
-                NETHERITE_SHOVEL,
-                NETHERITE_PICKAXE,
-                NETHERITE_AXE,
-                NETHERITE_HOE,
-                NETHERITE_SWORD,
-                NETHERITE_HELMET,
-                NETHERITE_CHESTPLATE,
-                NETHERITE_LEGGINGS,
-                NETHERITE_BOOTS
-            ));
+            .addChild(new CategoryNode(
+                    FLINT_AND_STEEL,
+                    "category_weaponry_misc",
+                    "Misc. Weaponry",
+                    "Other weapons, tools and armour"
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(LEATHER_HORSE_ARMOR),
+                        new MaterialNode(IRON_HORSE_ARMOR),
+                        new MaterialNode(GOLDEN_HORSE_ARMOR),
+                        new MaterialNode(DIAMOND_HORSE_ARMOR),
+                        new MaterialNode(WOLF_ARMOR),
+                        new MaterialNode(TURTLE_HELMET),
+                        new MaterialNode(SHIELD, true)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(BOW, true),
+                        new MaterialNode(CROSSBOW, true),
+                        new MaterialNode(FISHING_ROD),
+                        new MaterialNode(CARROT_ON_A_STICK),
+                        new MaterialNode(WARPED_FUNGUS_ON_A_STICK),
+                        new MaterialNode(SHEARS),
+                        new MaterialNode(BRUSH, true),
+                        new MaterialNode(FLINT_AND_STEEL),
+                        new MaterialNode(SPYGLASS),
+                        new MaterialNode(TRIDENT, true),
+                        new MaterialNode(MACE)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    DIAMOND_CHESTPLATE,
+                    "category_weaponry_tools_and_armour",
+                    "Tools and Armour",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        WOODEN_SHOVEL,
+                        WOODEN_PICKAXE,
+                        WOODEN_AXE,
+                        WOODEN_HOE,
+                        WOODEN_SWORD,
+                        LEATHER_HELMET,
+                        LEATHER_CHESTPLATE,
+                        LEATHER_LEGGINGS,
+                        LEATHER_BOOTS
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        STONE_SHOVEL,
+                        STONE_PICKAXE,
+                        STONE_AXE,
+                        STONE_HOE,
+                        STONE_SWORD,
+                        CHAINMAIL_HELMET,
+                        CHAINMAIL_CHESTPLATE,
+                        CHAINMAIL_LEGGINGS,
+                        CHAINMAIL_BOOTS
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(IRON_SHOVEL),
+                        new MaterialNode(IRON_PICKAXE),
+                        new MaterialNode(IRON_AXE, true),
+                        new MaterialNode(IRON_HOE),
+                        new MaterialNode(IRON_SWORD),
+                        new MaterialNode(IRON_HELMET),
+                        new MaterialNode(IRON_CHESTPLATE, true),
+                        new MaterialNode(IRON_LEGGINGS),
+                        new MaterialNode(IRON_BOOTS)
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        GOLDEN_SHOVEL,
+                        GOLDEN_PICKAXE,
+                        GOLDEN_AXE,
+                        GOLDEN_HOE,
+                        GOLDEN_SWORD,
+                        GOLDEN_HELMET,
+                        GOLDEN_CHESTPLATE,
+                        GOLDEN_LEGGINGS,
+                        GOLDEN_BOOTS
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(DIAMOND_SHOVEL),
+                        new MaterialNode(DIAMOND_PICKAXE),
+                        new MaterialNode(DIAMOND_AXE, true),
+                        new MaterialNode(DIAMOND_HOE),
+                        new MaterialNode(DIAMOND_SWORD),
+                        new MaterialNode(DIAMOND_HELMET),
+                        new MaterialNode(DIAMOND_CHESTPLATE, true),
+                        new MaterialNode(DIAMOND_LEGGINGS),
+                        new MaterialNode(DIAMOND_BOOTS)
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        NETHERITE_SHOVEL,
+                        NETHERITE_PICKAXE,
+                        NETHERITE_AXE,
+                        NETHERITE_HOE,
+                        NETHERITE_SWORD,
+                        NETHERITE_HELMET,
+                        NETHERITE_CHESTPLATE,
+                        NETHERITE_LEGGINGS,
+                        NETHERITE_BOOTS
+                    ))
+            );
     }
 
     public static TreeNode COLOURED_CATEGORY() {
@@ -247,23 +294,24 @@ public class MaterialTree {
                 new MaterialNode(MAGENTA_WOOL),
                 new MaterialNode(PINK_WOOL)
             ))
-            .addChildrenFromMaterials(List.of(
-                WHITE_CARPET,
-                LIGHT_GRAY_CARPET,
-                GRAY_CARPET,
-                BLACK_CARPET,
-                BROWN_CARPET,
-                RED_CARPET,
-                ORANGE_CARPET,
-                YELLOW_CARPET,
-                LIME_CARPET,
-                GREEN_CARPET,
-                CYAN_CARPET,
-                LIGHT_BLUE_CARPET,
-                BLUE_CARPET,
-                PURPLE_CARPET,
-                MAGENTA_CARPET,
-                PINK_CARPET
+            .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
+                new MaterialNode(WHITE_CARPET),
+                new MaterialNode(LIGHT_GRAY_CARPET),
+                new MaterialNode(GRAY_CARPET),
+                new MaterialNode(BLACK_CARPET),
+                new MaterialNode(BROWN_CARPET),
+                new MaterialNode(RED_CARPET),
+                new MaterialNode(ORANGE_CARPET),
+                new MaterialNode(YELLOW_CARPET),
+                new MaterialNode(LIME_CARPET),
+                new MaterialNode(GREEN_CARPET),
+                new MaterialNode(CYAN_CARPET),
+                new MaterialNode(LIGHT_BLUE_CARPET),
+                new MaterialNode(BLUE_CARPET),
+                new MaterialNode(PURPLE_CARPET),
+                new MaterialNode(MAGENTA_CARPET),
+                new MaterialNode(PINK_CARPET)
             ))
             .addChildrenFromMaterials(List.of(
                 TERRACOTTA,
@@ -285,6 +333,7 @@ public class MaterialTree {
                 PINK_TERRACOTTA
             ))
             .addChildrenFromNodes(List.of(
+                new PlaceholderNode(),
                 new MaterialNode(WHITE_GLAZED_TERRACOTTA),
                 new MaterialNode(LIGHT_GRAY_GLAZED_TERRACOTTA),
                 new MaterialNode(GRAY_GLAZED_TERRACOTTA),
@@ -502,69 +551,90 @@ public class MaterialTree {
             "Minerals",
             "Shiny rocks"
         )
-            .addChildrenFromMaterials(List.of(
-                COAL_ORE,
-                DEEPSLATE_COAL_ORE,
-                COAL,
-                COAL_BLOCK
-            ))
-            .addChildrenFromMaterials(List.of(
-                IRON_ORE,
-                DEEPSLATE_IRON_ORE,
-                IRON_INGOT,
-                IRON_BLOCK,
-                IRON_NUGGET,
-                RAW_IRON,
-                RAW_IRON_BLOCK
-            ))
-            .addChildrenFromNodes(List.of(
-                new MaterialNode(COPPER_ORE),
-                new MaterialNode(DEEPSLATE_COPPER_ORE),
-                new MaterialNode(COPPER_INGOT),
-                new MaterialNode(COPPER_BLOCK),
-                new PlaceholderNode(),
-                new MaterialNode(RAW_COPPER),
-                new MaterialNode(RAW_COPPER_BLOCK)
-            ))
-            .addChildrenFromMaterials(List.of(
-                GOLD_ORE,
-                DEEPSLATE_GOLD_ORE,
-                GOLD_INGOT,
-                GOLD_BLOCK,
-                GOLD_NUGGET,
-                RAW_GOLD,
-                RAW_GOLD_BLOCK
-            ))
-            .addChildrenFromMaterials(List.of(
-                REDSTONE_ORE,
-                DEEPSLATE_REDSTONE_ORE,
-                REDSTONE,
-                REDSTONE_BLOCK
-            ))
-            .addChildrenFromMaterials(List.of(
-                EMERALD_ORE,
-                DEEPSLATE_EMERALD_ORE,
-                EMERALD,
-                EMERALD_BLOCK
-            ))
-            .addChildrenFromMaterials(List.of(
-                LAPIS_ORE,
-                DEEPSLATE_LAPIS_ORE,
-                LAPIS_LAZULI,
-                LAPIS_BLOCK
-            ))
-            .addChildrenFromMaterials(List.of(
-                DIAMOND_ORE,
-                DEEPSLATE_DIAMOND_ORE,
-                DIAMOND,
-                DIAMOND_BLOCK
-            ))
-            .addChildrenFromMaterials(List.of(
-                ANCIENT_DEBRIS,
-                NETHERITE_SCRAP,
-                NETHERITE_INGOT,
-                NETHERITE_BLOCK
-            ));
+            .addChild(new CategoryNode(
+                    DIAMOND,
+                    "category_minerals_gems",
+                    "Gems",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        COAL_ORE,
+                        DEEPSLATE_COAL_ORE,
+                        COAL,
+                        COAL_BLOCK
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        REDSTONE_ORE,
+                        DEEPSLATE_REDSTONE_ORE,
+                        REDSTONE,
+                        REDSTONE_BLOCK
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(EMERALD_ORE),
+                        new MaterialNode(DEEPSLATE_EMERALD_ORE),
+                        new MaterialNode(EMERALD, true),
+                        new MaterialNode(EMERALD_BLOCK, true)
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        LAPIS_ORE,
+                        DEEPSLATE_LAPIS_ORE,
+                        LAPIS_LAZULI,
+                        LAPIS_BLOCK
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(DIAMOND_ORE),
+                        new MaterialNode(DEEPSLATE_DIAMOND_ORE),
+                        new MaterialNode(DIAMOND, true),
+                        new MaterialNode(DIAMOND_BLOCK, true)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(ANCIENT_DEBRIS, true),
+                        new MaterialNode(NETHERITE_SCRAP),
+                        new MaterialNode(NETHERITE_INGOT),
+                        new MaterialNode(NETHERITE_BLOCK)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    IRON_INGOT,
+                    "category_minerals_metals",
+                    "Metals",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(IRON_ORE),
+                        new MaterialNode(DEEPSLATE_IRON_ORE),
+                        new MaterialNode(IRON_INGOT, true),
+                        new MaterialNode(IRON_BLOCK, true),
+                        new MaterialNode(RAW_IRON),
+                        new MaterialNode(RAW_IRON_BLOCK),
+                        new MaterialNode(IRON_NUGGET)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(COPPER_ORE),
+                        new MaterialNode(DEEPSLATE_COPPER_ORE),
+                        new MaterialNode(COPPER_INGOT),
+                        new MaterialNode(COPPER_BLOCK, true),
+                        new MaterialNode(RAW_COPPER),
+                        new MaterialNode(RAW_COPPER_BLOCK)
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        GOLD_ORE,
+                        DEEPSLATE_GOLD_ORE,
+                        GOLD_INGOT,
+                        GOLD_BLOCK,
+                        RAW_GOLD,
+                        RAW_GOLD_BLOCK,
+                        GOLD_NUGGET
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(CREAKING_HEART),
+                        new PlaceholderNode(),
+                        new MaterialNode(RESIN_BRICK),
+                        new MaterialNode(RESIN_BRICKS, true),
+                        new MaterialNode(RESIN_CLUMP),
+                        new MaterialNode(RESIN_BLOCK)
+                    ))
+            );
     }
 
     public static TreeNode WOOD_CATEGORY() {
@@ -700,26 +770,30 @@ public class MaterialTree {
                 DARK_OAK_BOAT,
                 DARK_OAK_CHEST_BOAT
             ))
-            .addChildrenFromMaterials(List.of(
-                MANGROVE_LOG,
-                MANGROVE_WOOD,
-                STRIPPED_MANGROVE_LOG,
-                STRIPPED_MANGROVE_WOOD,
-                MANGROVE_PLANKS,
-                MANGROVE_STAIRS,
-                MANGROVE_SLAB,
-                MANGROVE_FENCE,
-                MANGROVE_FENCE_GATE,
-                MANGROVE_DOOR,
-                MANGROVE_TRAPDOOR,
-                MANGROVE_PRESSURE_PLATE,
-                MANGROVE_BUTTON,
-                MANGROVE_LEAVES,
-                MANGROVE_PROPAGULE,
-                MANGROVE_SIGN,
-                MANGROVE_HANGING_SIGN,
-                MANGROVE_BOAT,
-                MANGROVE_CHEST_BOAT
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(MANGROVE_LOG),
+                new MaterialNode(MANGROVE_WOOD),
+                new MaterialNode(STRIPPED_MANGROVE_LOG),
+                new MaterialNode(STRIPPED_MANGROVE_WOOD),
+                new MaterialNode(MANGROVE_PLANKS),
+                new MaterialNode(MANGROVE_STAIRS),
+                new MaterialNode(MANGROVE_SLAB),
+                new MaterialNode(MANGROVE_FENCE),
+                new MaterialNode(MANGROVE_FENCE_GATE),
+                new MaterialNode(MANGROVE_DOOR),
+                new MaterialNode(MANGROVE_TRAPDOOR),
+                new MaterialNode(MANGROVE_PRESSURE_PLATE),
+                new MaterialNode(MANGROVE_BUTTON)
+                    .addChildrenFromMaterials(List.of(
+                        MANGROVE_ROOTS,
+                        MUDDY_MANGROVE_ROOTS
+                    )),
+                new MaterialNode(MANGROVE_LEAVES),
+                new MaterialNode(MANGROVE_PROPAGULE),
+                new MaterialNode(MANGROVE_SIGN),
+                new MaterialNode(MANGROVE_HANGING_SIGN),
+                new MaterialNode(MANGROVE_BOAT),
+                new MaterialNode(MANGROVE_CHEST_BOAT)
             ))
             .addChildrenFromMaterials(List.of(
                 CHERRY_LOG,
@@ -832,53 +906,860 @@ public class MaterialTree {
 
     public static TreeNode STONE_CATEGORY() {
         return new CategoryNode(
-            DEEPSLATE,
-            "category_stone",
-            "Stone",
+            STONE,
+            "category_stones",
+            "Stones",
             "Paper, Shears"
         )
+            .addChild(new CategoryNode(
+                    DEEPSLATE,
+                    "category_stone_deepslate",
+                    "Deepslate",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        COBBLED_DEEPSLATE,
+                        COBBLED_DEEPSLATE_STAIRS,
+                        COBBLED_DEEPSLATE_SLAB,
+                        COBBLED_DEEPSLATE_WALL,
+                        POLISHED_DEEPSLATE,
+                        POLISHED_DEEPSLATE_STAIRS,
+                        POLISHED_DEEPSLATE_SLAB,
+                        POLISHED_DEEPSLATE_WALL,
+                        DEEPSLATE,
+                        CHISELED_DEEPSLATE
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        DEEPSLATE_BRICKS,
+                        DEEPSLATE_BRICK_STAIRS,
+                        DEEPSLATE_BRICK_SLAB,
+                        DEEPSLATE_BRICK_WALL,
+                        DEEPSLATE_TILES,
+                        DEEPSLATE_TILE_STAIRS,
+                        DEEPSLATE_TILE_SLAB,
+                        DEEPSLATE_TILE_WALL,
+                        CRACKED_DEEPSLATE_BRICKS,
+                        CRACKED_DEEPSLATE_TILES
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    STONE,
+                    "category_stone_stone",
+                    "Stone",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(STONE),
+                        new MaterialNode(STONE_STAIRS),
+                        new MaterialNode(STONE_SLAB),
+                        new PlaceholderNode(),
+                        new MaterialNode(SMOOTH_STONE),
+                        new PlaceholderNode(),
+                        new MaterialNode(SMOOTH_STONE_SLAB)
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        COBBLESTONE,
+                        COBBLESTONE_STAIRS,
+                        COBBLESTONE_SLAB,
+                        COBBLESTONE_WALL,
+                        MOSSY_COBBLESTONE,
+                        MOSSY_COBBLESTONE_STAIRS,
+                        MOSSY_COBBLESTONE_SLAB,
+                        MOSSY_COBBLESTONE_WALL
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        STONE_BRICKS,
+                        STONE_BRICK_STAIRS,
+                        STONE_BRICK_SLAB,
+                        STONE_BRICK_WALL,
+                        MOSSY_STONE_BRICKS,
+                        MOSSY_STONE_BRICK_STAIRS,
+                        MOSSY_STONE_BRICK_SLAB,
+                        MOSSY_STONE_BRICK_WALL
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    GRANITE,
+                    "category_stone_igneous",
+                    "Igneous Rocks",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        GRANITE,
+                        GRANITE_STAIRS,
+                        GRANITE_SLAB,
+                        GRANITE_WALL,
+                        POLISHED_GRANITE,
+                        POLISHED_GRANITE_STAIRS,
+                        POLISHED_GRANITE_SLAB
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        DIORITE,
+                        DIORITE_STAIRS,
+                        DIORITE_SLAB,
+                        DIORITE_WALL,
+                        POLISHED_DIORITE,
+                        POLISHED_DIORITE_STAIRS,
+                        POLISHED_DIORITE_SLAB
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        ANDESITE,
+                        ANDESITE_STAIRS,
+                        ANDESITE_SLAB,
+                        ANDESITE_WALL,
+                        POLISHED_ANDESITE,
+                        POLISHED_ANDESITE_STAIRS,
+                        POLISHED_ANDESITE_SLAB
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    TUFF,
+                    "category_stone_tuff",
+                    "Tuff",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        POLISHED_TUFF,
+                        POLISHED_TUFF_STAIRS,
+                        POLISHED_TUFF_SLAB,
+                        POLISHED_TUFF_WALL,
+                        TUFF_BRICKS,
+                        TUFF_BRICK_STAIRS,
+                        TUFF_BRICK_SLAB,
+                        TUFF_BRICK_WALL
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(TUFF, true),
+                        new MaterialNode(TUFF_STAIRS),
+                        new MaterialNode(TUFF_SLAB),
+                        new MaterialNode(TUFF_WALL),
+                        new MaterialNode(CHISELED_TUFF),
+                        new MaterialNode(CHISELED_TUFF_BRICKS)
+                    ))
+            )
             .addChildrenFromMaterials(List.of(
-                GRANITE,
-                GRANITE_STAIRS,
-                GRANITE_SLAB,
-                GRANITE_WALL,
-                POLISHED_GRANITE,
-                POLISHED_GRANITE_STAIRS,
-                POLISHED_GRANITE_SLAB
-            ))
-            .addChildrenFromMaterials(List.of(
-                DIORITE,
-                DIORITE_STAIRS,
-                DIORITE_SLAB,
-                DIORITE_WALL,
-                POLISHED_DIORITE,
-                POLISHED_DIORITE_STAIRS,
-                POLISHED_DIORITE_SLAB
-            ))
-            .addChildrenFromMaterials(List.of(
-                ANDESITE,
-                ANDESITE_STAIRS,
-                ANDESITE_SLAB,
-                ANDESITE_WALL,
-                POLISHED_ANDESITE,
-                POLISHED_ANDESITE_STAIRS,
-                POLISHED_ANDESITE_SLAB
+                BRICKS,
+                BRICK_STAIRS,
+                BRICK_SLAB,
+                BRICK_WALL,
+                MUD_BRICKS,
+                MUD_BRICK_STAIRS,
+                MUD_BRICK_SLAB,
+                MUD_BRICK_WALL
             ))
             .addChildrenFromNodes(List.of(
-                new MaterialNode(STONE),
-                new MaterialNode(STONE_STAIRS),
-                new MaterialNode(STONE_SLAB),
-                new PlaceholderNode(),
-                new MaterialNode(SMOOTH_STONE),
-                new PlaceholderNode(),
-                new MaterialNode(SMOOTH_STONE_SLAB),
-                new MaterialNode(ANDESITE)
+                new MaterialNode(RESIN_BRICKS, true),
+                new MaterialNode(RESIN_BRICK_STAIRS),
+                new MaterialNode(RESIN_BRICK_SLAB),
+                new MaterialNode(RESIN_BRICK_WALL),
+                new MaterialNode(CHISELED_RESIN_BRICKS)
+            ))
+            .addChild(new MaterialNode(CALCITE, true))
+            ;
+    }
+
+    public static TreeNode FOOD_CATEGORY() {
+        return new CategoryNode(
+            APPLE,
+            "category_food",
+            "Food",
+            "Yum"
+        )
+            .addChildrenFromMaterials(List.of(
+                BEEF,
+                COOKED_BEEF,
+                PORKCHOP,
+                COOKED_PORKCHOP,
+                MUTTON,
+                COOKED_MUTTON,
+                CHICKEN,
+                COOKED_CHICKEN,
+                RABBIT,
+                COOKED_RABBIT,
+                COD,
+                COOKED_COD,
+                SALMON,
+                COOKED_SALMON
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(APPLE),
+                new MaterialNode(GOLDEN_APPLE, true),
+                new MaterialNode(ENCHANTED_GOLDEN_APPLE, true),
+                new MaterialNode(CAKE),
+                new MaterialNode(BREAD),
+                new MaterialNode(COOKIE),
+                new MaterialNode(PUMPKIN_PIE),
+                new MaterialNode(PUFFERFISH),
+                new MaterialNode(TROPICAL_FISH),
+                new MaterialNode(CARROT),
+                new MaterialNode(GOLDEN_CARROT, true),
+                new MaterialNode(POTATO),
+                new MaterialNode(BAKED_POTATO),
+                new MaterialNode(POISONOUS_POTATO)
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(BEETROOT),
+                new MaterialNode(MELON_SLICE),
+                new MaterialNode(SWEET_BERRIES),
+                new MaterialNode(GLOW_BERRIES, true),
+                new MaterialNode(DRIED_KELP),
+                new MaterialNode(CHORUS_FRUIT, true),
+                new MaterialNode(SUSPICIOUS_STEW),
+                new MaterialNode(MUSHROOM_STEW),
+                new MaterialNode(BEETROOT_SOUP),
+                new MaterialNode(RABBIT_STEW),
+                new MaterialNode(HONEY_BOTTLE, true),
+                new MaterialNode(ROTTEN_FLESH),
+                new MaterialNode(SPIDER_EYE)
+            ))
+            ;
+    }
+
+    public static TreeNode COPPER_CATEGORY() {
+        return new CategoryNode(
+            COPPER_BLOCK,
+            "category_copper",
+            "Copper",
+            ""
+        )
+            .addChild(new CategoryNode(
+                    CHISELED_COPPER,
+                    "category_copper_copper",
+                    "Copper",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(COPPER_BLOCK, true),
+                        new MaterialNode(CHISELED_COPPER),
+                        new MaterialNode(COPPER_GRATE),
+                        new MaterialNode(CUT_COPPER),
+                        new MaterialNode(CUT_COPPER_STAIRS),
+                        new MaterialNode(CUT_COPPER_SLAB),
+                        new MaterialNode(COPPER_DOOR),
+                        new MaterialNode(COPPER_TRAPDOOR),
+                        new MaterialNode(COPPER_BULB)
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        WAXED_COPPER_BLOCK,
+                        WAXED_CHISELED_COPPER,
+                        WAXED_COPPER_GRATE,
+                        WAXED_CUT_COPPER,
+                        WAXED_CUT_COPPER_STAIRS,
+                        WAXED_CUT_COPPER_SLAB,
+                        WAXED_COPPER_DOOR,
+                        WAXED_COPPER_TRAPDOOR,
+                        WAXED_COPPER_BULB
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    EXPOSED_CHISELED_COPPER,
+                    "category_copper_exposed",
+                    "Exposed",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        EXPOSED_COPPER,
+                        EXPOSED_CHISELED_COPPER,
+                        EXPOSED_COPPER_GRATE,
+                        EXPOSED_CUT_COPPER,
+                        EXPOSED_CUT_COPPER_STAIRS,
+                        EXPOSED_CUT_COPPER_SLAB,
+                        EXPOSED_COPPER_DOOR,
+                        EXPOSED_COPPER_TRAPDOOR,
+                        EXPOSED_COPPER_BULB
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        WAXED_EXPOSED_COPPER,
+                        WAXED_EXPOSED_CHISELED_COPPER,
+                        WAXED_EXPOSED_COPPER_GRATE,
+                        WAXED_EXPOSED_CUT_COPPER,
+                        WAXED_EXPOSED_CUT_COPPER_STAIRS,
+                        WAXED_EXPOSED_CUT_COPPER_SLAB,
+                        WAXED_EXPOSED_COPPER_DOOR,
+                        WAXED_EXPOSED_COPPER_TRAPDOOR,
+                        WAXED_EXPOSED_COPPER_BULB
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    WEATHERED_CHISELED_COPPER,
+                    "category_copper_weathered",
+                    "Weathered",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        WEATHERED_COPPER,
+                        WEATHERED_CHISELED_COPPER,
+                        WEATHERED_COPPER_GRATE,
+                        WEATHERED_CUT_COPPER,
+                        WEATHERED_CUT_COPPER_STAIRS,
+                        WEATHERED_CUT_COPPER_SLAB,
+                        WEATHERED_COPPER_DOOR,
+                        WEATHERED_COPPER_TRAPDOOR,
+                        WEATHERED_COPPER_BULB
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        WAXED_WEATHERED_COPPER,
+                        WAXED_WEATHERED_CHISELED_COPPER,
+                        WAXED_WEATHERED_COPPER_GRATE,
+                        WAXED_WEATHERED_CUT_COPPER,
+                        WAXED_WEATHERED_CUT_COPPER_STAIRS,
+                        WAXED_WEATHERED_CUT_COPPER_SLAB,
+                        WAXED_WEATHERED_COPPER_DOOR,
+                        WAXED_WEATHERED_COPPER_TRAPDOOR,
+                        WAXED_WEATHERED_COPPER_BULB
+                    ))
+
+            )
+            .addChild(new CategoryNode(
+                    WEATHERED_CHISELED_COPPER,
+                    "category_copper_oxidised",
+                    "Oxidised",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        OXIDIZED_COPPER,
+                        OXIDIZED_CHISELED_COPPER,
+                        OXIDIZED_COPPER_GRATE,
+                        OXIDIZED_CUT_COPPER,
+                        OXIDIZED_CUT_COPPER_STAIRS,
+                        OXIDIZED_CUT_COPPER_SLAB,
+                        OXIDIZED_COPPER_DOOR,
+                        OXIDIZED_COPPER_TRAPDOOR,
+                        OXIDIZED_COPPER_BULB
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        WAXED_OXIDIZED_COPPER,
+                        WAXED_OXIDIZED_CHISELED_COPPER,
+                        WAXED_OXIDIZED_COPPER_GRATE,
+                        WAXED_OXIDIZED_CUT_COPPER,
+                        WAXED_OXIDIZED_CUT_COPPER_STAIRS,
+                        WAXED_OXIDIZED_CUT_COPPER_SLAB,
+                        WAXED_OXIDIZED_COPPER_DOOR,
+                        WAXED_OXIDIZED_COPPER_TRAPDOOR,
+                        WAXED_OXIDIZED_COPPER_BULB
+                    ))
+
+            );
+    }
+
+    public static TreeNode NATURAL_CATEGORY() {
+        return new CategoryNode(
+            GRASS_BLOCK,
+            "category_natural",
+            "Natural",
+            ""
+        )
+            .addChild(FOOD_CATEGORY())
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(GRASS_BLOCK),
+                new MaterialNode(PODZOL),
+                new MaterialNode(MYCELIUM),
+                new MaterialNode(DIRT),
+                new MaterialNode(COARSE_DIRT),
+                new MaterialNode(ROOTED_DIRT),
+                new MaterialNode(MUD),
+                new MaterialNode(CLAY, true),
+                new MaterialNode(PACKED_MUD),
+                new MaterialNode(GRAVEL),
+                new MaterialNode(SAND, true),
+                new MaterialNode(RED_SAND, true),
+                new MaterialNode(BROWN_MUSHROOM_BLOCK),
+                new MaterialNode(RED_MUSHROOM_BLOCK)
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(ICE),
+                new MaterialNode(PACKED_ICE),
+                new MaterialNode(BLUE_ICE),
+                new MaterialNode(SNOW_BLOCK),
+                new MaterialNode(SNOW),
+                new MaterialNode(MOSS_BLOCK, true),
+                new MaterialNode(MOSS_CARPET, true),
+                new MaterialNode(PALE_MOSS_BLOCK),
+                new MaterialNode(PALE_MOSS_CARPET),
+                new MaterialNode(PALE_HANGING_MOSS)
+            ))
+            .addChild(new CategoryNode(
+                    OXEYE_DAISY,
+                    "category_natural_flowers",
+                    "Flowers",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(DANDELION),
+                        new MaterialNode(POPPY),
+                        new MaterialNode(BLUE_ORCHID),
+                        new MaterialNode(ALLIUM),
+                        new MaterialNode(AZURE_BLUET),
+                        new MaterialNode(RED_TULIP),
+                        new MaterialNode(ORANGE_TULIP),
+                        new MaterialNode(WHITE_TULIP),
+                        new MaterialNode(PINK_TULIP),
+                        new MaterialNode(OXEYE_DAISY),
+                        new MaterialNode(CORNFLOWER),
+                        new MaterialNode(LILY_OF_THE_VALLEY)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(TORCHFLOWER),
+                        new MaterialNode(CLOSED_EYEBLOSSOM),
+                        new MaterialNode(OPEN_EYEBLOSSOM),
+                        new MaterialNode(WITHER_ROSE),
+                        new MaterialNode(PINK_PETALS),
+                        new MaterialNode(SPORE_BLOSSOM, true),
+                        new MaterialNode(SUNFLOWER),
+                        new MaterialNode(LILAC),
+                        new MaterialNode(ROSE_BUSH),
+                        new MaterialNode(PEONY),
+                        new MaterialNode(PITCHER_PLANT),
+                        new MaterialNode(BROWN_MUSHROOM),
+                        new MaterialNode(RED_MUSHROOM)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    SAND,
+                    "category_natural_sand",
+                    "Sand",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(SAND, true),
+                        new MaterialNode(SANDSTONE),
+                        new MaterialNode(SANDSTONE_STAIRS),
+                        new MaterialNode(SANDSTONE_SLAB),
+                        new MaterialNode(SANDSTONE_WALL),
+                        new MaterialNode(CHISELED_SANDSTONE),
+                        new MaterialNode(SMOOTH_SANDSTONE),
+                        new MaterialNode(SMOOTH_SANDSTONE_STAIRS),
+                        new MaterialNode(SMOOTH_SANDSTONE_SLAB),
+                        new MaterialNode(CUT_SANDSTONE),
+                        new MaterialNode(CUT_SANDSTONE_SLAB)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(RED_SAND, true),
+                        new MaterialNode(RED_SANDSTONE),
+                        new MaterialNode(RED_SANDSTONE_STAIRS),
+                        new MaterialNode(RED_SANDSTONE_SLAB),
+                        new MaterialNode(RED_SANDSTONE_WALL),
+                        new MaterialNode(CHISELED_RED_SANDSTONE),
+                        new MaterialNode(SMOOTH_RED_SANDSTONE),
+                        new MaterialNode(SMOOTH_RED_SANDSTONE_STAIRS),
+                        new MaterialNode(SMOOTH_RED_SANDSTONE_SLAB),
+                        new MaterialNode(CUT_RED_SANDSTONE),
+                        new MaterialNode(CUT_RED_SANDSTONE_SLAB)
+                    ))
+            )
+            ;
+    }
+
+    public static TreeNode NETHER_CATEGORY() {
+        return new CategoryNode(
+            NETHERRACK,
+            "category_nether",
+            "Nether",
+            ""
+        )
+            .addChild(new CategoryNode(
+                    BLACKSTONE,
+                    "category_nether_blackstone",
+                    "Blackstone",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        BLACKSTONE,
+                        BLACKSTONE_STAIRS,
+                        BLACKSTONE_SLAB,
+                        BLACKSTONE_WALL,
+                        POLISHED_BLACKSTONE,
+                        POLISHED_BLACKSTONE_STAIRS,
+                        POLISHED_BLACKSTONE_SLAB,
+                        POLISHED_BLACKSTONE_WALL
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        POLISHED_BLACKSTONE_BRICKS,
+                        POLISHED_BLACKSTONE_BRICK_STAIRS,
+                        POLISHED_BLACKSTONE_BRICK_SLAB,
+                        POLISHED_BLACKSTONE_BRICK_WALL,
+                        GILDED_BLACKSTONE,
+                        CHISELED_POLISHED_BLACKSTONE,
+                        CRACKED_POLISHED_BLACKSTONE_BRICKS,
+                        POLISHED_BLACKSTONE_PRESSURE_PLATE,
+                        POLISHED_BLACKSTONE_BUTTON
+                    ))
+            )
+            .addChildrenFromMaterials(List.of(
+                QUARTZ,
+                QUARTZ_BLOCK,
+                QUARTZ_STAIRS,
+                QUARTZ_SLAB,
+                CHISELED_QUARTZ_BLOCK,
+                QUARTZ_BRICKS,
+                QUARTZ_PILLAR,
+                SMOOTH_QUARTZ,
+                SMOOTH_QUARTZ_STAIRS,
+                SMOOTH_QUARTZ_SLAB,
+                NETHER_QUARTZ_ORE
+            ))
+            .addChildrenFromMaterials(List.of(
+                NETHER_BRICK,
+                NETHER_BRICK_STAIRS,
+                NETHER_BRICK_SLAB,
+                NETHER_BRICK_WALL,
+                CRACKED_NETHER_BRICKS,
+                CHISELED_NETHER_BRICKS,
+                NETHER_BRICK_FENCE,
+                RED_NETHER_BRICKS,
+                RED_NETHER_BRICK_STAIRS,
+                RED_NETHER_BRICK_SLAB,
+                RED_NETHER_BRICK_WALL
+            ))
+            .addChildrenFromMaterials(List.of(
+                NETHERRACK,
+                CRIMSON_NYLIUM,
+                CRIMSON_ROOTS,
+                WEEPING_VINES,
+                WARPED_NYLIUM,
+                NETHER_SPROUTS,
+                WARPED_ROOTS,
+                TWISTING_VINES,
+                NETHER_WART,
+                SHROOMLIGHT
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(SOUL_SAND),
+                new MaterialNode(SOUL_SOIL),
+                new MaterialNode(BONE_BLOCK),
+                new MaterialNode(GLOWSTONE),
+                new MaterialNode(CRYING_OBSIDIAN),
+                new MaterialNode(BASALT),
+                new MaterialNode(POLISHED_BASALT),
+                new MaterialNode(SMOOTH_BASALT),
+                new MaterialNode(NETHER_GOLD_ORE),
+                new MaterialNode(ANCIENT_DEBRIS, true)
+            ))
+            ;
+    }
+
+    public static TreeNode ARCHEOLOGY_CATEGORY() {
+        return new CategoryNode(
+            BRUSH,
+            "category_archeology",
+            "Archeology",
+            ""
+        )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(SUSPICIOUS_SAND),
+                new MaterialNode(SUSPICIOUS_GRAVEL),
+                new MaterialNode(BRUSH, true),
+                new MaterialNode(DECORATED_POT)
+            ))
+            .addChild(new CategoryNode(
+                    SUSPICIOUS_SAND,
+                    "category_archeology_sherds",
+                    "Sherds",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        ANGLER_POTTERY_SHERD,
+                        ARCHER_POTTERY_SHERD,
+                        ARMS_UP_POTTERY_SHERD,
+                        BLADE_POTTERY_SHERD,
+                        BREWER_POTTERY_SHERD,
+                        BURN_POTTERY_SHERD,
+                        DANGER_POTTERY_SHERD,
+                        FLOW_POTTERY_SHERD,
+                        EXPLORER_POTTERY_SHERD,
+                        FRIEND_POTTERY_SHERD,
+                        GUSTER_POTTERY_SHERD,
+                        HEART_POTTERY_SHERD
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        HEARTBREAK_POTTERY_SHERD,
+                        HOWL_POTTERY_SHERD,
+                        MINER_POTTERY_SHERD,
+                        MOURNER_POTTERY_SHERD,
+                        PLENTY_POTTERY_SHERD,
+                        PRIZE_POTTERY_SHERD,
+                        SCRAPE_POTTERY_SHERD,
+                        SHEAF_POTTERY_SHERD,
+                        SHELTER_POTTERY_SHERD,
+                        SKULL_POTTERY_SHERD,
+                        SNORT_POTTERY_SHERD
+                    ))
+            )
+            ;
+    }
+
+    public static TreeNode CAVE_CATEGORY() {
+        return new CategoryNode(
+            FLOWERING_AZALEA_LEAVES,
+            "category_cave",
+            "Caves",
+            ""
+        )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(CLAY, true),
+                new MaterialNode(MOSS_BLOCK, true),
+                new MaterialNode(MOSS_CARPET, true),
+                new MaterialNode(AZALEA_LEAVES),
+                new MaterialNode(FLOWERING_AZALEA_LEAVES),
+                new MaterialNode(AZALEA),
+                new MaterialNode(FLOWERING_AZALEA),
+                new MaterialNode(SPORE_BLOSSOM, true),
+                new MaterialNode(BIG_DRIPLEAF),
+                new MaterialNode(SMALL_DRIPLEAF),
+                new MaterialNode(GLOW_BERRIES, true),
+                new MaterialNode(HANGING_ROOTS)
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(AMETHYST_SHARD),
+                new MaterialNode(AMETHYST_BLOCK),
+                new MaterialNode(SMALL_AMETHYST_BUD),
+                new MaterialNode(MEDIUM_AMETHYST_BUD),
+                new MaterialNode(LARGE_AMETHYST_BUD),
+                new MaterialNode(AMETHYST_CLUSTER),
+                new MaterialNode(CALCITE, true),
+                new MaterialNode(TUFF, true)
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(DRIPSTONE_BLOCK),
+                new MaterialNode(POINTED_DRIPSTONE),
+                new MaterialNode(OBSIDIAN),
+                new MaterialNode(GLOW_LICHEN),
+                new MaterialNode(COBWEB)
+            ))
+            ;
+    }
+
+    public static TreeNode TRIAL_CHAMBER_CATEGORY() {
+        return new CategoryNode(
+            VAULT,
+            "category_trial_chamber",
+            "Trial Chambers",
+            ""
+        )
+            .addChildrenFromMaterials(List.of(
+                BREEZE_ROD,
+                SLIME_BALL
+            ))
+            .addChild(new CategoryNode(
+                    TRIAL_KEY,
+                    "category_trial_chamber_vault",
+                    "Vault Loot",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(EMERALD, true),
+                        new MaterialNode(ARROW, true),
+                        new MaterialNode(IRON_INGOT, true),
+                        new MaterialNode(WIND_CHARGE, true),
+                        new MaterialNode(HONEY_BOTTLE, true),
+                        new MaterialNode(OMINOUS_BOTTLE, true),
+                        new MaterialNode(SHIELD, true),
+                        new MaterialNode(BOW, true),
+                        new MaterialNode(DIAMOND, true),
+                        new MaterialNode(GOLDEN_APPLE, true),
+                        new MaterialNode(GOLDEN_CARROT, true)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(ENCHANTED_BOOK, true),
+                        new MaterialNode(CROSSBOW, true),
+                        new MaterialNode(IRON_AXE, true),
+                        new MaterialNode(IRON_CHESTPLATE, true),
+                        new MaterialNode(BOLT_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(MUSIC_DISC_PRECIPICE, true),
+                        new MaterialNode(GUSTER_BANNER_PATTERN, true),
+                        new MaterialNode(DIAMOND_AXE, true),
+                        new MaterialNode(DIAMOND_CHESTPLATE, true),
+                        new MaterialNode(TRIDENT, true)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    OMINOUS_TRIAL_KEY,
+                    "category_trial_chamber_ominous",
+                    "Ominous Vault Loot",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(EMERALD, true),
+                        new MaterialNode(WIND_CHARGE, true),
+                        new MaterialNode(ARROW, true),
+                        new MaterialNode(DIAMOND, true),
+                        new MaterialNode(FLOW_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(ENCHANTED_GOLDEN_APPLE, true),
+                        new MaterialNode(FLOW_BANNER_PATTERN),
+                        new MaterialNode(OMINOUS_BOTTLE, true),
+                        new MaterialNode(EMERALD_BLOCK, true)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(CROSSBOW, true),
+                        new MaterialNode(IRON_BLOCK, true),
+                        new MaterialNode(GOLDEN_APPLE, true),
+                        new MaterialNode(DIAMOND_AXE, true),
+                        new MaterialNode(DIAMOND_CHESTPLATE, true),
+                        new MaterialNode(MUSIC_DISC_CREATOR, true),
+                        new MaterialNode(HEAVY_CORE),
+                        new MaterialNode(ENCHANTED_BOOK, true),
+                        new MaterialNode(DIAMOND_BLOCK, true)
+                    ))
+            );
+    }
+
+    public static TreeNode MUSIC_DISC_CATEGORY() {
+        return new CategoryNode(
+            JUKEBOX,
+            "category_music_disc",
+            "Music Discs",
+            ""
+        )
+            .addChild(new MaterialNode(JUKEBOX))
+            .addChild(new CategoryNode(
+                MUSIC_DISC_OTHERSIDE,
+                "category_music_disc_record",
+                "Records",
+                ""
+            )
+                .addChildrenFromMaterials(List.of(
+                    MUSIC_DISC_CAT,
+                    MUSIC_DISC_BLOCKS,
+                    MUSIC_DISC_CHIRP,
+                    MUSIC_DISC_FAR,
+                    MUSIC_DISC_MALL,
+                    MUSIC_DISC_MELLOHI,
+                    MUSIC_DISC_STAL,
+                    MUSIC_DISC_STRAD,
+                    MUSIC_DISC_WARD,
+                    MUSIC_DISC_WAIT
+                ))
+                .addChildrenFromNodes(List.of(
+                    new MaterialNode(MUSIC_DISC_11),
+                    new MaterialNode(MUSIC_DISC_13),
+                    new MaterialNode(MUSIC_DISC_CREATOR_MUSIC_BOX),
+                    new MaterialNode(MUSIC_DISC_CREATOR, true),
+                    new MaterialNode(MUSIC_DISC_PRECIPICE, true),
+                    new MaterialNode(MUSIC_DISC_OTHERSIDE),
+                    new MaterialNode(MUSIC_DISC_RELIC),
+                    new MaterialNode(MUSIC_DISC_5, true),
+                    new MaterialNode(MUSIC_DISC_PIGSTEP, true)
+                ))
+            )
+            ;
+    }
+
+    public static TreeNode SMITHING_CATEGORY() {
+        return new CategoryNode(
+            SMITHING_TABLE,
+            "category_smithing",
+            "Smithing",
+            ""
+        )
+            .addChild(new CategoryNode(
+                    SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE,
+                    "category_armour_trims",
+                    "Armour Trims",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(VEX_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(WILD_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(COAST_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(DUNE_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(RAISER_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(HOST_ARMOR_TRIM_SMITHING_TEMPLATE)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(WARD_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(TIDE_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(RIB_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(EYE_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(FLOW_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(BOLT_ARMOR_TRIM_SMITHING_TEMPLATE, true)
+                    ))
+            )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(SMITHING_TABLE, true),
+                new MaterialNode(NETHERITE_UPGRADE_SMITHING_TEMPLATE)
+            ))
+            ;
+    }
+
+    public static TreeNode END_CATEGORY() {
+        return new CategoryNode(
+            END_STONE,
+            "category_end",
+            "The End",
+            ""
+        )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(END_STONE),
+                new MaterialNode(END_STONE_BRICKS),
+                new MaterialNode(END_STONE_BRICK_STAIRS),
+                new MaterialNode(END_STONE_BRICK_SLAB),
+                new MaterialNode(END_STONE_BRICK_WALL),
+                new MaterialNode(PURPUR_BLOCK),
+                new MaterialNode(PURPUR_PILLAR),
+                new MaterialNode(PURPUR_STAIRS),
+                new MaterialNode(PURPUR_SLAB),
+                new MaterialNode(END_ROD),
+                new MaterialNode(END_CRYSTAL),
+                new MaterialNode(ENDER_CHEST)
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(DRAGON_EGG),
+                new MaterialNode(DRAGON_HEAD),
+                new MaterialNode(ENDER_EYE),
+                new MaterialNode(ELYTRA),
+                new MaterialNode(ENDER_PEARL),
+                new MaterialNode(CHORUS_FRUIT, true),
+                new MaterialNode(POPPED_CHORUS_FRUIT),
+                new MaterialNode(CHORUS_FLOWER),
+                new MaterialNode(SHULKER_SHELL),
+                new MaterialNode(DRAGON_BREATH),
+                new MaterialNode(SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, true)
+            ))
+            ;
+    }
+
+    public static TreeNode WORKSTATION_CATEGORY() {
+        return new CategoryNode(
+            CRAFTING_TABLE,
+            "category_workstation",
+            "Workstations",
+            ""
+        )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(CRAFTING_TABLE),
+                new MaterialNode(CRAFTER),
+                new MaterialNode(CHEST),
+                new MaterialNode(STONECUTTER),
+                new MaterialNode(LOOM),
+                new MaterialNode(CARTOGRAPHY_TABLE),
+                new MaterialNode(FURNACE),
+                new MaterialNode(BLAST_FURNACE),
+                new MaterialNode(SMOKER),
+                new MaterialNode(SMITHING_TABLE, true),
+                new MaterialNode(ANVIL),
+                new MaterialNode(CHIPPED_ANVIL),
+                new MaterialNode(DAMAGED_ANVIL),
+                new MaterialNode(ENCHANTING_TABLE),
+                new MaterialNode(GRINDSTONE),
+                new MaterialNode(FLETCHING_TABLE),
+                new MaterialNode(BARREL),
+                new MaterialNode(LECTERN),
+                new MaterialNode(COMPOSTER),
+                new MaterialNode(CAULDRON),
+                new MaterialNode(BREWING_STAND)
             ))
             ;
     }
 
     private final CategoryNode root;
 
+    private static final Set<Material> UNOBTAINIUM = CREATE_UNOBTAINIUM();
 
     public CategoryNode getRoot() {
         return root;
@@ -898,6 +1779,202 @@ public class MaterialTree {
             .addChild(MINERALS_CATEGORY())
             .addChild(WOOD_CATEGORY())
             .addChild(STONE_CATEGORY())
+            .addChild(COPPER_CATEGORY())
+            .addChild(NATURAL_CATEGORY())
+            .addChild(NETHER_CATEGORY())
+            .addChild(ARCHEOLOGY_CATEGORY())
+            .addChild(CAVE_CATEGORY())
+            .addChild(TRIAL_CHAMBER_CATEGORY())
+            .addChild(MUSIC_DISC_CATEGORY())
+            .addChild(SMITHING_CATEGORY())
+            .addChild(END_CATEGORY())
+            .addChild(WORKSTATION_CATEGORY())
         ;
+    }
+
+    public void verify() {
+
+        boolean hasMissing = hasMissingMaterials();
+        boolean hasUnobtainables = hasUnobtainableMaterials();
+        boolean hasUnallowedDuplicates = hasUnallowedDuplicateMaterials();
+        boolean hasUnusedDuplicates = hasUnusedDuplicateMaterials();
+
+        boolean isBad =
+            hasMissing ||
+                hasUnobtainables ||
+                hasUnallowedDuplicates ||
+                hasUnusedDuplicates;
+
+        if (isBad) {
+            String header = "ADVANCEMENT TREE CONTAINS ERRORS";
+            PrintHeader(header);
+        }
+    }
+
+    private Set<Material> getObtainableItems() {
+        return new HashSet<>(List.of(Material.values())).stream()
+            .filter(m -> !m.isLegacy())
+            .filter(m -> !UNOBTAINIUM.contains(m))
+            .filter(Material::isItem)
+            .collect(Collectors.toSet());
+    }
+
+    private boolean hasMissingMaterials() {
+        Set<Material> missingMaterials = getObtainableItems();
+
+        this.root.traverse(node -> {
+            if (!(node instanceof MaterialNode materialNode)) {
+                return;
+            }
+
+            missingMaterials.remove(materialNode.getTargetMaterial());
+        });
+
+        boolean hasMissingMaterials = !missingMaterials.isEmpty();
+
+        if (hasMissingMaterials) {
+            PrintErrorList(
+                missingMaterials,
+                "MISSING MATERIAL DETECTED",
+                "missing materials"
+            );
+        }
+
+        return hasMissingMaterials;
+    }
+
+    private boolean hasUnobtainableMaterials() {
+        Set<Material> unobtainableMaterials = new HashSet<>();
+
+        this.root.traverse(node -> {
+            if (!(node instanceof MaterialNode materialNode)) {
+                return;
+            }
+
+            Material targetMaterial = materialNode.getTargetMaterial();
+
+            if (UNOBTAINIUM.contains(targetMaterial)) {
+                unobtainableMaterials.add(targetMaterial);
+            }
+        });
+
+        boolean isGood = unobtainableMaterials.isEmpty();
+
+        if (!isGood) {
+            PrintErrorList(
+                unobtainableMaterials,
+                "UNOBTAINABLE MATERIAL DETECTED",
+                "unobtainable materials"
+            );
+        }
+
+        return isGood;
+    }
+
+    private static void PrintErrorList(Set<Material> materials, String header, String found) {
+        PrintHeader(header);
+
+        String s2 = "Found %d %s.".formatted(materials.size(), found);
+
+        LOGGER.severe(
+            "| %s%s |".formatted(s2, " ".repeat(ErrorPrintWidth - 4 - s2.length())));
+
+        if (materials.size() > MaxErrorListLength) {
+            String s3 = "Here are the first %d:".formatted(MaxErrorListLength);
+            LOGGER.severe("| %s%s |".formatted(s3, " ".repeat(ErrorPrintWidth - 4 - s3.length())));
+        }
+
+        materials.stream()
+            .sorted(Comparator.comparing(Enum::ordinal))
+            .limit(MaxErrorListLength)
+            .forEach(m -> LOGGER.severe(
+                "|  - %s%s |".formatted(m.name(),
+                    " ".repeat(ErrorPrintWidth - 7 - m.name().length()))));
+    }
+
+    private static void PrintHeader(String header) {
+        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
+        LOGGER.severe("%s %s %s".formatted(
+            HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
+            header,
+            HeaderCharacter.repeat(
+                (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
+                    / 2))
+        ));
+        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
+    }
+
+    private boolean hasUnallowedDuplicateMaterials() {
+        Map<Material, Integer> materialCount = new HashMap<>();
+        Map<Material, Boolean> dupsAllowed = new HashMap<>();
+
+        this.root.traverse(node -> {
+            if (!(node instanceof MaterialNode materialNode)) {
+                return;
+            }
+
+            Material targetMaterial = materialNode.getTargetMaterial();
+
+            int num = materialCount.getOrDefault(targetMaterial, 0);
+            boolean dup = dupsAllowed.getOrDefault(targetMaterial, true);
+
+            materialCount.put(targetMaterial, num + 1);
+            dupsAllowed.put(targetMaterial, dup && materialNode.duplicatesAllowed());
+        });
+
+        Set<Material> unauthorisedDuplicates = materialCount.entrySet().stream()
+            .filter(entry -> entry.getValue() > 1)
+            .filter(entry -> !dupsAllowed.get(entry.getKey()))
+            .map(Entry::getKey)
+            .collect(Collectors.toSet());
+
+        boolean isGood = unauthorisedDuplicates.isEmpty();
+
+        if (!isGood) {
+            PrintErrorList(
+                unauthorisedDuplicates,
+                "UNAUTHORISED DUPLICATES DETECTED",
+                "unauthorised duplicates"
+            );
+        }
+
+        return isGood;
+    }
+
+    private boolean hasUnusedDuplicateMaterials() {
+        Map<Material, Integer> materialCount = new HashMap<>();
+        Map<Material, Boolean> dupsAllowed = new HashMap<>();
+
+        this.root.traverse(node -> {
+            if (!(node instanceof MaterialNode materialNode)) {
+                return;
+            }
+
+            Material targetMaterial = materialNode.getTargetMaterial();
+
+            int num = materialCount.getOrDefault(targetMaterial, 0);
+            boolean dup = dupsAllowed.getOrDefault(targetMaterial, true);
+
+            materialCount.put(targetMaterial, num + 1);
+            dupsAllowed.put(targetMaterial, dup && materialNode.duplicatesAllowed());
+        });
+
+        Set<Material> unusedDuplicates = materialCount.entrySet().stream()
+            .filter(entry -> entry.getValue() <= 1)
+            .filter(entry -> dupsAllowed.get(entry.getKey()))
+            .map(Entry::getKey)
+            .collect(Collectors.toSet());
+
+        boolean isGood = unusedDuplicates.isEmpty();
+
+        if (!isGood) {
+            PrintErrorList(
+                unusedDuplicates,
+                "UNUSED DUPLICATES DETECTED",
+                "unused duplicates"
+            );
+        }
+
+        return isGood;
     }
 }

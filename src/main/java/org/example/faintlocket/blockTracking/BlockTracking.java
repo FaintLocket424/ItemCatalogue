@@ -1,40 +1,23 @@
 package org.example.faintlocket.blockTracking;
 
-import org.bukkit.NamespacedKey;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.example.faintlocket.blockTracking.commands.AdvancementsCommand;
 
-public class BlockTracking extends JavaPlugin implements Listener {
+public class BlockTracking extends JavaPlugin {
 
     private static final String pluginName = "BlockTracking";
+    public static Logger LOGGER;
 
     @Override
     public void onEnable() {
-        getLogger().info("Starting %s".formatted(pluginName));
+        LOGGER = getLogger();
+        LOGGER.info("Starting %s".formatted(pluginName));
 
         AdvancementsCommand.RegisterCommand(this);
-        getLogger().info("Registered commands");
-
-//        getServer().getPluginManager().registerEvents(this, this);
-//        getLogger().info("Registered listeners");
+        LOGGER.info("Registered commands");
 
         DatapackGenerator.GenerateJSON(getServer().getConsoleSender(), this);
-        getLogger().info("Generated JSON");
+        LOGGER.info("Generated JSON");
     }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!event.getPlayer().getName().equals("FaintLocket424")) {
-            return;
-        }
-
-        NamespacedKey key = new NamespacedKey(DatapackGenerator.GetDatapackNamespace(), "root");
-        getServer().dispatchCommand(getServer().getConsoleSender(),
-            "advancement grant %s from %s".formatted(event.getPlayer().getName(), key.key())
-        );
-    }
-
 }

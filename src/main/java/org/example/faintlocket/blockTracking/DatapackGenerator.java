@@ -1,5 +1,7 @@
 package org.example.faintlocket.blockTracking;
 
+import static org.example.faintlocket.blockTracking.BlockTracking.LOGGER;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -9,21 +11,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
 import org.example.faintlocket.blockTracking.tree.MaterialTree;
-import org.example.faintlocket.blockTracking.tree.nodes.TreeNode;
+import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
 
 public class DatapackGenerator {
 
@@ -35,15 +33,12 @@ public class DatapackGenerator {
     private static final String datapackDescription = "This is the description of your data pack";
     private static final String datapackNamespace = "item_tracking";
     private static final int packFormat = 61;
-    private static Logger LOGGER = null;
 
     public static String GetDatapackNamespace() {
         return datapackNamespace;
     }
 
     public static void GenerateJSON(CommandSender sender, BlockTracking plugin) {
-        LOGGER = plugin.getLogger();
-
         sender.sendPlainMessage("Generating JSON");
 
         // Create the datapack folder and put it in the plugin folder.
@@ -77,8 +72,14 @@ public class DatapackGenerator {
         }
 
         AtomicInteger advancementsCreated = new AtomicInteger();
+        Set<Material> uniqueMaterials = new HashSet<>();
+
         MATERIAL_TREE.getRoot().traverse(node -> {
             try {
+                if (node instanceof MaterialNode mn) {
+                    uniqueMaterials.add(mn.getTargetMaterial());
+                }
+
                 node.writeAdvancementJSON(advancementFolder);
             } catch (IOException e) {
                 String errMsg = "Error generating advancement for: %s".formatted("TODO");
@@ -89,27 +90,12 @@ public class DatapackGenerator {
             advancementsCreated.getAndIncrement();
         });
 
-        Set<Material> missing = findMissingMaterials(MATERIAL_TREE.getRoot());
-
-        if (!missing.isEmpty()) {
-            int maxSize = 10;
-
-            LOGGER.severe("=============================================================");
-            LOGGER.severe("================= MISSING MATERIAL DETECTED =================");
-            LOGGER.severe("=============================================================");
-
-            LOGGER.info("Found %d missing materials.".formatted(missing.size()));
-            LOGGER.info("Here are the first %d:".formatted(maxSize));
-
-            for (Material material : missing.stream().sorted(Comparator.comparing(Enum::ordinal))
-                .limit(maxSize).toList()) {
-                LOGGER.info("\t- %s".formatted(material.name()));
-            }
-        }
+        MATERIAL_TREE.verify();
 
         sender.sendMessage(
-            "Generated %s advancements in %s".formatted(
-                advancementsCreated,
+            "Generated %d advancements for %d unique materials in %s".formatted(
+                advancementsCreated.get(),
+                uniqueMaterials.size(),
                 pluginDataPackFolder.getAbsolutePath()
             )
         );
@@ -130,56 +116,6 @@ public class DatapackGenerator {
             LOGGER.severe(errMsg);
             return;
         }
-    }
-
-    public static Set<Material> findMissingMaterials(TreeNode root) {
-        Set<Material> allMaterials = new HashSet<>(
-            Arrays.asList(Material.values())); // All Materials
-        Set<Material> presentMaterials = new HashSet<>(); // Materials in the tree
-
-        Set<Material> duplicates = new HashSet<>();
-
-        // Traverse the tree and add all present materials to the set
-        root.traverse(node -> {
-            if (!(node instanceof MaterialNode materialNode)) {
-                return;
-            }
-
-            Material targetMaterial = materialNode.getTargetMaterial();
-            if (presentMaterials.contains(targetMaterial)) {
-                duplicates.add(targetMaterial);
-            }
-            presentMaterials.add(targetMaterial);
-        });
-
-        if (!duplicates.isEmpty()) {
-
-        }
-
-        if (!duplicates.isEmpty()) {
-            int maxSize = 10;
-            LOGGER.severe("=============================================================");
-            LOGGER.severe("==================== DUPLICATES DETECTED ====================");
-            LOGGER.severe("=============================================================");
-
-            LOGGER.info("Found %d duplicate materials.".formatted(duplicates.size()));
-            LOGGER.info("Here are the first %d:".formatted(maxSize));
-            for (Material material : duplicates.stream().sorted(Comparator.comparing(Enum::ordinal))
-                .limit(maxSize).toList()) {
-                LOGGER.info("\t- %s".formatted(material.name()));
-            }
-        }
-
-        // Find the difference (missing materials)
-        allMaterials.removeAll(presentMaterials);
-        allMaterials.removeAll(MaterialTree.UNOBTAINIUM());
-
-        allMaterials = allMaterials.stream()
-            .filter(m -> !m.isLegacy())
-            .filter(Material::isItem)
-            .collect(Collectors.toSet());
-
-        return allMaterials;
     }
 
     /**

@@ -46,12 +46,14 @@ public interface TreeNode {
             current = newNode; // Move to the newly added child
         }
 
-        current.addChild(new CategoryNode(
-            END_CARD_MATERIAL,
-            current.getAdvancementKey().getKey() + "_end",
-            "",
-            ""
-        ));
+//        current.addChild(new CategoryNode(
+//            END_CARD_MATERIAL,
+//            current.getAdvancementKey().getKey() + "_end",
+//            "",
+//            ""
+//        ));
+
+        current.addChild(new PlaceholderNode(END_CARD_MATERIAL));
 
         return root;
     }
