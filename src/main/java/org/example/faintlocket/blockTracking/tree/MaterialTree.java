@@ -2250,7 +2250,6 @@ public class MaterialTree {
     }
 
     public void verify() {
-
         boolean hasMissing = hasMissingMaterials();
         boolean hasUnobtainables = hasUnobtainableMaterials();
         boolean hasUnallowedDuplicates = hasUnallowedDuplicateMaterials();
@@ -2260,9 +2259,9 @@ public class MaterialTree {
             hasMissing || hasUnobtainables || hasUnallowedDuplicates || hasUnusedDuplicates;
 
         if (isBad) {
-            PrintHeader("ADVANCEMENT TREE CONTAINS ERRORS");
+            PrintErrorHeader("ADVANCEMENT TREE CONTAINS ERRORS");
         } else {
-            PrintHeader("ADVANCEMENT TREE INTEGRITY AT 100%");
+            PrintInfoHeader("ADVANCEMENT TREE INTEGRITY AT 100%");
         }
     }
 
@@ -2275,7 +2274,7 @@ public class MaterialTree {
     }
 
     private static void PrintErrorList(Set<Material> materials, String header, String found) {
-        PrintHeader(header);
+        PrintErrorHeader(header);
 
         String s2 = "Found %d %s.".formatted(materials.size(), found);
 
@@ -2295,7 +2294,7 @@ public class MaterialTree {
                     " ".repeat(ErrorPrintWidth - 7 - m.name().length()))));
     }
 
-    private static void PrintHeader(String header) {
+    private static void PrintErrorHeader(String header) {
         LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
         LOGGER.severe("%s %s %s".formatted(
             HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
@@ -2305,6 +2304,19 @@ public class MaterialTree {
                     / 2))
         ));
         LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static void PrintInfoHeader(String header) {
+        LOGGER.info(HeaderCharacter.repeat(ErrorPrintWidth));
+        LOGGER.info("%s %s %s".formatted(
+            HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
+            header,
+            HeaderCharacter.repeat(
+                (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
+                    / 2))
+        ));
+        LOGGER.info(HeaderCharacter.repeat(ErrorPrintWidth));
     }
 
     private boolean hasMissingMaterials() {
