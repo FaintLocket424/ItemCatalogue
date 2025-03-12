@@ -1,4 +1,4 @@
-package org.example.faintlocket.blockTracking.tree.nodes;
+package org.example.faintlocket.itemCatalogue.tree.nodes;
 
 import static org.bukkit.Material.ORANGE_STAINED_GLASS_PANE;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.example.faintlocket.blockTracking.DatapackGenerator;
+import org.example.faintlocket.itemCatalogue.DatapackGenerator;
 
 @SuppressWarnings("UnusedReturnValue")
 public interface TreeNode {

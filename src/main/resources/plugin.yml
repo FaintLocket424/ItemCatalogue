@@ -1,6 +1,6 @@
-name: BlockTracking
+name: ItemCatalogue
 version: '1.0-SNAPSHOT'
-main: org.example.faintlocket.blockTracking.BlockTracking
+main: org.example.faintlocket.itemCatalogue.ItemCatalogue
 api-version: '1.21'
-prefix: BlockTracking
+prefix: ItemCatalogue
 authors: [ FaintLocket424 ]

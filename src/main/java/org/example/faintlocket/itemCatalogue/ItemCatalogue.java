@@ -1,12 +1,12 @@
-package org.example.faintlocket.blockTracking;
+package org.example.faintlocket.itemCatalogue;
 
 import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.example.faintlocket.blockTracking.commands.AdvancementsCommand;
+import org.example.faintlocket.itemCatalogue.commands.AdvancementsCommand;
 
-public class BlockTracking extends JavaPlugin {
+public class ItemCatalogue extends JavaPlugin {
 
-    private static final String pluginName = "BlockTracking";
+    private static final String pluginName = "ItemCatalogue";
     public static Logger LOGGER;
 
     @Override

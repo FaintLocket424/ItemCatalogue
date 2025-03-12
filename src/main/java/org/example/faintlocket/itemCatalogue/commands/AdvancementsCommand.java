@@ -1,4 +1,4 @@
-package org.example.faintlocket.blockTracking.commands;
+package org.example.faintlocket.itemCatalogue.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
@@ -7,13 +7,13 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.command.CommandSender;
-import org.example.faintlocket.blockTracking.BlockTracking;
-import org.example.faintlocket.blockTracking.DatapackGenerator;
+import org.example.faintlocket.itemCatalogue.ItemCatalogue;
+import org.example.faintlocket.itemCatalogue.DatapackGenerator;
 
 @SuppressWarnings("ALL")
 public class AdvancementsCommand {
 
-    public static void RegisterCommand(BlockTracking plugin) {
+    public static void RegisterCommand(ItemCatalogue plugin) {
         plugin.getLifecycleManager()
             .registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
 
@@ -26,7 +26,7 @@ public class AdvancementsCommand {
             });
     }
 
-    private static int HandleGenerateCommand(CommandContext<CommandSourceStack> ctx, BlockTracking plugin) {
+    private static int HandleGenerateCommand(CommandContext<CommandSourceStack> ctx, ItemCatalogue plugin) {
 
         CommandSender sender = ctx.getSource().getSender();
 

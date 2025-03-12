@@ -1,4 +1,4 @@
-package org.example.faintlocket.blockTracking.tree.nodes;
+package org.example.faintlocket.itemCatalogue.tree.nodes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.example.faintlocket.blockTracking.DatapackGenerator;
+import org.example.faintlocket.itemCatalogue.DatapackGenerator;
 import org.jetbrains.annotations.NotNull;
 
 public class MaterialNode implements TreeNode {

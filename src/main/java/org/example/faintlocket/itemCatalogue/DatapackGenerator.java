@@ -1,6 +1,6 @@
-package org.example.faintlocket.blockTracking;
+package org.example.faintlocket.itemCatalogue;
 
-import static org.example.faintlocket.blockTracking.BlockTracking.LOGGER;
+import static org.example.faintlocket.itemCatalogue.ItemCatalogue.LOGGER;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,11 +17,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.example.faintlocket.blockTracking.tree.MaterialTree;
-import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
+import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
+import org.example.faintlocket.itemCatalogue.tree.nodes.MaterialNode;
 
 public class DatapackGenerator {
 
@@ -29,16 +30,16 @@ public class DatapackGenerator {
 
     private static final MaterialTree MATERIAL_TREE = new MaterialTree();
 
-    private static final String dataPackName = "testpack";
-    private static final String datapackDescription = "This is the description of your data pack";
-    private static final String datapackNamespace = "item_tracking";
+    private static final String dataPackName = "item_catalogue";
+    private static final String datapackDescription = "A full item catalogue for " + Bukkit.getServer().getMinecraftVersion();
+    private static final String datapackNamespace = "item_catalogue";
     private static final int packFormat = 61;
 
     public static String GetDatapackNamespace() {
         return datapackNamespace;
     }
 
-    public static void GenerateJSON(CommandSender sender, BlockTracking plugin) {
+    public static void GenerateJSON(CommandSender sender, ItemCatalogue plugin) {
         sender.sendPlainMessage("Generating JSON");
 
         // Create the datapack folder and put it in the plugin folder.

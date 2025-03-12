@@ -1,7 +1,7 @@
-package org.example.faintlocket.blockTracking.tree;
+package org.example.faintlocket.itemCatalogue.tree;
 
 import static org.bukkit.Material.*;
-import static org.example.faintlocket.blockTracking.BlockTracking.LOGGER;
+import static org.example.faintlocket.itemCatalogue.ItemCatalogue.LOGGER;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,10 +14,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.example.faintlocket.blockTracking.tree.nodes.CategoryNode;
-import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
-import org.example.faintlocket.blockTracking.tree.nodes.PlaceholderNode;
-import org.example.faintlocket.blockTracking.tree.nodes.TreeNode;
+import org.example.faintlocket.itemCatalogue.tree.nodes.CategoryNode;
+import org.example.faintlocket.itemCatalogue.tree.nodes.MaterialNode;
+import org.example.faintlocket.itemCatalogue.tree.nodes.PlaceholderNode;
+import org.example.faintlocket.itemCatalogue.tree.nodes.TreeNode;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;

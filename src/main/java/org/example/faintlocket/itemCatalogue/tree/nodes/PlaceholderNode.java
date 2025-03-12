@@ -1,4 +1,4 @@
-package org.example.faintlocket.blockTracking.tree.nodes;
+package org.example.faintlocket.itemCatalogue.tree.nodes;
 
 import static org.bukkit.Material.ORANGE_STAINED_GLASS_PANE;
 
