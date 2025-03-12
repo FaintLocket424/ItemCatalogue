@@ -1,9 +1,9 @@
 package org.example.faintlocket.blockTracking.tree;
 
 import static org.bukkit.Material.*;
-
 import static org.example.faintlocket.blockTracking.BlockTracking.LOGGER;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,15 +18,25 @@ import org.example.faintlocket.blockTracking.tree.nodes.CategoryNode;
 import org.example.faintlocket.blockTracking.tree.nodes.MaterialNode;
 import org.example.faintlocket.blockTracking.tree.nodes.PlaceholderNode;
 import org.example.faintlocket.blockTracking.tree.nodes.TreeNode;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 @SuppressWarnings("DuplicatedCode")
 public class MaterialTree {
 
-    private static final int MaxErrorListLength = 20;
-    private static final int ErrorPrintWidth = 42;
+    private static final int MaxErrorListLength = 25;
+
+    private static final int ErrorPrintWidth =
+        7 + Arrays.stream(Material.values())
+            .map(m -> m.name().length())
+            .max(Integer::compare)
+            .orElseThrow();
+
     private static final String HeaderCharacter = "=";
 
-    public static Set<Material> CREATE_UNOBTAINIUM() {
+    @Contract(pure = true)
+    public static @NotNull @Unmodifiable Set<Material> CREATE_UNOBTAINIUM() {
         return Set.of(
             AIR,
             BEDROCK,
@@ -157,16 +167,16 @@ public class MaterialTree {
         );
     }
 
-    public static TreeNode WEAPONRY_CATEGORY() {
+    public static TreeNode TOOLS_AND_WEAPONRY_CATEGORY() {
         return new CategoryNode(
             DIAMOND_SWORD,
-            "category_weaponry",
+            "category_tools_and_weaponry",
             "Weaponry",
             ""
         )
             .addChild(new CategoryNode(
                     FLINT_AND_STEEL,
-                    "category_weaponry_misc",
+                    "category_tools_and_weaponry_misc",
                     "Misc. Weaponry",
                     "Other weapons, tools and armour"
                 )
@@ -176,26 +186,53 @@ public class MaterialTree {
                         new MaterialNode(GOLDEN_HORSE_ARMOR),
                         new MaterialNode(DIAMOND_HORSE_ARMOR),
                         new MaterialNode(WOLF_ARMOR),
-                        new MaterialNode(TURTLE_HELMET),
-                        new MaterialNode(SHIELD, true)
+                        new MaterialNode(TURTLE_HELMET, true),
+                        new MaterialNode(SHIELD),
+                        new MaterialNode(SADDLE),
+                        new MaterialNode(ARMOR_STAND)
                     ))
                     .addChildrenFromNodes(List.of(
-                        new MaterialNode(BOW, true),
-                        new MaterialNode(CROSSBOW, true),
+                        new MaterialNode(ARROW),
+                        new MaterialNode(BOW),
+                        new MaterialNode(CROSSBOW),
                         new MaterialNode(FISHING_ROD),
                         new MaterialNode(CARROT_ON_A_STICK),
                         new MaterialNode(WARPED_FUNGUS_ON_A_STICK),
                         new MaterialNode(SHEARS),
                         new MaterialNode(BRUSH, true),
                         new MaterialNode(FLINT_AND_STEEL),
+                        new MaterialNode(FIRE_CHARGE),
+                        new MaterialNode(TOTEM_OF_UNDYING),
                         new MaterialNode(SPYGLASS),
-                        new MaterialNode(TRIDENT, true),
+                        new MaterialNode(TRIDENT),
                         new MaterialNode(MACE)
                     ))
+                    .addChildrenFromMaterials(List.of(
+                        BUCKET,
+                        WATER_BUCKET,
+                        COD_BUCKET,
+                        SALMON_BUCKET,
+                        TROPICAL_FISH_BUCKET,
+                        PUFFERFISH_BUCKET,
+                        AXOLOTL_BUCKET,
+                        TADPOLE_BUCKET,
+                        LAVA_BUCKET,
+                        POWDER_SNOW_BUCKET,
+                        MILK_BUCKET
+                    ))
+                    .addChild(new CategoryNode(
+                            TIPPED_ARROW,
+                            "category_tools_and_weaponry_tipped_arrows",
+                            "Tipped Arrows",
+                            ""
+                        )
+                            .addChild(new MaterialNode(SPECTRAL_ARROW))
+                            .addChild(new MaterialNode(TIPPED_ARROW))
+                    )
             )
             .addChild(new CategoryNode(
                     DIAMOND_CHESTPLATE,
-                    "category_weaponry_tools_and_armour",
+                    "category_tools_and_weaponry_tools_and_armour",
                     "Tools and Armour",
                     ""
                 )
@@ -224,11 +261,11 @@ public class MaterialTree {
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(IRON_SHOVEL),
                         new MaterialNode(IRON_PICKAXE),
-                        new MaterialNode(IRON_AXE, true),
+                        new MaterialNode(IRON_AXE),
                         new MaterialNode(IRON_HOE),
                         new MaterialNode(IRON_SWORD),
                         new MaterialNode(IRON_HELMET),
-                        new MaterialNode(IRON_CHESTPLATE, true),
+                        new MaterialNode(IRON_CHESTPLATE),
                         new MaterialNode(IRON_LEGGINGS),
                         new MaterialNode(IRON_BOOTS)
                     ))
@@ -246,11 +283,11 @@ public class MaterialTree {
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(DIAMOND_SHOVEL),
                         new MaterialNode(DIAMOND_PICKAXE),
-                        new MaterialNode(DIAMOND_AXE, true),
+                        new MaterialNode(DIAMOND_AXE),
                         new MaterialNode(DIAMOND_HOE),
                         new MaterialNode(DIAMOND_SWORD),
                         new MaterialNode(DIAMOND_HELMET),
-                        new MaterialNode(DIAMOND_CHESTPLATE, true),
+                        new MaterialNode(DIAMOND_CHESTPLATE),
                         new MaterialNode(DIAMOND_LEGGINGS),
                         new MaterialNode(DIAMOND_BOOTS)
                     ))
@@ -563,17 +600,17 @@ public class MaterialTree {
                         COAL,
                         COAL_BLOCK
                     ))
-                    .addChildrenFromMaterials(List.of(
-                        REDSTONE_ORE,
-                        DEEPSLATE_REDSTONE_ORE,
-                        REDSTONE,
-                        REDSTONE_BLOCK
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(REDSTONE_ORE),
+                        new MaterialNode(DEEPSLATE_REDSTONE_ORE),
+                        new MaterialNode(REDSTONE, true),
+                        new MaterialNode(REDSTONE_BLOCK, true)
                     ))
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(EMERALD_ORE),
                         new MaterialNode(DEEPSLATE_EMERALD_ORE),
-                        new MaterialNode(EMERALD, true),
-                        new MaterialNode(EMERALD_BLOCK, true)
+                        new MaterialNode(EMERALD),
+                        new MaterialNode(EMERALD_BLOCK)
                     ))
                     .addChildrenFromMaterials(List.of(
                         LAPIS_ORE,
@@ -584,8 +621,8 @@ public class MaterialTree {
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(DIAMOND_ORE),
                         new MaterialNode(DEEPSLATE_DIAMOND_ORE),
-                        new MaterialNode(DIAMOND, true),
-                        new MaterialNode(DIAMOND_BLOCK, true)
+                        new MaterialNode(DIAMOND),
+                        new MaterialNode(DIAMOND_BLOCK)
                     ))
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(ANCIENT_DEBRIS, true),
@@ -603,11 +640,15 @@ public class MaterialTree {
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(IRON_ORE),
                         new MaterialNode(DEEPSLATE_IRON_ORE),
-                        new MaterialNode(IRON_INGOT, true),
-                        new MaterialNode(IRON_BLOCK, true),
+                        new MaterialNode(IRON_INGOT),
+                        new MaterialNode(IRON_BLOCK),
                         new MaterialNode(RAW_IRON),
                         new MaterialNode(RAW_IRON_BLOCK),
-                        new MaterialNode(IRON_NUGGET)
+                        new MaterialNode(IRON_NUGGET),
+                        new MaterialNode(IRON_DOOR),
+                        new MaterialNode(IRON_TRAPDOOR),
+                        new MaterialNode(CHAIN),
+                        new MaterialNode(IRON_BARS)
                     ))
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(COPPER_ORE),
@@ -949,13 +990,15 @@ public class MaterialTree {
                     ""
                 )
                     .addChildrenFromNodes(List.of(
-                        new MaterialNode(STONE),
+                        new MaterialNode(STONE, true),
                         new MaterialNode(STONE_STAIRS),
                         new MaterialNode(STONE_SLAB),
                         new PlaceholderNode(),
                         new MaterialNode(SMOOTH_STONE),
                         new PlaceholderNode(),
-                        new MaterialNode(SMOOTH_STONE_SLAB)
+                        new MaterialNode(SMOOTH_STONE_SLAB),
+                        new MaterialNode(STONE_BUTTON),
+                        new MaterialNode(STONE_PRESSURE_PLATE)
                     ))
                     .addChildrenFromMaterials(List.of(
                         COBBLESTONE,
@@ -975,7 +1018,9 @@ public class MaterialTree {
                         MOSSY_STONE_BRICKS,
                         MOSSY_STONE_BRICK_STAIRS,
                         MOSSY_STONE_BRICK_SLAB,
-                        MOSSY_STONE_BRICK_WALL
+                        MOSSY_STONE_BRICK_WALL,
+                        CRACKED_STONE_BRICKS,
+                        CHISELED_STONE_BRICKS
                     ))
             )
             .addChild(new CategoryNode(
@@ -1042,6 +1087,7 @@ public class MaterialTree {
                 BRICK_STAIRS,
                 BRICK_SLAB,
                 BRICK_WALL,
+                BRICK,
                 MUD_BRICKS,
                 MUD_BRICK_STAIRS,
                 MUD_BRICK_SLAB,
@@ -1083,24 +1129,24 @@ public class MaterialTree {
             ))
             .addChildrenFromNodes(List.of(
                 new MaterialNode(APPLE),
-                new MaterialNode(GOLDEN_APPLE, true),
-                new MaterialNode(ENCHANTED_GOLDEN_APPLE, true),
+                new MaterialNode(GOLDEN_APPLE),
+                new MaterialNode(ENCHANTED_GOLDEN_APPLE),
                 new MaterialNode(CAKE),
                 new MaterialNode(BREAD),
                 new MaterialNode(COOKIE),
                 new MaterialNode(PUMPKIN_PIE),
-                new MaterialNode(PUFFERFISH),
+                new MaterialNode(PUFFERFISH, true),
                 new MaterialNode(TROPICAL_FISH),
-                new MaterialNode(CARROT),
+                new MaterialNode(CARROT, true),
                 new MaterialNode(GOLDEN_CARROT, true),
-                new MaterialNode(POTATO),
+                new MaterialNode(POTATO, true),
                 new MaterialNode(BAKED_POTATO),
                 new MaterialNode(POISONOUS_POTATO)
             ))
             .addChildrenFromNodes(List.of(
-                new MaterialNode(BEETROOT),
+                new MaterialNode(BEETROOT, true),
                 new MaterialNode(MELON_SLICE),
-                new MaterialNode(SWEET_BERRIES),
+                new MaterialNode(SWEET_BERRIES, true),
                 new MaterialNode(GLOW_BERRIES, true),
                 new MaterialNode(DRIED_KELP),
                 new MaterialNode(CHORUS_FRUIT, true),
@@ -1108,9 +1154,9 @@ public class MaterialTree {
                 new MaterialNode(MUSHROOM_STEW),
                 new MaterialNode(BEETROOT_SOUP),
                 new MaterialNode(RABBIT_STEW),
-                new MaterialNode(HONEY_BOTTLE, true),
-                new MaterialNode(ROTTEN_FLESH),
-                new MaterialNode(SPIDER_EYE)
+                new MaterialNode(HONEY_BOTTLE),
+                new MaterialNode(ROTTEN_FLESH, true),
+                new MaterialNode(SPIDER_EYE, true)
             ))
             ;
     }
@@ -1250,6 +1296,49 @@ public class MaterialTree {
             ""
         )
             .addChild(FOOD_CATEGORY())
+            .addChild(new CategoryNode(
+                    WHEAT,
+                    "category_natural_crops",
+                    "Crops",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(WHEAT_SEEDS),
+                        new MaterialNode(WHEAT),
+                        new MaterialNode(BEETROOT_SEEDS),
+                        new MaterialNode(BEETROOT, true),
+                        new MaterialNode(CARROT, true),
+                        new MaterialNode(POTATO, true),
+                        new MaterialNode(MELON_SEEDS),
+                        new MaterialNode(MELON),
+                        new MaterialNode(PUMPKIN_SEEDS),
+                        new MaterialNode(PUMPKIN),
+                        new MaterialNode(CARVED_PUMPKIN),
+                        new MaterialNode(JACK_O_LANTERN),
+                        new MaterialNode(COCOA_BEANS),
+                        new MaterialNode(SUGAR_CANE)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(TORCHFLOWER_SEEDS),
+                        new MaterialNode(TORCHFLOWER, true),
+                        new MaterialNode(PITCHER_POD),
+                        new MaterialNode(PITCHER_PLANT, true),
+                        new MaterialNode(SWEET_BERRIES, true),
+                        new MaterialNode(CACTUS),
+                        new MaterialNode(RED_MUSHROOM),
+                        new MaterialNode(BROWN_MUSHROOM),
+                        new MaterialNode(GLOW_BERRIES, true),
+                        new MaterialNode(NETHER_WART, true)
+                    ))
+            )
+            .addChildrenFromMaterials(List.of(
+                SHORT_GRASS,
+                FERN,
+                DEAD_BUSH,
+                VINE,
+                TALL_GRASS,
+                LARGE_FERN
+            ))
             .addChildrenFromNodes(List.of(
                 new MaterialNode(GRASS_BLOCK),
                 new MaterialNode(PODZOL),
@@ -1264,7 +1353,10 @@ public class MaterialTree {
                 new MaterialNode(SAND, true),
                 new MaterialNode(RED_SAND, true),
                 new MaterialNode(BROWN_MUSHROOM_BLOCK),
-                new MaterialNode(RED_MUSHROOM_BLOCK)
+                new MaterialNode(RED_MUSHROOM_BLOCK),
+                new MaterialNode(MUSHROOM_STEM),
+                new MaterialNode(DRIED_KELP_BLOCK),
+                new MaterialNode(HAY_BLOCK)
             ))
             .addChildrenFromNodes(List.of(
                 new MaterialNode(ICE),
@@ -1284,6 +1376,7 @@ public class MaterialTree {
                     "Flowers",
                     ""
                 )
+                    .addChild(new MaterialNode(FLOWER_POT))
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(DANDELION),
                         new MaterialNode(POPPY),
@@ -1299,7 +1392,7 @@ public class MaterialTree {
                         new MaterialNode(LILY_OF_THE_VALLEY)
                     ))
                     .addChildrenFromNodes(List.of(
-                        new MaterialNode(TORCHFLOWER),
+                        new MaterialNode(TORCHFLOWER, true),
                         new MaterialNode(CLOSED_EYEBLOSSOM),
                         new MaterialNode(OPEN_EYEBLOSSOM),
                         new MaterialNode(WITHER_ROSE),
@@ -1309,16 +1402,14 @@ public class MaterialTree {
                         new MaterialNode(LILAC),
                         new MaterialNode(ROSE_BUSH),
                         new MaterialNode(PEONY),
-                        new MaterialNode(PITCHER_PLANT),
-                        new MaterialNode(BROWN_MUSHROOM),
-                        new MaterialNode(RED_MUSHROOM)
+                        new MaterialNode(PITCHER_PLANT, true)
                     ))
             )
             .addChild(new CategoryNode(
                     SAND,
                     "category_natural_sand",
-                    "Sand",
-                    ""
+                    "Sands of Time",
+                    "Tick Tock"
                 )
                     .addChildrenFromNodes(List.of(
                         new MaterialNode(SAND, true),
@@ -1345,6 +1436,49 @@ public class MaterialTree {
                         new MaterialNode(SMOOTH_RED_SANDSTONE_SLAB),
                         new MaterialNode(CUT_RED_SANDSTONE),
                         new MaterialNode(CUT_RED_SANDSTONE_SLAB)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    BRAIN_CORAL,
+                    "category_natural_coral",
+                    "Coral",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        TUBE_CORAL_BLOCK,
+                        BRAIN_CORAL_BLOCK,
+                        BUBBLE_CORAL_BLOCK,
+                        FIRE_CORAL_BLOCK,
+                        HORN_CORAL_BLOCK,
+                        DEAD_TUBE_CORAL_BLOCK,
+                        DEAD_BRAIN_CORAL_BLOCK,
+                        DEAD_BUBBLE_CORAL_BLOCK,
+                        DEAD_FIRE_CORAL_BLOCK,
+                        DEAD_HORN_CORAL_BLOCK
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        TUBE_CORAL,
+                        BRAIN_CORAL,
+                        BUBBLE_CORAL,
+                        FIRE_CORAL,
+                        HORN_CORAL,
+                        DEAD_TUBE_CORAL,
+                        DEAD_BRAIN_CORAL,
+                        DEAD_BUBBLE_CORAL,
+                        DEAD_FIRE_CORAL,
+                        DEAD_HORN_CORAL
+                    ))
+                    .addChildrenFromMaterials(List.of(
+                        TUBE_CORAL_FAN,
+                        BRAIN_CORAL_FAN,
+                        BUBBLE_CORAL_FAN,
+                        FIRE_CORAL_FAN,
+                        HORN_CORAL_FAN,
+                        DEAD_TUBE_CORAL_FAN,
+                        DEAD_BRAIN_CORAL_FAN,
+                        DEAD_BUBBLE_CORAL_FAN,
+                        DEAD_FIRE_CORAL_FAN,
+                        DEAD_HORN_CORAL_FAN
                     ))
             )
             ;
@@ -1399,10 +1533,11 @@ public class MaterialTree {
                 NETHER_QUARTZ_ORE
             ))
             .addChildrenFromMaterials(List.of(
-                NETHER_BRICK,
+                NETHER_BRICKS,
                 NETHER_BRICK_STAIRS,
                 NETHER_BRICK_SLAB,
                 NETHER_BRICK_WALL,
+                NETHER_BRICK,
                 CRACKED_NETHER_BRICKS,
                 CHISELED_NETHER_BRICKS,
                 NETHER_BRICK_FENCE,
@@ -1411,29 +1546,35 @@ public class MaterialTree {
                 RED_NETHER_BRICK_SLAB,
                 RED_NETHER_BRICK_WALL
             ))
-            .addChildrenFromMaterials(List.of(
-                NETHERRACK,
-                CRIMSON_NYLIUM,
-                CRIMSON_ROOTS,
-                WEEPING_VINES,
-                WARPED_NYLIUM,
-                NETHER_SPROUTS,
-                WARPED_ROOTS,
-                TWISTING_VINES,
-                NETHER_WART,
-                SHROOMLIGHT
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(NETHERRACK),
+                new MaterialNode(CRIMSON_NYLIUM),
+                new MaterialNode(CRIMSON_ROOTS),
+                new MaterialNode(WEEPING_VINES),
+                new MaterialNode(WARPED_NYLIUM),
+                new MaterialNode(NETHER_SPROUTS),
+                new MaterialNode(WARPED_ROOTS),
+                new MaterialNode(TWISTING_VINES),
+                new MaterialNode(NETHER_WART, true),
+                new MaterialNode(SHROOMLIGHT)
             ))
             .addChildrenFromNodes(List.of(
                 new MaterialNode(SOUL_SAND),
                 new MaterialNode(SOUL_SOIL),
                 new MaterialNode(BONE_BLOCK),
                 new MaterialNode(GLOWSTONE),
+                new MaterialNode(GLOWSTONE_DUST, true),
                 new MaterialNode(CRYING_OBSIDIAN),
+                new MaterialNode(MAGMA_CREAM, true),
+                new MaterialNode(MAGMA_BLOCK),
                 new MaterialNode(BASALT),
                 new MaterialNode(POLISHED_BASALT),
                 new MaterialNode(SMOOTH_BASALT),
                 new MaterialNode(NETHER_GOLD_ORE),
-                new MaterialNode(ANCIENT_DEBRIS, true)
+                new MaterialNode(RESPAWN_ANCHOR),
+                new MaterialNode(LODESTONE, true),
+                new MaterialNode(ANCIENT_DEBRIS, true),
+                new MaterialNode(MUSIC_DISC_PIGSTEP, true)
             ))
             ;
     }
@@ -1524,83 +1665,53 @@ public class MaterialTree {
                 new MaterialNode(POINTED_DRIPSTONE),
                 new MaterialNode(OBSIDIAN),
                 new MaterialNode(GLOW_LICHEN),
-                new MaterialNode(COBWEB)
-            ))
-            ;
-    }
-
-    public static TreeNode TRIAL_CHAMBER_CATEGORY() {
-        return new CategoryNode(
-            VAULT,
-            "category_trial_chamber",
-            "Trial Chambers",
-            ""
-        )
-            .addChildrenFromMaterials(List.of(
-                BREEZE_ROD,
-                SLIME_BALL
+                new MaterialNode(COBWEB, true)
             ))
             .addChild(new CategoryNode(
-                    TRIAL_KEY,
-                    "category_trial_chamber_vault",
-                    "Vault Loot",
+                    SCULK,
+                    "category_cave_deep_dark",
+                    "The Deep Dark",
                     ""
                 )
                     .addChildrenFromNodes(List.of(
-                        new MaterialNode(EMERALD, true),
-                        new MaterialNode(ARROW, true),
-                        new MaterialNode(IRON_INGOT, true),
-                        new MaterialNode(WIND_CHARGE, true),
-                        new MaterialNode(HONEY_BOTTLE, true),
-                        new MaterialNode(OMINOUS_BOTTLE, true),
-                        new MaterialNode(SHIELD, true),
-                        new MaterialNode(BOW, true),
-                        new MaterialNode(DIAMOND, true),
-                        new MaterialNode(GOLDEN_APPLE, true),
-                        new MaterialNode(GOLDEN_CARROT, true)
+                        new MaterialNode(DISC_FRAGMENT_5),
+                        new MaterialNode(MUSIC_DISC_5, true),
+                        new MaterialNode(ECHO_SHARD),
+                        new MaterialNode(WARD_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(RECOVERY_COMPASS)
                     ))
-                    .addChildrenFromNodes(List.of(
-                        new MaterialNode(ENCHANTED_BOOK, true),
-                        new MaterialNode(CROSSBOW, true),
-                        new MaterialNode(IRON_AXE, true),
-                        new MaterialNode(IRON_CHESTPLATE, true),
-                        new MaterialNode(BOLT_ARMOR_TRIM_SMITHING_TEMPLATE, true),
-                        new MaterialNode(MUSIC_DISC_PRECIPICE, true),
-                        new MaterialNode(GUSTER_BANNER_PATTERN, true),
-                        new MaterialNode(DIAMOND_AXE, true),
-                        new MaterialNode(DIAMOND_CHESTPLATE, true),
-                        new MaterialNode(TRIDENT, true)
+                    .addChildrenFromMaterials(List.of(
+                        SCULK,
+                        SCULK_VEIN,
+                        SCULK_CATALYST,
+                        SCULK_SHRIEKER,
+                        SCULK_SENSOR
                     ))
             )
             .addChild(new CategoryNode(
-                    OMINOUS_TRIAL_KEY,
-                    "category_trial_chamber_ominous",
-                    "Ominous Vault Loot",
+                    VAULT,
+                    "category_cave_trial_chamber",
+                    "Trial Chambers",
                     ""
                 )
                     .addChildrenFromNodes(List.of(
-                        new MaterialNode(EMERALD, true),
+                        new MaterialNode(TRIAL_KEY),
+                        new MaterialNode(OMINOUS_TRIAL_KEY),
+                        new MaterialNode(BREEZE_ROD, true),
+                        new MaterialNode(SLIME_BALL, true),
                         new MaterialNode(WIND_CHARGE, true),
-                        new MaterialNode(ARROW, true),
-                        new MaterialNode(DIAMOND, true),
-                        new MaterialNode(FLOW_ARMOR_TRIM_SMITHING_TEMPLATE, true),
-                        new MaterialNode(ENCHANTED_GOLDEN_APPLE, true),
-                        new MaterialNode(FLOW_BANNER_PATTERN),
-                        new MaterialNode(OMINOUS_BOTTLE, true),
-                        new MaterialNode(EMERALD_BLOCK, true)
-                    ))
-                    .addChildrenFromNodes(List.of(
-                        new MaterialNode(CROSSBOW, true),
-                        new MaterialNode(IRON_BLOCK, true),
-                        new MaterialNode(GOLDEN_APPLE, true),
-                        new MaterialNode(DIAMOND_AXE, true),
-                        new MaterialNode(DIAMOND_CHESTPLATE, true),
-                        new MaterialNode(MUSIC_DISC_CREATOR, true),
                         new MaterialNode(HEAVY_CORE),
-                        new MaterialNode(ENCHANTED_BOOK, true),
-                        new MaterialNode(DIAMOND_BLOCK, true)
+                        new MaterialNode(OMINOUS_BOTTLE),
+                        new MaterialNode(FLOW_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(BOLT_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(MUSIC_DISC_PRECIPICE, true),
+                        new MaterialNode(MUSIC_DISC_CREATOR, true),
+                        new MaterialNode(GUSTER_BANNER_PATTERN, true),
+                        new MaterialNode(FLOW_BANNER_PATTERN, true)
                     ))
-            );
+            )
+            ;
     }
 
     public static TreeNode MUSIC_DISC_CATEGORY() {
@@ -1612,34 +1723,34 @@ public class MaterialTree {
         )
             .addChild(new MaterialNode(JUKEBOX))
             .addChild(new CategoryNode(
-                MUSIC_DISC_OTHERSIDE,
-                "category_music_disc_record",
-                "Records",
-                ""
-            )
-                .addChildrenFromMaterials(List.of(
-                    MUSIC_DISC_CAT,
-                    MUSIC_DISC_BLOCKS,
-                    MUSIC_DISC_CHIRP,
-                    MUSIC_DISC_FAR,
-                    MUSIC_DISC_MALL,
-                    MUSIC_DISC_MELLOHI,
-                    MUSIC_DISC_STAL,
-                    MUSIC_DISC_STRAD,
-                    MUSIC_DISC_WARD,
-                    MUSIC_DISC_WAIT
-                ))
-                .addChildrenFromNodes(List.of(
-                    new MaterialNode(MUSIC_DISC_11),
-                    new MaterialNode(MUSIC_DISC_13),
-                    new MaterialNode(MUSIC_DISC_CREATOR_MUSIC_BOX),
-                    new MaterialNode(MUSIC_DISC_CREATOR, true),
-                    new MaterialNode(MUSIC_DISC_PRECIPICE, true),
-                    new MaterialNode(MUSIC_DISC_OTHERSIDE),
-                    new MaterialNode(MUSIC_DISC_RELIC),
-                    new MaterialNode(MUSIC_DISC_5, true),
-                    new MaterialNode(MUSIC_DISC_PIGSTEP, true)
-                ))
+                    MUSIC_DISC_OTHERSIDE,
+                    "category_music_disc_record",
+                    "Records",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        MUSIC_DISC_CAT,
+                        MUSIC_DISC_BLOCKS,
+                        MUSIC_DISC_CHIRP,
+                        MUSIC_DISC_FAR,
+                        MUSIC_DISC_MALL,
+                        MUSIC_DISC_MELLOHI,
+                        MUSIC_DISC_STAL,
+                        MUSIC_DISC_STRAD,
+                        MUSIC_DISC_WARD,
+                        MUSIC_DISC_WAIT
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(MUSIC_DISC_11),
+                        new MaterialNode(MUSIC_DISC_13),
+                        new MaterialNode(MUSIC_DISC_CREATOR_MUSIC_BOX),
+                        new MaterialNode(MUSIC_DISC_CREATOR, true),
+                        new MaterialNode(MUSIC_DISC_PRECIPICE, true),
+                        new MaterialNode(MUSIC_DISC_OTHERSIDE),
+                        new MaterialNode(MUSIC_DISC_RELIC),
+                        new MaterialNode(MUSIC_DISC_5, true),
+                        new MaterialNode(MUSIC_DISC_PIGSTEP, true)
+                    ))
             )
             ;
     }
@@ -1669,8 +1780,8 @@ public class MaterialTree {
                         new MaterialNode(HOST_ARMOR_TRIM_SMITHING_TEMPLATE)
                     ))
                     .addChildrenFromNodes(List.of(
-                        new MaterialNode(WARD_ARMOR_TRIM_SMITHING_TEMPLATE),
-                        new MaterialNode(SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE),
+                        new MaterialNode(WARD_ARMOR_TRIM_SMITHING_TEMPLATE, true),
+                        new MaterialNode(SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE, true),
                         new MaterialNode(TIDE_ARMOR_TRIM_SMITHING_TEMPLATE),
                         new MaterialNode(SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE),
                         new MaterialNode(RIB_ARMOR_TRIM_SMITHING_TEMPLATE),
@@ -1710,49 +1821,360 @@ public class MaterialTree {
             ))
             .addChildrenFromNodes(List.of(
                 new MaterialNode(DRAGON_EGG),
-                new MaterialNode(DRAGON_HEAD),
+                new MaterialNode(DRAGON_HEAD, true),
                 new MaterialNode(ENDER_EYE),
                 new MaterialNode(ELYTRA),
-                new MaterialNode(ENDER_PEARL),
+                new MaterialNode(ENDER_PEARL, true),
                 new MaterialNode(CHORUS_FRUIT, true),
                 new MaterialNode(POPPED_CHORUS_FRUIT),
                 new MaterialNode(CHORUS_FLOWER),
-                new MaterialNode(SHULKER_SHELL),
-                new MaterialNode(DRAGON_BREATH),
+                new MaterialNode(SHULKER_SHELL, true),
+                new MaterialNode(DRAGON_BREATH, true),
                 new MaterialNode(SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE, true)
             ))
             ;
     }
 
-    public static TreeNode WORKSTATION_CATEGORY() {
+    public static TreeNode UTILITY_CATEGORY() {
         return new CategoryNode(
             CRAFTING_TABLE,
-            "category_workstation",
-            "Workstations",
+            "category_utility",
+            "Utility Blocks",
+            ""
+        )
+            .addChild(new CategoryNode(
+                    BLAST_FURNACE,
+                    "category_utility_workstations",
+                    "Workstations",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(CRAFTING_TABLE),
+                        new MaterialNode(CRAFTER, true),
+                        new MaterialNode(CHEST),
+                        new MaterialNode(STONECUTTER),
+                        new MaterialNode(LOOM),
+                        new MaterialNode(CARTOGRAPHY_TABLE),
+                        new MaterialNode(FURNACE),
+                        new MaterialNode(BLAST_FURNACE),
+                        new MaterialNode(SMOKER),
+                        new MaterialNode(SMITHING_TABLE, true),
+                        new MaterialNode(ANVIL)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(CHIPPED_ANVIL),
+                        new MaterialNode(DAMAGED_ANVIL),
+                        new MaterialNode(ENCHANTING_TABLE, true),
+                        new MaterialNode(GRINDSTONE),
+                        new MaterialNode(FLETCHING_TABLE),
+                        new MaterialNode(BARREL),
+                        new MaterialNode(LECTERN),
+                        new MaterialNode(COMPOSTER),
+                        new MaterialNode(CAULDRON),
+                        new MaterialNode(BREWING_STAND, true)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    TORCH,
+                    "category_utility_light",
+                    "Light Sources",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        TORCH,
+                        SOUL_TORCH,
+                        LANTERN,
+                        SOUL_LANTERN,
+                        CAMPFIRE,
+                        SOUL_CAMPFIRE
+                    ))
+            )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(SCAFFOLDING),
+                new MaterialNode(LADDER),
+                new MaterialNode(LODESTONE, true)
+            ))
+            ;
+    }
+
+    public static TreeNode OCEAN_CATEGORY() {
+        return new CategoryNode(
+            PRISMARINE,
+            "category_ocean",
+            "Ocean",
+            ""
+        )
+            .addChildrenFromMaterials(List.of(
+                PRISMARINE,
+                PRISMARINE_STAIRS,
+                PRISMARINE_SLAB,
+                PRISMARINE_WALL,
+                PRISMARINE_BRICKS,
+                PRISMARINE_BRICK_STAIRS,
+                PRISMARINE_BRICK_SLAB,
+                DARK_PRISMARINE,
+                DARK_PRISMARINE_STAIRS,
+                DARK_PRISMARINE_SLAB,
+                PRISMARINE_SHARD,
+                PRISMARINE_CRYSTALS,
+                SEA_LANTERN,
+                KELP,
+                LILY_PAD,
+                SEA_PICKLE,
+                SEAGRASS,
+                HEART_OF_THE_SEA,
+                CONDUIT,
+                SPONGE,
+                WET_SPONGE
+            ))
+            ;
+    }
+
+    public static TreeNode ENCHANTING_CATEGORY() {
+        return new CategoryNode(
+            ENCHANTING_TABLE,
+            "category_enchanting",
+            "Enchanting",
             ""
         )
             .addChildrenFromNodes(List.of(
-                new MaterialNode(CRAFTING_TABLE),
-                new MaterialNode(CRAFTER),
-                new MaterialNode(CHEST),
-                new MaterialNode(STONECUTTER),
-                new MaterialNode(LOOM),
-                new MaterialNode(CARTOGRAPHY_TABLE),
-                new MaterialNode(FURNACE),
-                new MaterialNode(BLAST_FURNACE),
-                new MaterialNode(SMOKER),
-                new MaterialNode(SMITHING_TABLE, true),
-                new MaterialNode(ANVIL),
-                new MaterialNode(CHIPPED_ANVIL),
-                new MaterialNode(DAMAGED_ANVIL),
-                new MaterialNode(ENCHANTING_TABLE),
-                new MaterialNode(GRINDSTONE),
-                new MaterialNode(FLETCHING_TABLE),
-                new MaterialNode(BARREL),
-                new MaterialNode(LECTERN),
-                new MaterialNode(COMPOSTER),
-                new MaterialNode(CAULDRON),
-                new MaterialNode(BREWING_STAND)
+                new MaterialNode(ENCHANTING_TABLE, true),
+                new MaterialNode(BOOKSHELF),
+                new MaterialNode(CHISELED_BOOKSHELF),
+                new MaterialNode(BOOK),
+                new MaterialNode(EXPERIENCE_BOTTLE)
+            ))
+            .addChild(new CategoryNode(
+                    ENCHANTED_BOOK,
+                    "category_enchanting_books",
+                    "Enchanted Books",
+                    ""
+                )
+                    .addChild(new MaterialNode(ENCHANTED_BOOK))
+            )
+            ;
+    }
+
+    public static TreeNode REDSTONE_CATEGORY() {
+        return new CategoryNode(
+            REDSTONE,
+            "category_redstone",
+            "Redstone",
+            ""
+        )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(REDSTONE, true),
+                new MaterialNode(REDSTONE_TORCH),
+                new MaterialNode(REDSTONE_BLOCK, true),
+                new MaterialNode(REPEATER),
+                new MaterialNode(COMPARATOR),
+                new MaterialNode(TARGET),
+                new MaterialNode(LEVER),
+                new MaterialNode(LIGHT_WEIGHTED_PRESSURE_PLATE),
+                new MaterialNode(HEAVY_WEIGHTED_PRESSURE_PLATE),
+                new MaterialNode(CALIBRATED_SCULK_SENSOR),
+                new MaterialNode(TRIPWIRE_HOOK),
+                new MaterialNode(DAYLIGHT_DETECTOR),
+                new MaterialNode(LIGHTNING_ROD)
+            ))
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(PISTON),
+                new MaterialNode(STICKY_PISTON),
+                new MaterialNode(SLIME_BLOCK, true),
+                new MaterialNode(HONEY_BLOCK),
+                new MaterialNode(DISPENSER),
+                new MaterialNode(DROPPER),
+                new MaterialNode(CRAFTER, true),
+                new MaterialNode(HOPPER),
+                new MaterialNode(TRAPPED_CHEST),
+                new MaterialNode(OBSERVER),
+                new MaterialNode(NOTE_BLOCK),
+                new MaterialNode(REDSTONE_LAMP),
+                new MaterialNode(TNT)
+            ))
+            .addChild(new CategoryNode(
+                    MINECART,
+                    "category_redstone_minecart",
+                    "Minecarts",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        RAIL,
+                        POWERED_RAIL,
+                        DETECTOR_RAIL,
+                        ACTIVATOR_RAIL,
+                        MINECART,
+                        HOPPER_MINECART,
+                        CHEST_MINECART,
+                        FURNACE_MINECART,
+                        TNT_MINECART
+                    ))
+            )
+            ;
+    }
+
+    public static TreeNode MOB_DROP_CATEGORY() {
+        return new CategoryNode(
+            CREEPER_HEAD,
+            "category_mob_drop",
+            "Mob Drops",
+            ""
+        )
+            .addChild(new CategoryNode(
+                    ROTTEN_FLESH,
+                    "category_mob_drop_loot",
+                    "Mob Loot",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(ROTTEN_FLESH, true),
+                        new MaterialNode(BONE),
+                        new MaterialNode(SPIDER_EYE, true),
+                        new MaterialNode(STRING),
+                        new MaterialNode(ENDER_PEARL, true),
+                        new MaterialNode(GUNPOWDER, true),
+                        new MaterialNode(SHULKER_SHELL, true),
+                        new MaterialNode(WIND_CHARGE, true),
+                        new MaterialNode(GHAST_TEAR, true),
+                        new MaterialNode(MAGMA_CREAM, true),
+                        new MaterialNode(PHANTOM_MEMBRANE, true),
+                        new MaterialNode(NETHER_STAR),
+                        new MaterialNode(BLAZE_ROD),
+                        new MaterialNode(BREEZE_ROD, true),
+                        new MaterialNode(NAUTILUS_SHELL),
+                        new MaterialNode(SLIME_BALL, true),
+                        new MaterialNode(TOTEM_OF_UNDYING, true)
+                    ))
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(FEATHER),
+                        new MaterialNode(EGG),
+                        new MaterialNode(LEATHER),
+                        new MaterialNode(RABBIT_HIDE),
+                        new MaterialNode(RABBIT_FOOT, true),
+                        new MaterialNode(INK_SAC),
+                        new MaterialNode(GLOW_INK_SAC),
+                        new MaterialNode(ARMADILLO_SCUTE),
+                        new MaterialNode(TURTLE_SCUTE)
+                    ))
+            )
+            .addChildrenFromMaterials(List.of(
+                TURTLE_EGG,
+                SNIFFER_EGG,
+                BEE_NEST,
+                BEEHIVE,
+                OCHRE_FROGLIGHT,
+                VERDANT_FROGLIGHT,
+                PEARLESCENT_FROGLIGHT
+            ))
+            .addChild(new CategoryNode(
+                    WITHER_SKELETON_SKULL,
+                    "category_mob_drop_heads",
+                    "Mob Heads",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(SKELETON_SKULL),
+                        new MaterialNode(WITHER_SKELETON_SKULL),
+                        new MaterialNode(ZOMBIE_HEAD),
+                        new MaterialNode(CREEPER_HEAD),
+                        new MaterialNode(PIGLIN_HEAD),
+                        new MaterialNode(DRAGON_HEAD, true)
+                    ))
+            )
+            ;
+    }
+
+    public static TreeNode BANNER_CATEGORY() {
+        return new CategoryNode(
+            CREEPER_HEAD,
+            "category_banner_patterns",
+            "Mob Drops",
+            ""
+        )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(FIELD_MASONED_BANNER_PATTERN),
+                new MaterialNode(BORDURE_INDENTED_BANNER_PATTERN),
+                new MaterialNode(FLOWER_BANNER_PATTERN),
+                new MaterialNode(CREEPER_BANNER_PATTERN),
+                new MaterialNode(SKULL_BANNER_PATTERN),
+                new MaterialNode(MOJANG_BANNER_PATTERN),
+                new MaterialNode(GLOBE_BANNER_PATTERN),
+                new MaterialNode(PIGLIN_BANNER_PATTERN),
+                new MaterialNode(FLOW_BANNER_PATTERN, true),
+                new MaterialNode(GUSTER_BANNER_PATTERN, true)
+            ))
+            ;
+    }
+
+    public static TreeNode BREWING_CATEGORY() {
+        return new CategoryNode(
+            BREWING_STAND,
+            "category_brewing",
+            "Brewing",
+            ""
+        )
+            .addChildrenFromNodes(List.of(
+                new MaterialNode(BREWING_STAND, true),
+                new MaterialNode(GLASS_BOTTLE),
+                new MaterialNode(NETHER_WART, true),
+                new MaterialNode(REDSTONE, true),
+                new MaterialNode(GLOWSTONE_DUST, true),
+                new MaterialNode(GUNPOWDER, true),
+                new MaterialNode(DRAGON_BREATH, true)
+            ))
+            .addChild(new CategoryNode(
+                    FERMENTED_SPIDER_EYE,
+                    "category_brewing_ingredients",
+                    "Ingredients",
+                    ""
+                )
+                    .addChildrenFromNodes(List.of(
+                        new MaterialNode(FERMENTED_SPIDER_EYE),
+                        new MaterialNode(SUGAR),
+                        new MaterialNode(RABBIT_FOOT, true),
+                        new MaterialNode(BLAZE_POWDER),
+                        new MaterialNode(GLISTERING_MELON_SLICE),
+                        new MaterialNode(SPIDER_EYE, true),
+                        new MaterialNode(GHAST_TEAR, true),
+                        new MaterialNode(MAGMA_CREAM, true),
+                        new MaterialNode(PUFFERFISH, true),
+                        new MaterialNode(GOLDEN_CARROT, true),
+                        new MaterialNode(TURTLE_HELMET, true),
+                        new MaterialNode(PHANTOM_MEMBRANE, true),
+                        new MaterialNode(BREEZE_ROD, true),
+                        new MaterialNode(COBWEB, true),
+                        new MaterialNode(SLIME_BLOCK, true),
+                        new MaterialNode(STONE, true)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    POTION,
+                    "category_brewing_potions",
+                    "Potions",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        POTION,
+                        SPLASH_POTION,
+                        LINGERING_POTION
+                    ))
+            )
+            ;
+    }
+
+    public static TreeNode MATERIALS_CATEGORY() {
+        return new CategoryNode(
+            FLINT,
+            "category_materials",
+            "Materials",
+            ""
+        )
+            .addChildrenFromMaterials(List.of(
+                STICK,
+                FLINT,
+                CHARCOAL,
+                CLAY_BALL,
+                BOWL
             ))
             ;
     }
@@ -1774,7 +2196,7 @@ public class MaterialTree {
         );
 
         this.root
-            .addChild(WEAPONRY_CATEGORY())
+            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
             .addChild(COLOURED_CATEGORY())
             .addChild(MINERALS_CATEGORY())
             .addChild(WOOD_CATEGORY())
@@ -1784,11 +2206,17 @@ public class MaterialTree {
             .addChild(NETHER_CATEGORY())
             .addChild(ARCHEOLOGY_CATEGORY())
             .addChild(CAVE_CATEGORY())
-            .addChild(TRIAL_CHAMBER_CATEGORY())
             .addChild(MUSIC_DISC_CATEGORY())
             .addChild(SMITHING_CATEGORY())
             .addChild(END_CATEGORY())
-            .addChild(WORKSTATION_CATEGORY())
+            .addChild(UTILITY_CATEGORY())
+            .addChild(OCEAN_CATEGORY())
+            .addChild(ENCHANTING_CATEGORY())
+            .addChild(REDSTONE_CATEGORY())
+            .addChild(MOB_DROP_CATEGORY())
+            .addChild(BANNER_CATEGORY())
+            .addChild(BREWING_CATEGORY())
+            .addChild(MATERIALS_CATEGORY())
         ;
     }
 
@@ -1817,6 +2245,39 @@ public class MaterialTree {
             .filter(m -> !UNOBTAINIUM.contains(m))
             .filter(Material::isItem)
             .collect(Collectors.toSet());
+    }
+
+    private static void PrintErrorList(Set<Material> materials, String header, String found) {
+        PrintHeader(header);
+
+        String s2 = "Found %d %s.".formatted(materials.size(), found);
+
+        LOGGER.severe(
+            "| %s%s |".formatted(s2, " ".repeat(ErrorPrintWidth - 4 - s2.length())));
+
+        if (materials.size() > MaxErrorListLength) {
+            String s3 = "Here are the first %d:".formatted(MaxErrorListLength);
+            LOGGER.severe("| %s%s |".formatted(s3, " ".repeat(ErrorPrintWidth - 4 - s3.length())));
+        }
+
+        materials.stream()
+            .sorted(Comparator.comparing(Enum::ordinal))
+            .limit(MaxErrorListLength)
+            .forEach(m -> LOGGER.severe(
+                "|  - %s%s |".formatted(m.name(),
+                    " ".repeat(ErrorPrintWidth - 7 - m.name().length()))));
+    }
+
+    private static void PrintHeader(String header) {
+        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
+        LOGGER.severe("%s %s %s".formatted(
+            HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
+            header,
+            HeaderCharacter.repeat(
+                (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
+                    / 2))
+        ));
+        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
     }
 
     private boolean hasMissingMaterials() {
@@ -1871,42 +2332,9 @@ public class MaterialTree {
         return isGood;
     }
 
-    private static void PrintErrorList(Set<Material> materials, String header, String found) {
-        PrintHeader(header);
-
-        String s2 = "Found %d %s.".formatted(materials.size(), found);
-
-        LOGGER.severe(
-            "| %s%s |".formatted(s2, " ".repeat(ErrorPrintWidth - 4 - s2.length())));
-
-        if (materials.size() > MaxErrorListLength) {
-            String s3 = "Here are the first %d:".formatted(MaxErrorListLength);
-            LOGGER.severe("| %s%s |".formatted(s3, " ".repeat(ErrorPrintWidth - 4 - s3.length())));
-        }
-
-        materials.stream()
-            .sorted(Comparator.comparing(Enum::ordinal))
-            .limit(MaxErrorListLength)
-            .forEach(m -> LOGGER.severe(
-                "|  - %s%s |".formatted(m.name(),
-                    " ".repeat(ErrorPrintWidth - 7 - m.name().length()))));
-    }
-
-    private static void PrintHeader(String header) {
-        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
-        LOGGER.severe("%s %s %s".formatted(
-            HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
-            header,
-            HeaderCharacter.repeat(
-                (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
-                    / 2))
-        ));
-        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
-    }
-
     private boolean hasUnallowedDuplicateMaterials() {
         Map<Material, Integer> materialCount = new HashMap<>();
-        Map<Material, Boolean> dupsAllowed = new HashMap<>();
+        Map<Material, Boolean> duplicatesAllowed = new HashMap<>();
 
         this.root.traverse(node -> {
             if (!(node instanceof MaterialNode materialNode)) {
@@ -1916,15 +2344,16 @@ public class MaterialTree {
             Material targetMaterial = materialNode.getTargetMaterial();
 
             int num = materialCount.getOrDefault(targetMaterial, 0);
-            boolean dup = dupsAllowed.getOrDefault(targetMaterial, true);
+            boolean duplicateAllowed = duplicatesAllowed.getOrDefault(targetMaterial, true);
 
             materialCount.put(targetMaterial, num + 1);
-            dupsAllowed.put(targetMaterial, dup && materialNode.duplicatesAllowed());
+            duplicatesAllowed.put(targetMaterial,
+                duplicateAllowed && materialNode.duplicatesAllowed());
         });
 
         Set<Material> unauthorisedDuplicates = materialCount.entrySet().stream()
             .filter(entry -> entry.getValue() > 1)
-            .filter(entry -> !dupsAllowed.get(entry.getKey()))
+            .filter(entry -> !duplicatesAllowed.get(entry.getKey()))
             .map(Entry::getKey)
             .collect(Collectors.toSet());
 
@@ -1943,7 +2372,7 @@ public class MaterialTree {
 
     private boolean hasUnusedDuplicateMaterials() {
         Map<Material, Integer> materialCount = new HashMap<>();
-        Map<Material, Boolean> dupsAllowed = new HashMap<>();
+        Map<Material, Boolean> duplicatesAllowed = new HashMap<>();
 
         this.root.traverse(node -> {
             if (!(node instanceof MaterialNode materialNode)) {
@@ -1953,15 +2382,16 @@ public class MaterialTree {
             Material targetMaterial = materialNode.getTargetMaterial();
 
             int num = materialCount.getOrDefault(targetMaterial, 0);
-            boolean dup = dupsAllowed.getOrDefault(targetMaterial, true);
+            boolean duplicateAllowed = duplicatesAllowed.getOrDefault(targetMaterial, true);
 
             materialCount.put(targetMaterial, num + 1);
-            dupsAllowed.put(targetMaterial, dup && materialNode.duplicatesAllowed());
+            duplicatesAllowed.put(targetMaterial,
+                duplicateAllowed && materialNode.duplicatesAllowed());
         });
 
         Set<Material> unusedDuplicates = materialCount.entrySet().stream()
             .filter(entry -> entry.getValue() <= 1)
-            .filter(entry -> dupsAllowed.get(entry.getKey()))
+            .filter(entry -> duplicatesAllowed.get(entry.getKey()))
             .map(Entry::getKey)
             .collect(Collectors.toSet());
 

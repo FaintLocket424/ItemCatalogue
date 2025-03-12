@@ -114,7 +114,6 @@ public class DatapackGenerator {
             String errMsg = "Error copying datapack to world folder";
             sender.sendMessage(errMsg);
             LOGGER.severe(errMsg);
-            return;
         }
     }
 

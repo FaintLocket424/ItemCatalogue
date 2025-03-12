@@ -123,8 +123,8 @@ public class MaterialNode implements TreeNode {
         display.add("description", getDescriptionArray());
 
         display.addProperty("frame", "task");
-        display.addProperty("show_toast", true);
-        display.addProperty("announce_to_chat", true);
+        display.addProperty("show_toast", false);
+        display.addProperty("announce_to_chat", false);
         display.addProperty("hidden", false);
 
         return display;

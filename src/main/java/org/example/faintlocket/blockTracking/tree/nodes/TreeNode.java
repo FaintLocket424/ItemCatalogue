@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.example.faintlocket.blockTracking.DatapackGenerator;
 
+@SuppressWarnings("UnusedReturnValue")
 public interface TreeNode {
     Material END_CARD_MATERIAL = ORANGE_STAINED_GLASS_PANE;
 
@@ -25,43 +26,20 @@ public interface TreeNode {
     }
 
     default TreeNode addChildrenFromMaterials(List<Material> materials) {
-        return addChild(createTreeFromMaterials(materials));
+        return addChildrenFromNodes(
+            materials.stream()
+                .map(m -> (TreeNode) new MaterialNode(m))
+                .toList()
+        );
     }
 
     default TreeNode addChildrenFromNodes(List<TreeNode> nodes) {
         return addChild(createTreeFromNodes(nodes));
     }
 
-    private static MaterialNode createTreeFromMaterials(List<Material> materials) {
-        if (materials == null || materials.isEmpty()) {
-            return new MaterialNode(Material.AIR);
-        }
-
-        MaterialNode root = new MaterialNode(materials.getFirst());
-        MaterialNode current = root;
-
-        for (int i = 1; i < materials.size(); i++) {
-            MaterialNode newNode = new MaterialNode(materials.get(i));
-            current.addChild(newNode);
-            current = newNode; // Move to the newly added child
-        }
-
-//        current.addChild(new CategoryNode(
-//            END_CARD_MATERIAL,
-//            current.getAdvancementKey().getKey() + "_end",
-//            "",
-//            ""
-//        ));
-
-        current.addChild(new PlaceholderNode(END_CARD_MATERIAL));
-
-        return root;
-    }
-
     private static TreeNode createTreeFromNodes(List<TreeNode> nodes) {
         if (nodes == null || nodes.isEmpty()) {
             return new MaterialNode(Material.AIR);
-//            return null; // Handle empty list case
         }
 
         TreeNode root = nodes.getFirst();
@@ -73,12 +51,7 @@ public interface TreeNode {
             current = newNode; // Move to the newly added child
         }
 
-        current.addChild(new CategoryNode(
-            END_CARD_MATERIAL,
-            current.getAdvancementKey().getKey() + "_end",
-            "",
-            ""
-        ));
+        current.addChild(new PlaceholderNode(END_CARD_MATERIAL));
 
         return root;
     }
