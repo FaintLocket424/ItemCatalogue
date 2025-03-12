@@ -200,9 +200,12 @@ public class MaterialTree {
                         new MaterialNode(WARPED_FUNGUS_ON_A_STICK),
                         new MaterialNode(SHEARS),
                         new MaterialNode(BRUSH, true),
+                        new MaterialNode(COMPASS),
+                        new MaterialNode(CLOCK),
+                        new MaterialNode(SNOWBALL),
                         new MaterialNode(FLINT_AND_STEEL),
                         new MaterialNode(FIRE_CHARGE),
-                        new MaterialNode(TOTEM_OF_UNDYING),
+                        new MaterialNode(TOTEM_OF_UNDYING, true),
                         new MaterialNode(SPYGLASS),
                         new MaterialNode(TRIDENT),
                         new MaterialNode(MACE)
@@ -1154,7 +1157,7 @@ public class MaterialTree {
                 new MaterialNode(MUSHROOM_STEW),
                 new MaterialNode(BEETROOT_SOUP),
                 new MaterialNode(RABBIT_STEW),
-                new MaterialNode(HONEY_BOTTLE),
+                new MaterialNode(HONEY_BOTTLE, true),
                 new MaterialNode(ROTTEN_FLESH, true),
                 new MaterialNode(SPIDER_EYE, true)
             ))
@@ -1839,7 +1842,7 @@ public class MaterialTree {
         return new CategoryNode(
             CRAFTING_TABLE,
             "category_utility",
-            "Utility Blocks",
+            "Utilities",
             ""
         )
             .addChild(new CategoryNode(
@@ -1892,7 +1895,18 @@ public class MaterialTree {
             .addChildrenFromNodes(List.of(
                 new MaterialNode(SCAFFOLDING),
                 new MaterialNode(LADDER),
-                new MaterialNode(LODESTONE, true)
+                new MaterialNode(LODESTONE, true),
+                new MaterialNode(BEACON),
+                new MaterialNode(BELL),
+                new MaterialNode(ITEM_FRAME),
+                new MaterialNode(GLOW_ITEM_FRAME),
+                new MaterialNode(PAINTING),
+                new MaterialNode(WRITABLE_BOOK),
+                new MaterialNode(FIREWORK_STAR),
+                new MaterialNode(FIREWORK_ROCKET),
+                new MaterialNode(NAME_TAG),
+                new MaterialNode(LEAD),
+                new MaterialNode(MAP)
             ))
             ;
     }
@@ -2016,13 +2030,13 @@ public class MaterialTree {
     public static TreeNode MOB_DROP_CATEGORY() {
         return new CategoryNode(
             CREEPER_HEAD,
-            "category_mob_drop",
-            "Mob Drops",
+            "category_mob_item",
+            "Mob Items",
             ""
         )
             .addChild(new CategoryNode(
                     ROTTEN_FLESH,
-                    "category_mob_drop_loot",
+                    "category_mob_item_loot",
                     "Mob Loot",
                     ""
                 )
@@ -2054,7 +2068,19 @@ public class MaterialTree {
                         new MaterialNode(INK_SAC),
                         new MaterialNode(GLOW_INK_SAC),
                         new MaterialNode(ARMADILLO_SCUTE),
-                        new MaterialNode(TURTLE_SCUTE)
+                        new MaterialNode(TURTLE_SCUTE),
+                        new MaterialNode(HONEYCOMB),
+                        new MaterialNode(HONEY_BOTTLE, true)
+                    ))
+            )
+            .addChild(new CategoryNode(
+                    ROTTEN_FLESH,
+                    "category_mob_item_loot",
+                    "Mob Loot",
+                    ""
+                )
+                    .addChildrenFromMaterials(List.of(
+                        GOAT_HORN
                     ))
             )
             .addChildrenFromMaterials(List.of(
@@ -2062,13 +2088,14 @@ public class MaterialTree {
                 SNIFFER_EGG,
                 BEE_NEST,
                 BEEHIVE,
+                HONEYCOMB_BLOCK,
                 OCHRE_FROGLIGHT,
                 VERDANT_FROGLIGHT,
                 PEARLESCENT_FROGLIGHT
             ))
             .addChild(new CategoryNode(
                     WITHER_SKELETON_SKULL,
-                    "category_mob_drop_heads",
+                    "category_mob_item_heads",
                     "Mob Heads",
                     ""
                 )
@@ -2174,7 +2201,9 @@ public class MaterialTree {
                 FLINT,
                 CHARCOAL,
                 CLAY_BALL,
-                BOWL
+                BOWL,
+                BONE_MEAL,
+                PAPER
             ))
             ;
     }
@@ -2228,14 +2257,12 @@ public class MaterialTree {
         boolean hasUnusedDuplicates = hasUnusedDuplicateMaterials();
 
         boolean isBad =
-            hasMissing ||
-                hasUnobtainables ||
-                hasUnallowedDuplicates ||
-                hasUnusedDuplicates;
+            hasMissing || hasUnobtainables || hasUnallowedDuplicates || hasUnusedDuplicates;
 
         if (isBad) {
-            String header = "ADVANCEMENT TREE CONTAINS ERRORS";
-            PrintHeader(header);
+            PrintHeader("ADVANCEMENT TREE CONTAINS ERRORS");
+        } else {
+            PrintHeader("ADVANCEMENT TREE INTEGRITY AT 100%");
         }
     }
 
@@ -2319,9 +2346,9 @@ public class MaterialTree {
             }
         });
 
-        boolean isGood = unobtainableMaterials.isEmpty();
+        boolean isBad = !unobtainableMaterials.isEmpty();
 
-        if (!isGood) {
+        if (isBad) {
             PrintErrorList(
                 unobtainableMaterials,
                 "UNOBTAINABLE MATERIAL DETECTED",
@@ -2329,7 +2356,7 @@ public class MaterialTree {
             );
         }
 
-        return isGood;
+        return isBad;
     }
 
     private boolean hasUnallowedDuplicateMaterials() {
@@ -2357,9 +2384,9 @@ public class MaterialTree {
             .map(Entry::getKey)
             .collect(Collectors.toSet());
 
-        boolean isGood = unauthorisedDuplicates.isEmpty();
+        boolean isBad = !unauthorisedDuplicates.isEmpty();
 
-        if (!isGood) {
+        if (isBad) {
             PrintErrorList(
                 unauthorisedDuplicates,
                 "UNAUTHORISED DUPLICATES DETECTED",
@@ -2367,7 +2394,7 @@ public class MaterialTree {
             );
         }
 
-        return isGood;
+        return isBad;
     }
 
     private boolean hasUnusedDuplicateMaterials() {
@@ -2395,9 +2422,9 @@ public class MaterialTree {
             .map(Entry::getKey)
             .collect(Collectors.toSet());
 
-        boolean isGood = unusedDuplicates.isEmpty();
+        boolean isBad = !unusedDuplicates.isEmpty();
 
-        if (!isGood) {
+        if (isBad) {
             PrintErrorList(
                 unusedDuplicates,
                 "UNUSED DUPLICATES DETECTED",
@@ -2405,6 +2432,6 @@ public class MaterialTree {
             );
         }
 
-        return isGood;
+        return isBad;
     }
 }
