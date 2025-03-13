@@ -25,8 +25,9 @@ import org.jetbrains.annotations.Unmodifiable;
 
 @SuppressWarnings("DuplicatedCode")
 public class MaterialTree {
-    private final String namespace;
+    private static int pageId = 1;
 
+    private final String namespace;
 
     private final CategoryNode root;
 
@@ -34,7 +35,7 @@ public class MaterialTree {
         return root;
     }
 
-    public MaterialTree(int pageId) {
+    public MaterialTree() {
         this.namespace = "%s_page_%d".formatted(datapackNamespace, pageId);
 
         this.root = new CategoryNode(
@@ -43,6 +44,8 @@ public class MaterialTree {
             "Item Catalogue Page %d".formatted(pageId),
             "Your complete item catalogue for " + Bukkit.getServer().getMinecraftVersion()
         );
+
+        pageId++;
 
 //        this.root
 //            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
