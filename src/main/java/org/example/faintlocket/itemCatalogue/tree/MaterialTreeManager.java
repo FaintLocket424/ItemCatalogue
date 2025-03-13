@@ -2211,38 +2211,71 @@ public class MaterialTreeManager implements Iterable<MaterialTree> {
     private final Set<MaterialTree> trees = new HashSet<>();
 
     public MaterialTreeManager() {
-        int page_id = 1;
+        MaterialTree enchantingTree = new MaterialTree();
+        enchantingTree.getRoot()
+            .addChild(ENCHANTING_CATEGORY())
+        ;
+        this.trees.add(enchantingTree);
 
-        MaterialTree tree1 = new MaterialTree(page_id++);
-        tree1.getRoot()
+        MaterialTree weaponsAndToolsTree = new MaterialTree();
+        weaponsAndToolsTree.getRoot()
+            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
+            .addChild(SMITHING_CATEGORY())
+        ;
+        this.trees.add(weaponsAndToolsTree);
+
+        MaterialTree brewingTree = new MaterialTree();
+        brewingTree.getRoot()
             .addChild(BREWING_CATEGORY())
         ;
-        this.trees.add(tree1);
+        this.trees.add(brewingTree);
 
-        MaterialTree tree2 = new MaterialTree(page_id++);
-        tree2.getRoot()
-            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
-            .addChild(COLOURED_CATEGORY())
-            .addChild(MINERALS_CATEGORY())
+        MaterialTree woodTree = new MaterialTree();
+        woodTree.getRoot()
             .addChild(WOOD_CATEGORY())
+        ;
+        this.trees.add(woodTree);
+
+        MaterialTree undergroundTree = new MaterialTree();
+        undergroundTree.getRoot()
+            .addChild(MINERALS_CATEGORY())
             .addChild(STONE_CATEGORY())
             .addChild(COPPER_CATEGORY())
-            .addChild(NATURAL_CATEGORY())
-            .addChild(NETHER_CATEGORY())
-            .addChild(ARCHEOLOGY_CATEGORY())
             .addChild(CAVE_CATEGORY())
-            .addChild(MUSIC_DISC_CATEGORY())
-            .addChild(SMITHING_CATEGORY())
+            .addChild(ARCHEOLOGY_CATEGORY())
+        ;
+        this.trees.add(undergroundTree);
+
+        MaterialTree dimensionsTree = new MaterialTree();
+        dimensionsTree.getRoot()
+            .addChild(NETHER_CATEGORY())
             .addChild(END_CATEGORY())
+        ;
+        this.trees.add(dimensionsTree);
+
+        MaterialTree natureTree = new MaterialTree();
+        natureTree.getRoot()
+            .addChild(NATURAL_CATEGORY())
+            .addChild(MOB_DROP_CATEGORY())
+        ;
+        this.trees.add(natureTree);
+
+        MaterialTree colourTree = new MaterialTree();
+        colourTree.getRoot()
+            .addChild(COLOURED_CATEGORY())
+        ;
+        this.trees.add(colourTree);
+
+        MaterialTree otherTree = new MaterialTree();
+        otherTree.getRoot()
+            .addChild(MUSIC_DISC_CATEGORY())
             .addChild(UTILITY_CATEGORY())
             .addChild(OCEAN_CATEGORY())
-            .addChild(ENCHANTING_CATEGORY())
             .addChild(REDSTONE_CATEGORY())
-            .addChild(MOB_DROP_CATEGORY())
             .addChild(BANNER_CATEGORY())
             .addChild(MATERIALS_CATEGORY())
         ;
-        this.trees.add(tree2);
+        this.trees.add(otherTree);
     }
 
     @Override
@@ -2332,7 +2365,6 @@ public class MaterialTreeManager implements Iterable<MaterialTree> {
                 missingMaterials.remove(materialNode.getTargetMaterial());
             });
         });
-
 
         boolean hasMissingMaterials = !missingMaterials.isEmpty();
 
