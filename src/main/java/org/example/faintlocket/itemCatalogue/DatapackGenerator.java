@@ -21,23 +21,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
+import org.example.faintlocket.itemCatalogue.tree.MaterialTreeManager;
 import org.example.faintlocket.itemCatalogue.tree.nodes.MaterialNode;
 
 public class DatapackGenerator {
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private static final MaterialTree MATERIAL_TREE = new MaterialTree();
+//    private static final MaterialTree MATERIAL_TREE = new MaterialTree();
 
     private static final String dataPackName = "item_catalogue";
-    private static final String datapackDescription = "A full item catalogue for " + Bukkit.getServer().getMinecraftVersion();
+    private static final String datapackDescription =
+        "A full item catalogue for " + Bukkit.getServer().getMinecraftVersion();
     private static final String datapackNamespace = "item_catalogue";
     private static final int packFormat = 61;
 
-    public static String GetDatapackNamespace() {
-        return datapackNamespace;
-    }
+//    public static String GetDatapackNamespace() {
+//        return datapackNamespace;
+//    }
 
     public static void GenerateJSON(CommandSender sender, ItemCatalogue plugin) {
         sender.sendPlainMessage("Generating JSON");
@@ -75,23 +76,27 @@ public class DatapackGenerator {
         AtomicInteger advancementsCreated = new AtomicInteger();
         Set<Material> uniqueMaterials = new HashSet<>();
 
-        MATERIAL_TREE.getRoot().traverse(node -> {
-            try {
-                if (node instanceof MaterialNode mn) {
-                    uniqueMaterials.add(mn.getTargetMaterial());
+        MaterialTreeManager treeManager = new MaterialTreeManager();
+
+        treeManager.forEach(tree -> {
+            tree.getRoot().traverse(node -> {
+                try {
+                    if (node instanceof MaterialNode mn) {
+                        uniqueMaterials.add(mn.getTargetMaterial());
+                    }
+
+                    node.writeAdvancementJSON(advancementFolder);
+                } catch (IOException e) {
+                    String errMsg = "Error generating advancement";
+                    sender.sendMessage(errMsg);
+                    LOGGER.severe(errMsg);
                 }
 
-                node.writeAdvancementJSON(advancementFolder);
-            } catch (IOException e) {
-                String errMsg = "Error generating advancement for: %s".formatted("TODO");
-                sender.sendMessage(errMsg);
-                LOGGER.severe(errMsg);
-            }
+                advancementsCreated.getAndIncrement();
+            });
 
-            advancementsCreated.getAndIncrement();
+            tree.verify();
         });
-
-        MATERIAL_TREE.verify();
 
         sender.sendMessage(
             "Generated %d advancements for %d unique materials in %s".formatted(

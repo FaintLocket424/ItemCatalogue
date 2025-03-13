@@ -1107,7 +1107,7 @@ public class MaterialTree {
             ;
     }
 
-    public static TreeNode FOOD_CATEGORY() {
+    private static TreeNode FOOD_CATEGORY() {
         return new CategoryNode(
             APPLE,
             "category_food",
@@ -2224,28 +2224,28 @@ public class MaterialTree {
             "Your complete item catalogue for " + Bukkit.getServer().getMinecraftVersion()
         );
 
-        this.root
-            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
-            .addChild(COLOURED_CATEGORY())
-            .addChild(MINERALS_CATEGORY())
-            .addChild(WOOD_CATEGORY())
-            .addChild(STONE_CATEGORY())
-            .addChild(COPPER_CATEGORY())
-            .addChild(NATURAL_CATEGORY())
-            .addChild(NETHER_CATEGORY())
-            .addChild(ARCHEOLOGY_CATEGORY())
-            .addChild(CAVE_CATEGORY())
-            .addChild(MUSIC_DISC_CATEGORY())
-            .addChild(SMITHING_CATEGORY())
-            .addChild(END_CATEGORY())
-            .addChild(UTILITY_CATEGORY())
-            .addChild(OCEAN_CATEGORY())
-            .addChild(ENCHANTING_CATEGORY())
-            .addChild(REDSTONE_CATEGORY())
-            .addChild(MOB_DROP_CATEGORY())
-            .addChild(BANNER_CATEGORY())
-            .addChild(BREWING_CATEGORY())
-            .addChild(MATERIALS_CATEGORY())
+//        this.root
+//            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
+//            .addChild(COLOURED_CATEGORY())
+//            .addChild(MINERALS_CATEGORY())
+//            .addChild(WOOD_CATEGORY())
+//            .addChild(STONE_CATEGORY())
+//            .addChild(COPPER_CATEGORY())
+//            .addChild(NATURAL_CATEGORY())
+//            .addChild(NETHER_CATEGORY())
+//            .addChild(ARCHEOLOGY_CATEGORY())
+//            .addChild(CAVE_CATEGORY())
+//            .addChild(MUSIC_DISC_CATEGORY())
+//            .addChild(SMITHING_CATEGORY())
+//            .addChild(END_CATEGORY())
+//            .addChild(UTILITY_CATEGORY())
+//            .addChild(OCEAN_CATEGORY())
+//            .addChild(ENCHANTING_CATEGORY())
+//            .addChild(REDSTONE_CATEGORY())
+//            .addChild(MOB_DROP_CATEGORY())
+//            .addChild(BANNER_CATEGORY())
+//            .addChild(BREWING_CATEGORY())
+//            .addChild(MATERIALS_CATEGORY())
         ;
     }
 
