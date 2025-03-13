@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.example.faintlocket.itemCatalogue.DatapackGenerator;
 import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
 
 public class CategoryNode implements TreeNode {
@@ -19,7 +18,6 @@ public class CategoryNode implements TreeNode {
     @Nullable
     private TreeNode parent = null;
     private final List<TreeNode> children = new ArrayList<>();
-    private MaterialTree materialTree;
 
     public CategoryNode(Material icon, String id, String title, String description) {
         this.icon = icon;
@@ -46,9 +44,9 @@ public class CategoryNode implements TreeNode {
     }
 
     @Override
-    public NamespacedKey getAdvancementKey() {
+    public NamespacedKey getAdvancementKey(String treeNamespace) {
         return new NamespacedKey(
-            this.materialTree.getNamespace(),
+            treeNamespace,
             this.id
         );
     }
@@ -86,16 +84,6 @@ public class CategoryNode implements TreeNode {
     }
 
     @Override
-    public void setTree(MaterialTree materialTree) {
-        this.materialTree = materialTree;
-    }
-
-    @Override
-    public MaterialTree getTree() {
-        return this.materialTree;
-    }
-
-    @Override
     public JsonObject getDisplayObject() {
         // The root object of the display section.
         JsonObject display = new JsonObject();
@@ -110,7 +98,6 @@ public class CategoryNode implements TreeNode {
 
         // Set the description of the advancement.
         display.addProperty("description", this.description);
-
 
         display.addProperty("show_toast", false);
         display.addProperty("announce_to_chat", false);

@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.example.faintlocket.itemCatalogue.DatapackGenerator;
-import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
 
 @SuppressWarnings("UnusedReturnValue")
 public interface TreeNode {
@@ -24,7 +23,6 @@ public interface TreeNode {
 
         getChildren().add(child);
         child.setParent(this);
-        child.setTree(this.getTree());
         return this;
     }
 
@@ -65,7 +63,7 @@ public interface TreeNode {
 
     TreeNode setParent(TreeNode parent);
 
-    NamespacedKey getAdvancementKey();
+    NamespacedKey getAdvancementKey(String treeNamespace);
 
     default void traverse(Consumer<TreeNode> visitor) {
         traversePreOrder(this, visitor);
@@ -83,14 +81,14 @@ public interface TreeNode {
         }
     }
 
-    default void writeAdvancementJSON(File advancementFolder) throws IOException {
+    default void writeAdvancementJSON(File advancementFolder, String treeNamespace) throws IOException {
         // Create root object
         JsonObject root = new JsonObject();
 
         // Set the "parent" tag to the NamespaceKey of the parent advancement.
         TreeNode parent = getParent();
         if (parent != null) {
-            root.addProperty("parent", parent.getAdvancementKey().toString());
+            root.addProperty("parent", parent.getAdvancementKey(treeNamespace).toString());
         }
 
         JsonObject display = getDisplayObject();
@@ -98,7 +96,7 @@ public interface TreeNode {
         root.add("display", display);
         root.add("criteria", criteria);
 
-        String fileName = "%s.json".formatted(getAdvancementKey().getKey());
+        String fileName = "%s.json".formatted(getAdvancementKey(treeNamespace).getKey());
 
         DatapackGenerator.WriteJSONFile(root, advancementFolder, fileName);
     }
@@ -106,8 +104,4 @@ public interface TreeNode {
     JsonObject getDisplayObject();
 
     JsonObject getCriteriaObject();
-
-    void setTree(MaterialTree materialTree);
-
-    MaterialTree getTree();
 }

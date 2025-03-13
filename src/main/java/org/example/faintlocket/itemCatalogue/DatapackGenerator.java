@@ -28,17 +28,11 @@ public class DatapackGenerator {
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-//    private static final MaterialTree MATERIAL_TREE = new MaterialTree();
-
     private static final String dataPackName = "item_catalogue";
     private static final String datapackDescription =
         "A full item catalogue for " + Bukkit.getServer().getMinecraftVersion();
-//    private static final String datapackNamespace = "item_catalogue";
+    public static final String datapackNamespace = "item_catalogue";
     private static final int packFormat = 61;
-
-//    public static String GetDatapackNamespace() {
-//        return datapackNamespace;
-//    }
 
     public static void GenerateJSON(CommandSender sender, ItemCatalogue plugin) {
         sender.sendPlainMessage("Generating JSON");
@@ -58,7 +52,7 @@ public class DatapackGenerator {
         }
 
         // Creating the folders needed for a datapack.
-        // {packName}/data/{namespace}/advancement
+        // {packName}/data/
         File dataFolder = new File(pluginDataPackFolder.getAbsolutePath(), "data");
 
 
@@ -78,6 +72,8 @@ public class DatapackGenerator {
         MaterialTreeManager treeManager = new MaterialTreeManager();
 
         treeManager.forEach(tree -> {
+            // Creating the folders needed for the tree.
+            // {packName}/data/{namespace}/advancement
             File namespaceFolder = new File(dataFolder.getAbsolutePath(), tree.getNamespace());
             File advancementFolder = new File(namespaceFolder.getAbsolutePath(), "advancement");
 
@@ -87,7 +83,7 @@ public class DatapackGenerator {
                         uniqueMaterials.add(mn.getTargetMaterial());
                     }
 
-                    node.writeAdvancementJSON(advancementFolder);
+                    node.writeAdvancementJSON(advancementFolder, tree.getNamespace());
                 } catch (IOException e) {
                     String errMsg = "Error generating advancement";
                     sender.sendMessage(errMsg);
@@ -96,9 +92,9 @@ public class DatapackGenerator {
 
                 advancementsCreated.getAndIncrement();
             });
-
-            tree.verify();
         });
+
+        treeManager.verify();
 
         sender.sendMessage(
             "Generated %d advancements for %d unique materials in %s".formatted(
