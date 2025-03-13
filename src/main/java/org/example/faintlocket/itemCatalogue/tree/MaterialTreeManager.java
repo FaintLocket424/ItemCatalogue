@@ -669,7 +669,7 @@ public class MaterialTreeManager implements Iterable<MaterialTree> {
                         GOLD_NUGGET
                     ))
                     .addChildrenFromNodes(List.of(
-                        new MaterialNode(CREAKING_HEART),
+                        new PlaceholderNode(),
                         new PlaceholderNode(),
                         new MaterialNode(RESIN_BRICK),
                         new MaterialNode(RESIN_BRICKS, true),
@@ -2089,7 +2089,8 @@ public class MaterialTreeManager implements Iterable<MaterialTree> {
                 HONEYCOMB_BLOCK,
                 OCHRE_FROGLIGHT,
                 VERDANT_FROGLIGHT,
-                PEARLESCENT_FROGLIGHT
+                PEARLESCENT_FROGLIGHT,
+                CREAKING_HEART
             ))
             .addChild(new CategoryNode(
                     WITHER_SKELETON_SKULL,
