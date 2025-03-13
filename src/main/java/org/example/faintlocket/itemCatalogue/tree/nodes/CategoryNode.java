@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.example.faintlocket.itemCatalogue.DatapackGenerator;
+import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
 
 public class CategoryNode implements TreeNode {
 
@@ -18,6 +19,7 @@ public class CategoryNode implements TreeNode {
     @Nullable
     private TreeNode parent = null;
     private final List<TreeNode> children = new ArrayList<>();
+    private MaterialTree materialTree;
 
     public CategoryNode(Material icon, String id, String title, String description) {
         this.icon = icon;
@@ -46,7 +48,7 @@ public class CategoryNode implements TreeNode {
     @Override
     public NamespacedKey getAdvancementKey() {
         return new NamespacedKey(
-            DatapackGenerator.GetDatapackNamespace(),
+            this.materialTree.getNamespace(),
             this.id
         );
     }
@@ -81,6 +83,16 @@ public class CategoryNode implements TreeNode {
         criteria.add("tick", criterion);
 
         return criteria;
+    }
+
+    @Override
+    public void setTree(MaterialTree materialTree) {
+        this.materialTree = materialTree;
+    }
+
+    @Override
+    public MaterialTree getTree() {
+        return this.materialTree;
     }
 
     @Override

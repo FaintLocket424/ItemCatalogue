@@ -10,9 +10,11 @@ import java.util.function.Consumer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.example.faintlocket.itemCatalogue.DatapackGenerator;
+import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
 
 @SuppressWarnings("UnusedReturnValue")
 public interface TreeNode {
+
     Material END_CARD_MATERIAL = ORANGE_STAINED_GLASS_PANE;
 
     default TreeNode addChild(TreeNode child) {
@@ -22,6 +24,7 @@ public interface TreeNode {
 
         getChildren().add(child);
         child.setParent(this);
+        child.setTree(this.getTree());
         return this;
     }
 
@@ -100,7 +103,11 @@ public interface TreeNode {
         DatapackGenerator.WriteJSONFile(root, advancementFolder, fileName);
     }
 
-    JsonObject getDisplayObject() ;
+    JsonObject getDisplayObject();
 
     JsonObject getCriteriaObject();
+
+    void setTree(MaterialTree materialTree);
+
+    MaterialTree getTree();
 }

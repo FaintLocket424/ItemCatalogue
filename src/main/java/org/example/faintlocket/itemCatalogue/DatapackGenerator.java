@@ -33,7 +33,7 @@ public class DatapackGenerator {
     private static final String dataPackName = "item_catalogue";
     private static final String datapackDescription =
         "A full item catalogue for " + Bukkit.getServer().getMinecraftVersion();
-    private static final String datapackNamespace = "item_catalogue";
+//    private static final String datapackNamespace = "item_catalogue";
     private static final int packFormat = 61;
 
 //    public static String GetDatapackNamespace() {
@@ -60,8 +60,7 @@ public class DatapackGenerator {
         // Creating the folders needed for a datapack.
         // {packName}/data/{namespace}/advancement
         File dataFolder = new File(pluginDataPackFolder.getAbsolutePath(), "data");
-        File namespaceFolder = new File(dataFolder.getAbsolutePath(), datapackNamespace);
-        File advancementFolder = new File(namespaceFolder.getAbsolutePath(), "advancement");
+
 
         // Write the metadata into the top level of the datapack.
         try {
@@ -79,6 +78,9 @@ public class DatapackGenerator {
         MaterialTreeManager treeManager = new MaterialTreeManager();
 
         treeManager.forEach(tree -> {
+            File namespaceFolder = new File(dataFolder.getAbsolutePath(), tree.getNamespace());
+            File advancementFolder = new File(namespaceFolder.getAbsolutePath(), "advancement");
+
             tree.getRoot().traverse(node -> {
                 try {
                     if (node instanceof MaterialNode mn) {

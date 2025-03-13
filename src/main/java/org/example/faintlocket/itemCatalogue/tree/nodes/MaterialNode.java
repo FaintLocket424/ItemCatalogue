@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.example.faintlocket.itemCatalogue.DatapackGenerator;
+import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
 import org.jetbrains.annotations.NotNull;
 
 public class MaterialNode implements TreeNode {
@@ -22,6 +23,7 @@ public class MaterialNode implements TreeNode {
     private static final Map<Material, Integer> MATERIAL_MAP = new HashMap<>();
     private final int id;
     private final boolean allowDuplicates;
+    private MaterialTree materialTree;
 
     public MaterialNode(Material targetMaterial, boolean allowDuplicates) {
         this.targetMaterial = targetMaterial;
@@ -58,7 +60,7 @@ public class MaterialNode implements TreeNode {
     @Override
     public NamespacedKey getAdvancementKey() {
         return new NamespacedKey(
-            DatapackGenerator.GetDatapackNamespace(),
+            this.getTree().getNamespace(),
             targetMaterial.getKey().getKey() +
                 (id > 1 ? "_" + id : "")
         );
@@ -174,5 +176,15 @@ public class MaterialNode implements TreeNode {
         criteria.add("get_item", criterion);
 
         return criteria;
+    }
+
+    @Override
+    public void setTree(MaterialTree materialTree) {
+        this.materialTree = materialTree;
+    }
+
+    @Override
+    public MaterialTree getTree() {
+        return this.materialTree;
     }
 }

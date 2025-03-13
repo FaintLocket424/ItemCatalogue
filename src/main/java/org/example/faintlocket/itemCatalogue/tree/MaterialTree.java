@@ -34,6 +34,7 @@ public class MaterialTree {
             .orElseThrow();
 
     private static final String HeaderCharacter = "=";
+    private final String namespace;
 
     @Contract(pure = true)
     public static @NotNull @Unmodifiable Set<Material> CREATE_UNOBTAINIUM() {
@@ -2216,13 +2217,17 @@ public class MaterialTree {
         return root;
     }
 
-    public MaterialTree() {
+    public MaterialTree(String namespace) {
+        this.namespace = namespace;
+
         this.root = new CategoryNode(
             WRITABLE_BOOK,
             "root",
             "Item Catalogue",
             "Your complete item catalogue for " + Bukkit.getServer().getMinecraftVersion()
         );
+
+        this.root.setTree(this);
 
 //        this.root
 //            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
@@ -2247,6 +2252,10 @@ public class MaterialTree {
 //            .addChild(BREWING_CATEGORY())
 //            .addChild(MATERIALS_CATEGORY())
         ;
+    }
+
+    public String getNamespace() {
+        return this.namespace;
     }
 
     public void verify() {
