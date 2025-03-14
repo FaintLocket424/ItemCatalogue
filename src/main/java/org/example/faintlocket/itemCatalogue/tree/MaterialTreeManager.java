@@ -14,9 +14,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bukkit.Material;
+import org.bukkit.potion.PotionType;
 import org.example.faintlocket.itemCatalogue.tree.nodes.CategoryNode;
 import org.example.faintlocket.itemCatalogue.tree.nodes.MaterialNode;
 import org.example.faintlocket.itemCatalogue.tree.nodes.PlaceholderNode;
+import org.example.faintlocket.itemCatalogue.tree.nodes.PotionNode;
 import org.example.faintlocket.itemCatalogue.tree.nodes.TreeNode;
 import org.jetbrains.annotations.NotNull;
 
@@ -2179,10 +2181,9 @@ public class MaterialTreeManager implements Iterable<MaterialTree> {
                     "Potions",
                     ""
                 )
-                    .addChildrenFromMaterials(List.of(
-                        POTION,
-                        SPLASH_POTION,
-                        LINGERING_POTION
+                    .addChildrenFromNodes(List.of(
+                        new PotionNode(POTION, PotionType.FIRE_RESISTANCE),
+                        new PotionNode(POTION, PotionType.STRENGTH)
                     ))
             )
             ;
@@ -2211,18 +2212,18 @@ public class MaterialTreeManager implements Iterable<MaterialTree> {
     private final Set<MaterialTree> trees = new HashSet<>();
 
     public MaterialTreeManager() {
-        MaterialTree enchantingTree = new MaterialTree();
-        enchantingTree.getRoot()
-            .addChild(ENCHANTING_CATEGORY())
-        ;
-        this.trees.add(enchantingTree);
-
-        MaterialTree weaponsAndToolsTree = new MaterialTree();
-        weaponsAndToolsTree.getRoot()
-            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
-            .addChild(SMITHING_CATEGORY())
-        ;
-        this.trees.add(weaponsAndToolsTree);
+//        MaterialTree enchantingTree = new MaterialTree();
+//        enchantingTree.getRoot()
+//            .addChild(ENCHANTING_CATEGORY())
+//        ;
+//        this.trees.add(enchantingTree);
+//
+//        MaterialTree weaponsAndToolsTree = new MaterialTree();
+//        weaponsAndToolsTree.getRoot()
+//            .addChild(TOOLS_AND_WEAPONRY_CATEGORY())
+//            .addChild(SMITHING_CATEGORY())
+//        ;
+//        this.trees.add(weaponsAndToolsTree);
 
         MaterialTree brewingTree = new MaterialTree();
         brewingTree.getRoot()
@@ -2230,52 +2231,52 @@ public class MaterialTreeManager implements Iterable<MaterialTree> {
         ;
         this.trees.add(brewingTree);
 
-        MaterialTree woodTree = new MaterialTree();
-        woodTree.getRoot()
-            .addChild(WOOD_CATEGORY())
-        ;
-        this.trees.add(woodTree);
-
-        MaterialTree undergroundTree = new MaterialTree();
-        undergroundTree.getRoot()
-            .addChild(MINERALS_CATEGORY())
-            .addChild(STONE_CATEGORY())
-            .addChild(COPPER_CATEGORY())
-            .addChild(CAVE_CATEGORY())
-            .addChild(ARCHEOLOGY_CATEGORY())
-        ;
-        this.trees.add(undergroundTree);
-
-        MaterialTree dimensionsTree = new MaterialTree();
-        dimensionsTree.getRoot()
-            .addChild(NETHER_CATEGORY())
-            .addChild(END_CATEGORY())
-        ;
-        this.trees.add(dimensionsTree);
-
-        MaterialTree natureTree = new MaterialTree();
-        natureTree.getRoot()
-            .addChild(NATURAL_CATEGORY())
-            .addChild(MOB_DROP_CATEGORY())
-        ;
-        this.trees.add(natureTree);
-
-        MaterialTree colourTree = new MaterialTree();
-        colourTree.getRoot()
-            .addChild(COLOURED_CATEGORY())
-        ;
-        this.trees.add(colourTree);
-
-        MaterialTree otherTree = new MaterialTree();
-        otherTree.getRoot()
-            .addChild(MUSIC_DISC_CATEGORY())
-            .addChild(UTILITY_CATEGORY())
-            .addChild(OCEAN_CATEGORY())
-            .addChild(REDSTONE_CATEGORY())
-            .addChild(BANNER_CATEGORY())
-            .addChild(MATERIALS_CATEGORY())
-        ;
-        this.trees.add(otherTree);
+//        MaterialTree woodTree = new MaterialTree();
+//        woodTree.getRoot()
+//            .addChild(WOOD_CATEGORY())
+//        ;
+//        this.trees.add(woodTree);
+//
+//        MaterialTree undergroundTree = new MaterialTree();
+//        undergroundTree.getRoot()
+//            .addChild(MINERALS_CATEGORY())
+//            .addChild(STONE_CATEGORY())
+//            .addChild(COPPER_CATEGORY())
+//            .addChild(CAVE_CATEGORY())
+//            .addChild(ARCHEOLOGY_CATEGORY())
+//        ;
+//        this.trees.add(undergroundTree);
+//
+//        MaterialTree dimensionsTree = new MaterialTree();
+//        dimensionsTree.getRoot()
+//            .addChild(NETHER_CATEGORY())
+//            .addChild(END_CATEGORY())
+//        ;
+//        this.trees.add(dimensionsTree);
+//
+//        MaterialTree natureTree = new MaterialTree();
+//        natureTree.getRoot()
+//            .addChild(NATURAL_CATEGORY())
+//            .addChild(MOB_DROP_CATEGORY())
+//        ;
+//        this.trees.add(natureTree);
+//
+//        MaterialTree colourTree = new MaterialTree();
+//        colourTree.getRoot()
+//            .addChild(COLOURED_CATEGORY())
+//        ;
+//        this.trees.add(colourTree);
+//
+//        MaterialTree otherTree = new MaterialTree();
+//        otherTree.getRoot()
+//            .addChild(MUSIC_DISC_CATEGORY())
+//            .addChild(UTILITY_CATEGORY())
+//            .addChild(OCEAN_CATEGORY())
+//            .addChild(REDSTONE_CATEGORY())
+//            .addChild(BANNER_CATEGORY())
+//            .addChild(MATERIALS_CATEGORY())
+//        ;
+//        this.trees.add(otherTree);
     }
 
     @Override

@@ -8,10 +8,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.example.faintlocket.itemCatalogue.DatapackGenerator;
 
-@SuppressWarnings("UnusedReturnValue")
 public interface TreeNode {
 
     Material END_CARD_MATERIAL = ORANGE_STAINED_GLASS_PANE;
@@ -63,7 +61,7 @@ public interface TreeNode {
 
     TreeNode setParent(TreeNode parent);
 
-    NamespacedKey getAdvancementKey(String treeNamespace);
+    String getAdvancementKey();
 
     default void traverse(Consumer<TreeNode> visitor) {
         traversePreOrder(this, visitor);
@@ -81,14 +79,14 @@ public interface TreeNode {
         }
     }
 
-    default void writeAdvancementJSON(File advancementFolder, String treeNamespace) throws IOException {
+    default void writeAdvancementJSON(File advancementFolder, String treeSubfolder) throws IOException {
         // Create root object
         JsonObject root = new JsonObject();
 
         // Set the "parent" tag to the NamespaceKey of the parent advancement.
         TreeNode parent = getParent();
         if (parent != null) {
-            root.addProperty("parent", parent.getAdvancementKey(treeNamespace).toString());
+            root.addProperty("parent", "%s:%s/%s".formatted(DatapackGenerator.datapackNamespace, treeSubfolder, parent.getAdvancementKey()));
         }
 
         JsonObject display = getDisplayObject();
@@ -96,7 +94,7 @@ public interface TreeNode {
         root.add("display", display);
         root.add("criteria", criteria);
 
-        String fileName = "%s.json".formatted(getAdvancementKey(treeNamespace).getKey());
+        String fileName = "%s.json".formatted(getAdvancementKey());
 
         DatapackGenerator.WriteJSONFile(root, advancementFolder, fileName);
     }

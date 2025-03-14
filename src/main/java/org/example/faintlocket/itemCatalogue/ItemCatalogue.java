@@ -20,4 +20,14 @@ public class ItemCatalogue extends JavaPlugin {
         DatapackGenerator.GenerateJSON(getServer().getConsoleSender(), this);
         LOGGER.info("Generated JSON");
     }
+
+    /*
+    A MaterialTreeManager which stores multiple MaterialTree instances.
+
+    A MaterialTree is made up of TreeNode instances arranged into a tree structure.
+
+    A TreeNode is either a CategoryNode, a PlaceholderNode, or a MaterialNode.
+
+    Each TreeNode has to be written to a JSON file.
+     */
 }

@@ -2,66 +2,25 @@ package org.example.faintlocket.itemCatalogue.tree.nodes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 
-public class MaterialNode implements TreeNode {
+public class PotionNode extends MaterialNode {
 
-    private final Material targetMaterial;
-    @Nullable
-    private TreeNode parent = null;
-    private final List<TreeNode> children = new ArrayList<>();
+    private final PotionType potionType;
 
-    private static final Map<Material, Integer> MATERIAL_MAP = new HashMap<>();
-    private final int id;
-    private final boolean allowDuplicates;
+    public PotionNode(Material targetMaterial, PotionType potionType) {
+        super(targetMaterial, true);
 
-    public MaterialNode(Material targetMaterial, boolean allowDuplicates) {
-        this.targetMaterial = targetMaterial;
-        this.id = MATERIAL_MAP.getOrDefault(targetMaterial, 0) + 1;
-        this.allowDuplicates = allowDuplicates;
-
-        MATERIAL_MAP.put(targetMaterial, this.id);
+        this.potionType = potionType;
     }
 
-    public MaterialNode(Material targetMaterial) {
-        this(targetMaterial, false);
-    }
+    private @NotNull NamespacedKey getTranslationKey() {
+        String key = "item.minecraft.potion.effect." + potionType.getKey().getKey();
 
-    public boolean duplicatesAllowed() {
-        return allowDuplicates;
-    }
-
-    public List<TreeNode> getChildren() {
-        return children;
-    }
-
-    @Override
-    @Nullable
-    public TreeNode getParent() {
-        return parent;
-    }
-
-    @Override
-    public TreeNode setParent(TreeNode parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    @Override
-    public String getAdvancementKey() {
-        return targetMaterial.getKey().getKey() + (id > 1 ? "_" + id : "");
-    }
-
-    public NamespacedKey getIconKey() {
-        return targetMaterial.getKey();
+        return NamespacedKey.minecraft(key);
     }
 
     private JsonArray getTitleObject() {
@@ -73,17 +32,6 @@ public class MaterialNode implements TreeNode {
         return titleObj;
     }
 
-    private @NotNull NamespacedKey getTranslationKey() {
-        String key = targetMaterial.isRecord()
-            ? "jukebox_song.minecraft." + targetMaterial.name().substring("MUSIC_DISC_".length())
-            .toLowerCase() :
-            targetMaterial.isItem()
-                ? targetMaterial.getItemTranslationKey()
-                : targetMaterial.getBlockTranslationKey();
-
-        return NamespacedKey.minecraft(key == null ? "KEY_NOT_FOUND" : key);
-    }
-
     private JsonArray getDescriptionArray() {
         JsonArray description = new JsonArray();
         description.add("Obtain ");
@@ -92,14 +40,6 @@ public class MaterialNode implements TreeNode {
         description.add(translatedDescriptionPart);
 
         return description;
-    }
-    
-    public NamespacedKey getMaterialKey() {
-        return this.targetMaterial.getKey();
-    }
-
-    public Material getTargetMaterial() {
-        return this.targetMaterial;
     }
 
     @Override
@@ -110,6 +50,13 @@ public class MaterialNode implements TreeNode {
         // Set the id of the icon of the advancement.
         JsonObject icon = new JsonObject();
         icon.addProperty("id", getIconKey().toString());
+
+        JsonObject components = new JsonObject();
+        JsonObject potionContents = new JsonObject();
+        potionContents.addProperty("potion", potionType.key().value());
+        components.add("minecraft:potion_contents", potionContents);
+        icon.add("components", components);
+
         display.add("icon", icon);
 
         // Set the title of the advancement.
@@ -158,10 +105,14 @@ public class MaterialNode implements TreeNode {
 
         JsonArray itemsArray = new JsonArray();
         JsonObject itemObject = new JsonObject();
-        JsonArray itemIds = new JsonArray();
 
-        itemIds.add(getMaterialKey().toString());
-        itemObject.add("items", itemIds);
+        JsonObject components = new JsonObject();
+        JsonObject potionContents = new JsonObject();
+        potionContents.addProperty("potion", potionType.key().value());
+        components.add("minecraft:potion_contents", potionContents);
+        itemObject.add("components", components);
+
+        itemObject.addProperty("items", getMaterialKey().toString());
         itemsArray.add(itemObject);
         conditions.add("items", itemsArray);
 

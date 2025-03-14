@@ -1,33 +1,15 @@
 package org.example.faintlocket.itemCatalogue.tree;
 
-import static org.bukkit.Material.*;
-import static org.example.faintlocket.itemCatalogue.DatapackGenerator.datapackNamespace;
-import static org.example.faintlocket.itemCatalogue.ItemCatalogue.LOGGER;
+import static org.bukkit.Material.WRITABLE_BOOK;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.example.faintlocket.itemCatalogue.tree.nodes.CategoryNode;
-import org.example.faintlocket.itemCatalogue.tree.nodes.MaterialNode;
-import org.example.faintlocket.itemCatalogue.tree.nodes.PlaceholderNode;
-import org.example.faintlocket.itemCatalogue.tree.nodes.TreeNode;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
 @SuppressWarnings("DuplicatedCode")
 public class MaterialTree {
     private static int pageId = 1;
 
-    private final String namespace;
+    private final String subfolder;
 
     private final CategoryNode root;
 
@@ -36,7 +18,7 @@ public class MaterialTree {
     }
 
     public MaterialTree() {
-        this.namespace = "%s_page_%d".formatted(datapackNamespace, pageId);
+        this.subfolder = "page_%d".formatted(pageId);
 
         this.root = new CategoryNode(
             WRITABLE_BOOK,
@@ -72,7 +54,7 @@ public class MaterialTree {
 //        ;
     }
 
-    public String getNamespace() {
-        return this.namespace;
+    public String getSubfolder() {
+        return this.subfolder;
     }
 }

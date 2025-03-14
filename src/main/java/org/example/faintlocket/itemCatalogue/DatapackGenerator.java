@@ -52,9 +52,10 @@ public class DatapackGenerator {
         }
 
         // Creating the folders needed for a datapack.
-        // {packName}/data/
+        // {packName}/data/{namespace}/advancement
         File dataFolder = new File(pluginDataPackFolder.getAbsolutePath(), "data");
-
+        File namespaceFolder = new File(dataFolder.getAbsolutePath(), datapackNamespace);
+        File advancementFolder = new File(namespaceFolder.getAbsolutePath(), "advancement");
 
         // Write the metadata into the top level of the datapack.
         try {
@@ -73,9 +74,9 @@ public class DatapackGenerator {
 
         treeManager.forEach(tree -> {
             // Creating the folders needed for the tree.
-            // {packName}/data/{namespace}/advancement
-            File namespaceFolder = new File(dataFolder.getAbsolutePath(), tree.getNamespace());
-            File advancementFolder = new File(namespaceFolder.getAbsolutePath(), "advancement");
+            // {packName}/data/{namespace}/advancement/{subfolder}
+            File advancementSubFolder = new File(advancementFolder.getAbsolutePath(),
+                tree.getSubfolder());
 
             tree.getRoot().traverse(node -> {
                 try {
@@ -83,7 +84,7 @@ public class DatapackGenerator {
                         uniqueMaterials.add(mn.getTargetMaterial());
                     }
 
-                    node.writeAdvancementJSON(advancementFolder, tree.getNamespace());
+                    node.writeAdvancementJSON(advancementSubFolder, tree.getSubfolder());
                 } catch (IOException e) {
                     String errMsg = "Error generating advancement";
                     sender.sendMessage(errMsg);

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.example.faintlocket.itemCatalogue.tree.MaterialTree;
 
 public class CategoryNode implements TreeNode {
 
@@ -44,11 +43,8 @@ public class CategoryNode implements TreeNode {
     }
 
     @Override
-    public NamespacedKey getAdvancementKey(String treeNamespace) {
-        return new NamespacedKey(
-            treeNamespace,
-            this.id
-        );
+    public String getAdvancementKey() {
+        return this.id;
     }
 
     public NamespacedKey getIconKey() {
