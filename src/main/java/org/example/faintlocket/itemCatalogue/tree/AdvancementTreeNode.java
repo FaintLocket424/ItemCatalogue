@@ -1,17 +1,14 @@
 package org.example.faintlocket.itemCatalogue.tree;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.example.faintlocket.itemCatalogue.tree.nodes.AdvancementTreeData;
-import org.example.faintlocket.itemCatalogue.tree.nodes.ItemAdvancement;
-import org.example.faintlocket.itemCatalogue.tree.nodes.PlaceholderAdvancement;
 
 public class AdvancementTreeNode implements TreeNode<AdvancementTreeData> {
 
     private final AdvancementTreeData nodeData;
     private TreeNode<AdvancementTreeData> parent = null;
-    private List<TreeNode<AdvancementTreeData>> children = new ArrayList<>();
+    private final List<TreeNode<AdvancementTreeData>> children = new ArrayList<>();
 
     public AdvancementTreeNode(AdvancementTreeData nodeData) {
         this.nodeData = nodeData;
@@ -43,21 +40,5 @@ public class AdvancementTreeNode implements TreeNode<AdvancementTreeData> {
     public List<TreeNode<AdvancementTreeData>> getChildren() {
         return this.children;
     }
-
-    public AdvancementTreeNode addChildrenFromData(List<ItemAdvancement> data) {
-        var root = new AdvancementTreeNode(data.getFirst());
-        var currentNode = root;
-
-        for (int i = 1; i < data.size(); i++) {
-            var node = new AdvancementTreeNode(data.get(i));
-            currentNode.addChild(node);
-            currentNode = node;
-        }
-
-        currentNode.addChild(new AdvancementTreeNode(new PlaceholderAdvancement()));
-
-        return root;
-    }
-
 
 }

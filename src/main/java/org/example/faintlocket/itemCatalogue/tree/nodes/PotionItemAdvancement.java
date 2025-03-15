@@ -16,7 +16,11 @@ public abstract class PotionItemAdvancement extends ItemAdvancement {
 
     @Override
     protected NamespacedKey getTranslationKey() {
-        String key = "item.minecraft.potion.effect." + potionType.getKey().getKey();
+        String effect_key = potionType.getKey().getKey()
+            .replaceFirst("long_", "")
+            .replaceFirst("strong_", "");
+
+        String key = "item.minecraft.potion.effect." + effect_key;
 
         return NamespacedKey.minecraft(key);
     }
