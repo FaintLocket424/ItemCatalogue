@@ -21,8 +21,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.example.faintlocket.itemCatalogue.tree.MaterialTreeManager;
-import org.example.faintlocket.itemCatalogue.tree.nodes.MaterialNode;
+import org.example.faintlocket.itemCatalogue.tree.AdvancementTreeManager;
+import org.example.faintlocket.itemCatalogue.tree.TreeNode;
+import org.example.faintlocket.itemCatalogue.tree.nodes.ItemAdvancement;
+import org.example.faintlocket.itemCatalogue.tree.nodes.AdvancementTreeData;
 
 public class DatapackGenerator {
 
@@ -70,7 +72,7 @@ public class DatapackGenerator {
         AtomicInteger advancementsCreated = new AtomicInteger();
         Set<Material> uniqueMaterials = new HashSet<>();
 
-        MaterialTreeManager treeManager = new MaterialTreeManager();
+        AdvancementTreeManager treeManager = new AdvancementTreeManager();
 
         treeManager.forEach(tree -> {
             // Creating the folders needed for the tree.
@@ -78,13 +80,16 @@ public class DatapackGenerator {
             File advancementSubFolder = new File(advancementFolder.getAbsolutePath(),
                 tree.getSubfolder());
 
-            tree.getRoot().traverse(node -> {
+            tree.traverse(node -> {
+                AdvancementTreeData data = node.getValue();
+                TreeNode<AdvancementTreeData> parent = node.getParent();
+
                 try {
-                    if (node instanceof MaterialNode mn) {
-                        uniqueMaterials.add(mn.getTargetMaterial());
+                    if (data instanceof ItemAdvancement itemAdvancement) {
+                        uniqueMaterials.add(itemAdvancement.getTargetMaterial());
                     }
 
-                    node.writeAdvancementJSON(advancementSubFolder, tree.getSubfolder());
+                    data.writeAdvancementJSON(advancementSubFolder, tree.getSubfolder(), parent);
                 } catch (IOException e) {
                     String errMsg = "Error generating advancement";
                     sender.sendMessage(errMsg);

@@ -4,15 +4,17 @@ import static org.bukkit.Material.ORANGE_STAINED_GLASS_PANE;
 
 import org.bukkit.Material;
 
-public class PlaceholderNode extends CategoryNode {
+public class PlaceholderAdvancement extends CategoryAdvancement {
+
     private static int counter = 0;
     private static final Material PLACEHOLDER_MATERIAL = ORANGE_STAINED_GLASS_PANE;
 
-    public PlaceholderNode() {
-        this(PLACEHOLDER_MATERIAL);
+    public PlaceholderAdvancement() {
+        super(PLACEHOLDER_MATERIAL, "placeholder_" + counter++, "", "");
     }
 
-    public PlaceholderNode(Material icon) {
-        super(icon, "placeholder_" + counter++, "", "");
+    @Override
+    protected String getFrameProperty() {
+        return "task";
     }
 }
