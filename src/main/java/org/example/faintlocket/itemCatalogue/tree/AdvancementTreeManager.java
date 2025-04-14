@@ -162,160 +162,165 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.bukkit.Material;
 import org.bukkit.potion.PotionType;
 import org.example.faintlocket.itemCatalogue.tree.nodes.AdvancementTreeData;
 import org.example.faintlocket.itemCatalogue.tree.nodes.CategoryAdvancement;
 import org.example.faintlocket.itemCatalogue.tree.nodes.ItemAdvancement;
-import org.example.faintlocket.itemCatalogue.tree.nodes.LingeringPotionItemAdvancement;
-import org.example.faintlocket.itemCatalogue.tree.nodes.RegularPotionItemAdvancement;
-import org.example.faintlocket.itemCatalogue.tree.nodes.SplashPotionItemAdvancement;
+import org.example.faintlocket.itemCatalogue.tree.nodes.potions.LingeringPotionItemAdvancement;
+import org.example.faintlocket.itemCatalogue.tree.nodes.potions.PotionItemAdvancement;
+import org.example.faintlocket.itemCatalogue.tree.nodes.potions.RegularPotionItemAdvancement;
+import org.example.faintlocket.itemCatalogue.tree.nodes.potions.SplashPotionItemAdvancement;
 import org.jetbrains.annotations.NotNull;
 
 public class AdvancementTreeManager implements Iterable<AdvancementTree> {
 
-    private static final int MaxErrorListLength = 25;
+  private static final int MaxErrorListLength = 25;
 
-    private static final int ErrorPrintWidth =
-        7 + Arrays.stream(Material.values())
-            .map(m -> m.name().length())
-            .max(Integer::compare)
-            .orElseThrow();
+  private static final int ErrorPrintWidth =
+      7 + Arrays.stream(Material.values())
+          .map(m -> m.name().length())
+          .max(Integer::compare)
+          .orElseThrow();
 
-    private static final String HeaderCharacter = "=";
+  private static final String HeaderCharacter = "=";
 
-    public static Set<Material> CREATE_UNOBTAINIUM() {
-        return Set.of(
-            AIR,
-            BEDROCK,
-            REINFORCED_DEEPSLATE,
-            BUDDING_AMETHYST,
-            BARRIER,
-            STRUCTURE_BLOCK,
-            STRUCTURE_VOID,
-            LIGHT,
-            JIGSAW,
-            CHORUS_PLANT,
-            DIRT_PATH,
-            END_PORTAL_FRAME,
-            END_PORTAL,
-            NETHER_PORTAL,
-            FROGSPAWN,
-            FARMLAND,
-            INFESTED_CHISELED_STONE_BRICKS,
-            INFESTED_CRACKED_STONE_BRICKS,
-            INFESTED_COBBLESTONE,
-            INFESTED_DEEPSLATE,
-            INFESTED_MOSSY_STONE_BRICKS,
-            INFESTED_STONE,
-            INFESTED_STONE_BRICKS,
-            SPAWNER,
-            TRIAL_SPAWNER,
-            VAULT,
-            WATER,
-            LAVA,
-            COMMAND_BLOCK,
-            CHAIN_COMMAND_BLOCK,
-            REPEATING_COMMAND_BLOCK,
-            COMMAND_BLOCK_MINECART,
-            DEBUG_STICK,
-            KNOWLEDGE_BOOK,
-            PETRIFIED_OAK_SLAB,
-            COCOA,
-            FILLED_MAP,
+  public static Set<Material> CREATE_UNOBTAINIUM() {
+    return Set.of(
+        AIR,
+        BEDROCK,
+        REINFORCED_DEEPSLATE,
+        BUDDING_AMETHYST,
+        BARRIER,
+        STRUCTURE_BLOCK,
+        STRUCTURE_VOID,
+        LIGHT,
+        JIGSAW,
+        CHORUS_PLANT,
+        DIRT_PATH,
+        END_PORTAL_FRAME,
+        END_PORTAL,
+        NETHER_PORTAL,
+        FROGSPAWN,
+        FARMLAND,
+        INFESTED_CHISELED_STONE_BRICKS,
+        INFESTED_CRACKED_STONE_BRICKS,
+        INFESTED_COBBLESTONE,
+        INFESTED_DEEPSLATE,
+        INFESTED_MOSSY_STONE_BRICKS,
+        INFESTED_STONE,
+        INFESTED_STONE_BRICKS,
+        SPAWNER,
+        TRIAL_SPAWNER,
+        VAULT,
+        WATER,
+        LAVA,
+        COMMAND_BLOCK,
+        CHAIN_COMMAND_BLOCK,
+        REPEATING_COMMAND_BLOCK,
+        COMMAND_BLOCK_MINECART,
+        DEBUG_STICK,
+        KNOWLEDGE_BOOK,
+        PETRIFIED_OAK_SLAB,
+        COCOA,
+        FILLED_MAP,
 
-            ALLAY_SPAWN_EGG,
-            ARMADILLO_SPAWN_EGG,
-            AXOLOTL_SPAWN_EGG,
-            BAT_SPAWN_EGG,
-            BEE_SPAWN_EGG,
-            BLAZE_SPAWN_EGG,
-            BOGGED_SPAWN_EGG,
-            BREEZE_SPAWN_EGG,
-            CAMEL_SPAWN_EGG,
-            CAT_SPAWN_EGG,
-            CAVE_SPIDER_SPAWN_EGG,
-            CHICKEN_SPAWN_EGG,
-            COD_SPAWN_EGG,
-            COW_SPAWN_EGG,
-            CREAKING_SPAWN_EGG,
-            CREEPER_SPAWN_EGG,
-            DOLPHIN_SPAWN_EGG,
-            DONKEY_SPAWN_EGG,
-            DROWNED_SPAWN_EGG,
-            ELDER_GUARDIAN_SPAWN_EGG,
-            ENDERMAN_SPAWN_EGG,
-            ENDER_DRAGON_SPAWN_EGG,
-            ENDERMITE_SPAWN_EGG,
-            EVOKER_SPAWN_EGG,
-            FOX_SPAWN_EGG,
-            FROG_SPAWN_EGG,
-            GHAST_SPAWN_EGG,
-            GLOW_SQUID_SPAWN_EGG,
-            GOAT_SPAWN_EGG,
-            GUARDIAN_SPAWN_EGG,
-            HOGLIN_SPAWN_EGG,
-            HORSE_SPAWN_EGG,
-            HUSK_SPAWN_EGG,
-            IRON_GOLEM_SPAWN_EGG,
-            LLAMA_SPAWN_EGG,
-            MAGMA_CUBE_SPAWN_EGG,
-            MOOSHROOM_SPAWN_EGG,
-            MULE_SPAWN_EGG,
-            OCELOT_SPAWN_EGG,
-            PANDA_SPAWN_EGG,
-            PARROT_SPAWN_EGG,
-            PHANTOM_SPAWN_EGG,
-            PIG_SPAWN_EGG,
-            PIGLIN_SPAWN_EGG,
-            PIGLIN_BRUTE_SPAWN_EGG,
-            PILLAGER_SPAWN_EGG,
-            POLAR_BEAR_SPAWN_EGG,
-            PUFFERFISH_SPAWN_EGG,
-            RABBIT_SPAWN_EGG,
-            RAVAGER_SPAWN_EGG,
-            SALMON_SPAWN_EGG,
-            SHEEP_SPAWN_EGG,
-            SHULKER_SPAWN_EGG,
-            SILVERFISH_SPAWN_EGG,
-            SKELETON_SPAWN_EGG,
-            SKELETON_HORSE_SPAWN_EGG,
-            SLIME_SPAWN_EGG,
-            SNIFFER_SPAWN_EGG,
-            SNOW_GOLEM_SPAWN_EGG,
-            SPIDER_SPAWN_EGG,
-            SQUID_SPAWN_EGG,
-            STRAY_SPAWN_EGG,
-            STRIDER_SPAWN_EGG,
-            TADPOLE_SPAWN_EGG,
-            TRADER_LLAMA_SPAWN_EGG,
-            TROPICAL_FISH_SPAWN_EGG,
-            TURTLE_SPAWN_EGG,
-            VEX_SPAWN_EGG,
-            VILLAGER_SPAWN_EGG,
-            VINDICATOR_SPAWN_EGG,
-            WANDERING_TRADER_SPAWN_EGG,
-            WARDEN_SPAWN_EGG,
-            WITCH_SPAWN_EGG,
-            WITHER_SKELETON_SPAWN_EGG,
-            WITHER_SPAWN_EGG,
-            WOLF_SPAWN_EGG,
-            ZOGLIN_SPAWN_EGG,
-            ZOMBIE_SPAWN_EGG,
-            ZOMBIE_HORSE_SPAWN_EGG,
-            ZOMBIE_VILLAGER_SPAWN_EGG,
-            ZOMBIFIED_PIGLIN_SPAWN_EGG,
+        ALLAY_SPAWN_EGG,
+        ARMADILLO_SPAWN_EGG,
+        AXOLOTL_SPAWN_EGG,
+        BAT_SPAWN_EGG,
+        BEE_SPAWN_EGG,
+        BLAZE_SPAWN_EGG,
+        BOGGED_SPAWN_EGG,
+        BREEZE_SPAWN_EGG,
+        CAMEL_SPAWN_EGG,
+        CAT_SPAWN_EGG,
+        CAVE_SPIDER_SPAWN_EGG,
+        CHICKEN_SPAWN_EGG,
+        COD_SPAWN_EGG,
+        COW_SPAWN_EGG,
+        CREAKING_SPAWN_EGG,
+        CREEPER_SPAWN_EGG,
+        DOLPHIN_SPAWN_EGG,
+        DONKEY_SPAWN_EGG,
+        DROWNED_SPAWN_EGG,
+        ELDER_GUARDIAN_SPAWN_EGG,
+        ENDERMAN_SPAWN_EGG,
+        ENDER_DRAGON_SPAWN_EGG,
+        ENDERMITE_SPAWN_EGG,
+        EVOKER_SPAWN_EGG,
+        FOX_SPAWN_EGG,
+        FROG_SPAWN_EGG,
+        GHAST_SPAWN_EGG,
+        GLOW_SQUID_SPAWN_EGG,
+        GOAT_SPAWN_EGG,
+        GUARDIAN_SPAWN_EGG,
+        HOGLIN_SPAWN_EGG,
+        HORSE_SPAWN_EGG,
+        HUSK_SPAWN_EGG,
+        IRON_GOLEM_SPAWN_EGG,
+        LLAMA_SPAWN_EGG,
+        MAGMA_CUBE_SPAWN_EGG,
+        MOOSHROOM_SPAWN_EGG,
+        MULE_SPAWN_EGG,
+        OCELOT_SPAWN_EGG,
+        PANDA_SPAWN_EGG,
+        PARROT_SPAWN_EGG,
+        PHANTOM_SPAWN_EGG,
+        PIG_SPAWN_EGG,
+        PIGLIN_SPAWN_EGG,
+        PIGLIN_BRUTE_SPAWN_EGG,
+        PILLAGER_SPAWN_EGG,
+        POLAR_BEAR_SPAWN_EGG,
+        PUFFERFISH_SPAWN_EGG,
+        RABBIT_SPAWN_EGG,
+        RAVAGER_SPAWN_EGG,
+        SALMON_SPAWN_EGG,
+        SHEEP_SPAWN_EGG,
+        SHULKER_SPAWN_EGG,
+        SILVERFISH_SPAWN_EGG,
+        SKELETON_SPAWN_EGG,
+        SKELETON_HORSE_SPAWN_EGG,
+        SLIME_SPAWN_EGG,
+        SNIFFER_SPAWN_EGG,
+        SNOW_GOLEM_SPAWN_EGG,
+        SPIDER_SPAWN_EGG,
+        SQUID_SPAWN_EGG,
+        STRAY_SPAWN_EGG,
+        STRIDER_SPAWN_EGG,
+        TADPOLE_SPAWN_EGG,
+        TRADER_LLAMA_SPAWN_EGG,
+        TROPICAL_FISH_SPAWN_EGG,
+        TURTLE_SPAWN_EGG,
+        VEX_SPAWN_EGG,
+        VILLAGER_SPAWN_EGG,
+        VINDICATOR_SPAWN_EGG,
+        WANDERING_TRADER_SPAWN_EGG,
+        WARDEN_SPAWN_EGG,
+        WITCH_SPAWN_EGG,
+        WITHER_SKELETON_SPAWN_EGG,
+        WITHER_SPAWN_EGG,
+        WOLF_SPAWN_EGG,
+        ZOGLIN_SPAWN_EGG,
+        ZOMBIE_SPAWN_EGG,
+        ZOMBIE_HORSE_SPAWN_EGG,
+        ZOMBIE_VILLAGER_SPAWN_EGG,
+        ZOMBIFIED_PIGLIN_SPAWN_EGG,
 
-            CARROTS,
-            POTATOES,
-            BEETROOTS,
-            WRITTEN_BOOK,
-            PLAYER_HEAD,
-            DRAGON_WALL_HEAD
-        );
-    }
+        CARROTS,
+        POTATOES,
+        BEETROOTS,
+        WRITTEN_BOOK,
+        PLAYER_HEAD,
+        DRAGON_WALL_HEAD
+    );
+  }
 
-    private static final Set<Material> UNOBTAINIUM = CREATE_UNOBTAINIUM();
+  private static final Set<Material> UNOBTAINIUM = CREATE_UNOBTAINIUM();
+
+  private static final Set<PotionType> POTION_UNOBTAINIUM = Set.of(PotionType.LUCK);
 
 //    public static AdvancementTreeNode TOOLS_AND_WEAPONRY_CATEGORY() {
 //        return new CategoryNode(
@@ -2284,220 +2289,222 @@ public class AdvancementTreeManager implements Iterable<AdvancementTree> {
 //            ;
 //    }
 
-    public static TreeNode<AdvancementTreeData> BREWING_CATEGORY() {
-        return new AdvancementTreeNode(
-            new CategoryAdvancement(
-                BREWING_STAND,
-                "category_brewing",
-                "Brewing",
-                ""
-            )
+  public static TreeNode<AdvancementTreeData> BREWING_CATEGORY() {
+    return new AdvancementTreeNode(
+        new CategoryAdvancement(
+            BREWING_STAND,
+            "category_brewing",
+            "Brewing",
+            ""
         )
-            .addChild(AdvancementTree.createBranch((List.of(
-                new ItemAdvancement(BREWING_STAND, true),
-                new ItemAdvancement(GLASS_BOTTLE),
-                new ItemAdvancement(NETHER_WART, true),
-                new ItemAdvancement(REDSTONE, true),
-                new ItemAdvancement(GLOWSTONE_DUST, true),
-                new ItemAdvancement(GUNPOWDER, true),
-                new ItemAdvancement(DRAGON_BREATH, true)
-            ))))
-            .addChild(new AdvancementTreeNode(new CategoryAdvancement(
-                    FERMENTED_SPIDER_EYE,
-                    "category_brewing_ingredients",
-                    "Ingredients",
-                    ""
-                ))
-                    .addChild(AdvancementTree.createBranch((List.of(
-                        new ItemAdvancement(FERMENTED_SPIDER_EYE),
-                        new ItemAdvancement(SUGAR),
-                        new ItemAdvancement(RABBIT_FOOT, true),
-                        new ItemAdvancement(BLAZE_POWDER),
-                        new ItemAdvancement(GLISTERING_MELON_SLICE),
-                        new ItemAdvancement(SPIDER_EYE, true),
-                        new ItemAdvancement(GHAST_TEAR, true),
-                        new ItemAdvancement(MAGMA_CREAM, true),
-                        new ItemAdvancement(PUFFERFISH, true),
-                        new ItemAdvancement(GOLDEN_CARROT, true),
-                        new ItemAdvancement(TURTLE_HELMET, true),
-                        new ItemAdvancement(PHANTOM_MEMBRANE, true),
-                        new ItemAdvancement(BREEZE_ROD, true),
-                        new ItemAdvancement(COBWEB, true),
-                        new ItemAdvancement(SLIME_BLOCK, true),
-                        new ItemAdvancement(STONE, true)
-                    ))))
-            )
-            .addChild(new AdvancementTreeNode(new CategoryAdvancement(
-                    POTION,
-                    "category_brewing_potions",
-                    "Potions",
-                    ""
-                ))
-                    .addChild(new AdvancementTreeNode(new CategoryAdvancement(
-                            POTION,
-                            "category_brewing_potions_regular",
-                            "Regular Potions",
-                            ""
-                        ))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new RegularPotionItemAdvancement(PotionType.NIGHT_VISION),
-                                new RegularPotionItemAdvancement(PotionType.LONG_NIGHT_VISION),
-                                new RegularPotionItemAdvancement(PotionType.INVISIBILITY),
-                                new RegularPotionItemAdvancement(PotionType.LONG_INVISIBILITY),
-                                new RegularPotionItemAdvancement(PotionType.LEAPING),
-                                new RegularPotionItemAdvancement(PotionType.LONG_LEAPING),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_LEAPING),
-                                new RegularPotionItemAdvancement(PotionType.SWIFTNESS),
-                                new RegularPotionItemAdvancement(PotionType.LONG_SWIFTNESS),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_SWIFTNESS),
-                                new RegularPotionItemAdvancement(PotionType.SLOWNESS),
-                                new RegularPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_SLOWNESS)
-                            )))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new RegularPotionItemAdvancement(PotionType.TURTLE_MASTER),
-                                new RegularPotionItemAdvancement(PotionType.LONG_TURTLE_MASTER),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_TURTLE_MASTER),
-                                new RegularPotionItemAdvancement(PotionType.HEALING),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_HEALING),
-                                new RegularPotionItemAdvancement(PotionType.HARMING),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_HARMING),
-                                new RegularPotionItemAdvancement(PotionType.POISON),
-                                new RegularPotionItemAdvancement(PotionType.LONG_POISON),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_POISON),
-                                new RegularPotionItemAdvancement(PotionType.REGENERATION),
-                                new RegularPotionItemAdvancement(PotionType.LONG_REGENERATION),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_REGENERATION)
-                            )))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new RegularPotionItemAdvancement(PotionType.WATER_BREATHING),
-                                new RegularPotionItemAdvancement(PotionType.LONG_WATER_BREATHING),
-                                new RegularPotionItemAdvancement(PotionType.FIRE_RESISTANCE),
-                                new RegularPotionItemAdvancement(PotionType.LONG_FIRE_RESISTANCE),
-                                new RegularPotionItemAdvancement(PotionType.STRENGTH),
-                                new RegularPotionItemAdvancement(PotionType.LONG_STRENGTH),
-                                new RegularPotionItemAdvancement(PotionType.STRONG_STRENGTH),
-                                new RegularPotionItemAdvancement(PotionType.WEAKNESS),
-                                new RegularPotionItemAdvancement(PotionType.LONG_WEAKNESS),
-                                new RegularPotionItemAdvancement(PotionType.SLOW_FALLING),
-                                new RegularPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
-                                new RegularPotionItemAdvancement(PotionType.WIND_CHARGED),
-                                new RegularPotionItemAdvancement(PotionType.WEAVING),
-                                new RegularPotionItemAdvancement(PotionType.OOZING),
-                                new RegularPotionItemAdvancement(PotionType.INFESTED)
-                            )))
-                    )
-                    .addChild(new AdvancementTreeNode(new CategoryAdvancement(
-                            SPLASH_POTION,
-                            "category_brewing_potions_splash",
-                            "Splash Potions",
-                            ""
-                        ))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new SplashPotionItemAdvancement(PotionType.NIGHT_VISION),
-                                new SplashPotionItemAdvancement(PotionType.LONG_NIGHT_VISION),
-                                new SplashPotionItemAdvancement(PotionType.INVISIBILITY),
-                                new SplashPotionItemAdvancement(PotionType.LONG_INVISIBILITY),
-                                new SplashPotionItemAdvancement(PotionType.LEAPING),
-                                new SplashPotionItemAdvancement(PotionType.LONG_LEAPING),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_LEAPING),
-                                new SplashPotionItemAdvancement(PotionType.SWIFTNESS),
-                                new SplashPotionItemAdvancement(PotionType.LONG_SWIFTNESS),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_SWIFTNESS),
-                                new SplashPotionItemAdvancement(PotionType.SLOWNESS),
-                                new SplashPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_SLOWNESS)
-                            )))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new SplashPotionItemAdvancement(PotionType.TURTLE_MASTER),
-                                new SplashPotionItemAdvancement(PotionType.LONG_TURTLE_MASTER),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_TURTLE_MASTER),
-                                new SplashPotionItemAdvancement(PotionType.HEALING),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_HEALING),
-                                new SplashPotionItemAdvancement(PotionType.HARMING),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_HARMING),
-                                new SplashPotionItemAdvancement(PotionType.POISON),
-                                new SplashPotionItemAdvancement(PotionType.LONG_POISON),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_POISON),
-                                new SplashPotionItemAdvancement(PotionType.REGENERATION),
-                                new SplashPotionItemAdvancement(PotionType.LONG_REGENERATION),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_REGENERATION)
-                            )))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new SplashPotionItemAdvancement(PotionType.WATER_BREATHING),
-                                new SplashPotionItemAdvancement(PotionType.LONG_WATER_BREATHING),
-                                new SplashPotionItemAdvancement(PotionType.FIRE_RESISTANCE),
-                                new SplashPotionItemAdvancement(PotionType.LONG_FIRE_RESISTANCE),
-                                new SplashPotionItemAdvancement(PotionType.STRENGTH),
-                                new SplashPotionItemAdvancement(PotionType.LONG_STRENGTH),
-                                new SplashPotionItemAdvancement(PotionType.STRONG_STRENGTH),
-                                new SplashPotionItemAdvancement(PotionType.WEAKNESS),
-                                new SplashPotionItemAdvancement(PotionType.LONG_WEAKNESS),
-                                new SplashPotionItemAdvancement(PotionType.SLOW_FALLING),
-                                new SplashPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
-                                new SplashPotionItemAdvancement(PotionType.WIND_CHARGED),
-                                new SplashPotionItemAdvancement(PotionType.WEAVING),
-                                new SplashPotionItemAdvancement(PotionType.OOZING),
-                                new SplashPotionItemAdvancement(PotionType.INFESTED)
-                            )))
-                    )
-                    .addChild(new AdvancementTreeNode(new CategoryAdvancement(
-                            LINGERING_POTION,
-                            "category_brewing_potions_lingering",
-                            "Lingering Potions",
-                            ""
-                        ))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new LingeringPotionItemAdvancement(PotionType.NIGHT_VISION),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_NIGHT_VISION),
-                                new LingeringPotionItemAdvancement(PotionType.INVISIBILITY),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_INVISIBILITY),
-                                new LingeringPotionItemAdvancement(PotionType.LEAPING),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_LEAPING),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_LEAPING),
-                                new LingeringPotionItemAdvancement(PotionType.SWIFTNESS),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_SWIFTNESS),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_SWIFTNESS),
-                                new LingeringPotionItemAdvancement(PotionType.SLOWNESS),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_SLOWNESS)
-                            )))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new LingeringPotionItemAdvancement(PotionType.TURTLE_MASTER),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_TURTLE_MASTER),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_TURTLE_MASTER),
-                                new LingeringPotionItemAdvancement(PotionType.HEALING),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_HEALING),
-                                new LingeringPotionItemAdvancement(PotionType.HARMING),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_HARMING),
-                                new LingeringPotionItemAdvancement(PotionType.POISON),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_POISON),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_POISON),
-                                new LingeringPotionItemAdvancement(PotionType.REGENERATION),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_REGENERATION),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_REGENERATION)
-                            )))
-                            .addChild(AdvancementTree.createBranch(List.of(
-                                new LingeringPotionItemAdvancement(PotionType.WATER_BREATHING),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_WATER_BREATHING),
-                                new LingeringPotionItemAdvancement(PotionType.FIRE_RESISTANCE),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_FIRE_RESISTANCE),
-                                new LingeringPotionItemAdvancement(PotionType.STRENGTH),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_STRENGTH),
-                                new LingeringPotionItemAdvancement(PotionType.STRONG_STRENGTH),
-                                new LingeringPotionItemAdvancement(PotionType.WEAKNESS),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_WEAKNESS),
-                                new LingeringPotionItemAdvancement(PotionType.SLOW_FALLING),
-                                new LingeringPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
-                                new LingeringPotionItemAdvancement(PotionType.WIND_CHARGED),
-                                new LingeringPotionItemAdvancement(PotionType.WEAVING),
-                                new LingeringPotionItemAdvancement(PotionType.OOZING),
-                                new LingeringPotionItemAdvancement(PotionType.INFESTED)
-                            )))
-                    )
-            )
-            ;
-    }
+    )
+        .addChild(AdvancementTree.createBranch((List.of(
+            new ItemAdvancement(BREWING_STAND, true),
+            new ItemAdvancement(GLASS_BOTTLE),
+            new ItemAdvancement(NETHER_WART, true),
+            new ItemAdvancement(REDSTONE, true),
+            new ItemAdvancement(GLOWSTONE_DUST, true),
+            new ItemAdvancement(GUNPOWDER, true),
+            new ItemAdvancement(DRAGON_BREATH, true)
+        ))))
+        .addChild(new AdvancementTreeNode(new CategoryAdvancement(
+                FERMENTED_SPIDER_EYE,
+                "category_brewing_ingredients",
+                "Ingredients",
+                ""
+            ))
+                .addChild(AdvancementTree.createBranch((List.of(
+                    new ItemAdvancement(FERMENTED_SPIDER_EYE),
+                    new ItemAdvancement(SUGAR),
+                    new ItemAdvancement(RABBIT_FOOT, true),
+                    new ItemAdvancement(BLAZE_POWDER),
+                    new ItemAdvancement(GLISTERING_MELON_SLICE),
+                    new ItemAdvancement(SPIDER_EYE, true),
+                    new ItemAdvancement(GHAST_TEAR, true),
+                    new ItemAdvancement(MAGMA_CREAM, true),
+                    new ItemAdvancement(PUFFERFISH, true),
+                    new ItemAdvancement(GOLDEN_CARROT, true),
+                    new ItemAdvancement(TURTLE_HELMET, true),
+                    new ItemAdvancement(PHANTOM_MEMBRANE, true),
+                    new ItemAdvancement(BREEZE_ROD, true),
+                    new ItemAdvancement(COBWEB, true),
+                    new ItemAdvancement(SLIME_BLOCK, true),
+                    new ItemAdvancement(STONE, true)
+                ))))
+        )
+        .addChild(new AdvancementTreeNode(new CategoryAdvancement(
+                POTION,
+                "category_brewing_potions",
+                "Potions",
+                ""
+            ))
+                .addChild(new AdvancementTreeNode(new CategoryAdvancement(
+                        POTION,
+                        "category_brewing_potions_regular",
+                        "Regular Potions",
+                        ""
+                    ))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new RegularPotionItemAdvancement(PotionType.NIGHT_VISION),
+                            new RegularPotionItemAdvancement(PotionType.LONG_NIGHT_VISION),
+                            new RegularPotionItemAdvancement(PotionType.INVISIBILITY),
+                            new RegularPotionItemAdvancement(PotionType.LONG_INVISIBILITY),
+                            new RegularPotionItemAdvancement(PotionType.LEAPING),
+                            new RegularPotionItemAdvancement(PotionType.LONG_LEAPING),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_LEAPING),
+                            new RegularPotionItemAdvancement(PotionType.SWIFTNESS),
+                            new RegularPotionItemAdvancement(PotionType.LONG_SWIFTNESS),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_SWIFTNESS),
+                            new RegularPotionItemAdvancement(PotionType.SLOWNESS),
+                            new RegularPotionItemAdvancement(PotionType.LONG_SLOWNESS),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_SLOWNESS),
+                            new RegularPotionItemAdvancement(PotionType.LUCK)
+                        )))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new RegularPotionItemAdvancement(PotionType.TURTLE_MASTER),
+                            new RegularPotionItemAdvancement(PotionType.LONG_TURTLE_MASTER),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_TURTLE_MASTER),
+                            new RegularPotionItemAdvancement(PotionType.HEALING),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_HEALING),
+                            new RegularPotionItemAdvancement(PotionType.HARMING),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_HARMING),
+                            new RegularPotionItemAdvancement(PotionType.POISON),
+                            new RegularPotionItemAdvancement(PotionType.LONG_POISON),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_POISON),
+                            new RegularPotionItemAdvancement(PotionType.REGENERATION),
+                            new RegularPotionItemAdvancement(PotionType.LONG_REGENERATION),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_REGENERATION)
+                        )))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new RegularPotionItemAdvancement(PotionType.WATER_BREATHING),
+                            new RegularPotionItemAdvancement(PotionType.LONG_WATER_BREATHING),
+                            new RegularPotionItemAdvancement(PotionType.FIRE_RESISTANCE),
+                            new RegularPotionItemAdvancement(PotionType.LONG_FIRE_RESISTANCE),
+                            new RegularPotionItemAdvancement(PotionType.LONG_FIRE_RESISTANCE),
+                            new RegularPotionItemAdvancement(PotionType.STRENGTH),
+                            new RegularPotionItemAdvancement(PotionType.LONG_STRENGTH),
+                            new RegularPotionItemAdvancement(PotionType.STRONG_STRENGTH),
+                            new RegularPotionItemAdvancement(PotionType.WEAKNESS),
+                            new RegularPotionItemAdvancement(PotionType.LONG_WEAKNESS),
+                            new RegularPotionItemAdvancement(PotionType.SLOW_FALLING),
+                            new RegularPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
+                            new RegularPotionItemAdvancement(PotionType.WIND_CHARGED),
+                            new RegularPotionItemAdvancement(PotionType.WEAVING),
+                            new RegularPotionItemAdvancement(PotionType.OOZING),
+                            new RegularPotionItemAdvancement(PotionType.INFESTED)
+                        )))
+                )
+                .addChild(new AdvancementTreeNode(new CategoryAdvancement(
+                        SPLASH_POTION,
+                        "category_brewing_potions_splash",
+                        "Splash Potions",
+                        ""
+                    ))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new SplashPotionItemAdvancement(PotionType.NIGHT_VISION),
+                            new SplashPotionItemAdvancement(PotionType.LONG_NIGHT_VISION),
+                            new SplashPotionItemAdvancement(PotionType.INVISIBILITY),
+                            new SplashPotionItemAdvancement(PotionType.LONG_INVISIBILITY),
+                            new SplashPotionItemAdvancement(PotionType.LEAPING),
+                            new SplashPotionItemAdvancement(PotionType.LONG_LEAPING),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_LEAPING),
+                            new SplashPotionItemAdvancement(PotionType.SWIFTNESS),
+                            new SplashPotionItemAdvancement(PotionType.LONG_SWIFTNESS),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_SWIFTNESS),
+                            new SplashPotionItemAdvancement(PotionType.SLOWNESS),
+                            new SplashPotionItemAdvancement(PotionType.LONG_SLOWNESS),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_SLOWNESS)
+                        )))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new SplashPotionItemAdvancement(PotionType.TURTLE_MASTER),
+                            new SplashPotionItemAdvancement(PotionType.LONG_TURTLE_MASTER),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_TURTLE_MASTER),
+                            new SplashPotionItemAdvancement(PotionType.HEALING),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_HEALING),
+                            new SplashPotionItemAdvancement(PotionType.HARMING),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_HARMING),
+                            new SplashPotionItemAdvancement(PotionType.POISON),
+                            new SplashPotionItemAdvancement(PotionType.LONG_POISON),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_POISON),
+                            new SplashPotionItemAdvancement(PotionType.REGENERATION),
+                            new SplashPotionItemAdvancement(PotionType.LONG_REGENERATION),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_REGENERATION)
+                        )))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new SplashPotionItemAdvancement(PotionType.WATER_BREATHING),
+                            new SplashPotionItemAdvancement(PotionType.LONG_WATER_BREATHING),
+                            new SplashPotionItemAdvancement(PotionType.FIRE_RESISTANCE),
+                            new SplashPotionItemAdvancement(PotionType.LONG_FIRE_RESISTANCE),
+                            new SplashPotionItemAdvancement(PotionType.STRENGTH),
+                            new SplashPotionItemAdvancement(PotionType.LONG_STRENGTH),
+                            new SplashPotionItemAdvancement(PotionType.STRONG_STRENGTH),
+                            new SplashPotionItemAdvancement(PotionType.WEAKNESS),
+                            new SplashPotionItemAdvancement(PotionType.LONG_WEAKNESS),
+                            new SplashPotionItemAdvancement(PotionType.SLOW_FALLING),
+                            new SplashPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
+                            new SplashPotionItemAdvancement(PotionType.WIND_CHARGED),
+                            new SplashPotionItemAdvancement(PotionType.WEAVING),
+                            new SplashPotionItemAdvancement(PotionType.OOZING),
+                            new SplashPotionItemAdvancement(PotionType.INFESTED)
+                        )))
+                )
+                .addChild(new AdvancementTreeNode(new CategoryAdvancement(
+                        LINGERING_POTION,
+                        "category_brewing_potions_lingering",
+                        "Lingering Potions",
+                        ""
+                    ))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new LingeringPotionItemAdvancement(PotionType.NIGHT_VISION),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_NIGHT_VISION),
+                            new LingeringPotionItemAdvancement(PotionType.INVISIBILITY),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_INVISIBILITY),
+                            new LingeringPotionItemAdvancement(PotionType.LEAPING),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_LEAPING),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_LEAPING),
+                            new LingeringPotionItemAdvancement(PotionType.SWIFTNESS),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_SWIFTNESS),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_SWIFTNESS),
+                            new LingeringPotionItemAdvancement(PotionType.SLOWNESS),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_SLOWNESS),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_SLOWNESS)
+                        )))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new LingeringPotionItemAdvancement(PotionType.TURTLE_MASTER),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_TURTLE_MASTER),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_TURTLE_MASTER),
+                            new LingeringPotionItemAdvancement(PotionType.HEALING),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_HEALING),
+                            new LingeringPotionItemAdvancement(PotionType.HARMING),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_HARMING),
+                            new LingeringPotionItemAdvancement(PotionType.POISON),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_POISON),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_POISON),
+                            new LingeringPotionItemAdvancement(PotionType.REGENERATION),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_REGENERATION),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_REGENERATION)
+                        )))
+                        .addChild(AdvancementTree.createBranch(List.of(
+                            new LingeringPotionItemAdvancement(PotionType.WATER_BREATHING),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_WATER_BREATHING),
+                            new LingeringPotionItemAdvancement(PotionType.FIRE_RESISTANCE),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_FIRE_RESISTANCE),
+                            new LingeringPotionItemAdvancement(PotionType.STRENGTH),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_STRENGTH),
+                            new LingeringPotionItemAdvancement(PotionType.STRONG_STRENGTH),
+                            new LingeringPotionItemAdvancement(PotionType.WEAKNESS),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_WEAKNESS),
+                            new LingeringPotionItemAdvancement(PotionType.SLOW_FALLING),
+                            new LingeringPotionItemAdvancement(PotionType.LONG_SLOW_FALLING),
+                            new LingeringPotionItemAdvancement(PotionType.WIND_CHARGED),
+                            new LingeringPotionItemAdvancement(PotionType.WEAVING),
+                            new LingeringPotionItemAdvancement(PotionType.OOZING),
+                            new LingeringPotionItemAdvancement(PotionType.INFESTED)
+                        )))
+                )
+        )
+        ;
+  }
 
 //    public static AdvancementTreeNode MATERIALS_CATEGORY() {
 //        return new CategoryNode(
@@ -2518,216 +2525,288 @@ public class AdvancementTreeManager implements Iterable<AdvancementTree> {
 //            ;
 //    }
 
-    private final Set<AdvancementTree> trees = new HashSet<>();
+  private final Set<AdvancementTree> trees = new HashSet<>();
 
-    public AdvancementTreeManager() {
-        AdvancementTree brewingTree = new AdvancementTree();
-        brewingTree.getRoot()
-            .addChild(BREWING_CATEGORY())
-        ;
-        this.trees.add(brewingTree);
+  public AdvancementTreeManager() {
+    AdvancementTree brewingTree = new AdvancementTree();
+    brewingTree.getRoot()
+        .addChild(BREWING_CATEGORY())
+    ;
+    this.trees.add(brewingTree);
+  }
+
+  @Override
+  public @NotNull Iterator<AdvancementTree> iterator() {
+    return trees.iterator();
+  }
+
+  public void verify() {
+      boolean isGood = Stream.of(
+              // Looking for materials which are in the game,
+              // but are not in the advancement tree.
+              hasMissingMaterials(),
+              hasMissingPotions(),
+
+              // Looking for items which are in the advancement tree,
+              // but are not obtainable in survival Minecraft.
+              hasUnobtainableMaterials(),
+              hasUnobtainablePotions(),
+
+              // Looking for items which appear multiple times in the tree,
+              // but are not marked for allowing duplicates.
+              hasUnallowedDuplicateMaterials(),
+
+              // Looking for items which appear only once in the tree,
+              // but are marked for having duplicates.
+              hasUnusedDuplicateMaterials()
+      ).noneMatch(Boolean::booleanValue);
+
+      if (isGood) {
+        PrintInfoHeader("ADVANCEMENT TREE INTEGRITY AT 100%");
+      } else {
+        PrintErrorHeader("ADVANCEMENT TREE CONTAINS ERRORS");
+      }
+  }
+
+  private static void PrintErrorHeader(String header) {
+    LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
+    LOGGER.severe("%s %s %s".formatted(
+        HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
+        header,
+        HeaderCharacter.repeat(
+            (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
+                / 2))
+    ));
+    LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
+  }
+
+  @SuppressWarnings("SameParameterValue")
+  private static void PrintInfoHeader(String header) {
+    LOGGER.info(HeaderCharacter.repeat(ErrorPrintWidth));
+    LOGGER.info("%s %s %s".formatted(
+        HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
+        header,
+        HeaderCharacter.repeat(
+            (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
+                / 2))
+    ));
+    LOGGER.info(HeaderCharacter.repeat(ErrorPrintWidth));
+  }
+
+  private static void PrintErrorList(Set<? extends Enum> materials, String header, String found) {
+    PrintErrorHeader(header);
+
+    String s2 = "Found %d %s.".formatted(materials.size(), found);
+
+    LOGGER.severe(
+        "| %s%s |".formatted(s2, " ".repeat(ErrorPrintWidth - 4 - s2.length())));
+
+    if (materials.size() > MaxErrorListLength) {
+      String s3 = "Here are the first %d:".formatted(MaxErrorListLength);
+      LOGGER.severe("| %s%s |".formatted(s3, " ".repeat(ErrorPrintWidth - 4 - s3.length())));
     }
 
-    @Override
-    public @NotNull Iterator<AdvancementTree> iterator() {
-        return trees.iterator();
+    materials.stream()
+        .sorted(Comparator.comparing(Enum::ordinal))
+        .limit(MaxErrorListLength)
+        .forEach(m -> LOGGER.severe(
+            "|  - %s%s |".formatted(m.name(),
+                " ".repeat(ErrorPrintWidth - 7 - m.name().length()))));
+  }
+
+  private Set<Material> getObtainableItems() {
+    return new HashSet<>(List.of(Material.values())).stream()
+        .filter(m -> !m.isLegacy())
+        .filter(m -> !UNOBTAINIUM.contains(m))
+        .filter(Material::isItem)
+        .collect(Collectors.toSet());
+  }
+
+  private boolean hasMissingMaterials() {
+    Set<Material> missingMaterials = getObtainableItems();
+
+    this.forEach(tree -> tree.traverse(node -> {
+      if (!(node.getValue() instanceof ItemAdvancement itemAdvancement)) {
+        return;
+      }
+
+      missingMaterials.remove(itemAdvancement.getTargetMaterial());
+    }));
+
+    boolean hasMissingMaterials = !missingMaterials.isEmpty();
+
+    if (hasMissingMaterials) {
+      PrintErrorList(
+          missingMaterials,
+          "MISSING MATERIAL DETECTED",
+          "missing materials"
+      );
     }
 
-    public void verify() {
-        boolean hasMissing = hasMissingMaterials();
-        boolean hasUnobtainables = hasUnobtainableMaterials();
-        boolean hasUnallowedDuplicates = hasUnallowedDuplicateMaterials();
-        boolean hasUnusedDuplicates = hasUnusedDuplicateMaterials();
+    return hasMissingMaterials;
+  }
 
-        boolean isBad =
-            hasMissing || hasUnobtainables || hasUnallowedDuplicates || hasUnusedDuplicates;
+  private boolean hasMissingPotions() {
+    Set<PotionType> allPotions = Stream.of(PotionType.values())
+        .filter(m -> !POTION_UNOBTAINIUM.contains(m))
+        .collect(Collectors.toSet());
 
-        if (isBad) {
-            PrintErrorHeader("ADVANCEMENT TREE CONTAINS ERRORS");
-        } else {
-            PrintInfoHeader("ADVANCEMENT TREE INTEGRITY AT 100%");
-        }
+    this.forEach(tree -> tree.traverse(node -> {
+      if (!(node.getValue() instanceof PotionItemAdvancement potionAdvancement)) {
+        return;
+      }
+
+      allPotions.remove(potionAdvancement.getPotionType());
+
+//            missingMaterials.remove(potionAdvancement.getTargetMaterial());
+    }));
+
+    boolean isBad = !allPotions.isEmpty();
+
+    if (isBad) {
+      PrintErrorList(
+          allPotions,
+          "MISSING POTIONS DETECTED",
+          "missing potions"
+      );
     }
 
-    private static void PrintErrorHeader(String header) {
-        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
-        LOGGER.severe("%s %s %s".formatted(
-            HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
-            header,
-            HeaderCharacter.repeat(
-                (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
-                    / 2))
-        ));
-        LOGGER.severe(HeaderCharacter.repeat(ErrorPrintWidth));
+    return isBad;
+  }
+
+  private boolean hasUnobtainableMaterials() {
+    Set<Material> unobtainableMaterials = new HashSet<>();
+
+    this.forEach(tree -> tree.traverse(node -> {
+      if (!(node.getValue() instanceof ItemAdvancement itemAdvancement)) {
+        return;
+      }
+
+      Material targetMaterial = itemAdvancement.getTargetMaterial();
+
+      if (UNOBTAINIUM.contains(targetMaterial)) {
+        unobtainableMaterials.add(targetMaterial);
+      }
+    }));
+
+    boolean isBad = !unobtainableMaterials.isEmpty();
+
+    if (isBad) {
+      PrintErrorList(
+          unobtainableMaterials,
+          "UNOBTAINABLE MATERIAL DETECTED",
+          "unobtainable materials"
+      );
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private static void PrintInfoHeader(String header) {
-        LOGGER.info(HeaderCharacter.repeat(ErrorPrintWidth));
-        LOGGER.info("%s %s %s".formatted(
-            HeaderCharacter.repeat((ErrorPrintWidth - header.length() - 2) / 2),
-            header,
-            HeaderCharacter.repeat(
-                (ErrorPrintWidth - header.length() - 2) - ((ErrorPrintWidth - header.length() - 2)
-                    / 2))
-        ));
-        LOGGER.info(HeaderCharacter.repeat(ErrorPrintWidth));
-    }
+    return isBad;
+  }
 
-    private static void PrintErrorList(Set<Material> materials, String header, String found) {
-        PrintErrorHeader(header);
-
-        String s2 = "Found %d %s.".formatted(materials.size(), found);
-
-        LOGGER.severe(
-            "| %s%s |".formatted(s2, " ".repeat(ErrorPrintWidth - 4 - s2.length())));
-
-        if (materials.size() > MaxErrorListLength) {
-            String s3 = "Here are the first %d:".formatted(MaxErrorListLength);
-            LOGGER.severe("| %s%s |".formatted(s3, " ".repeat(ErrorPrintWidth - 4 - s3.length())));
-        }
-
-        materials.stream()
-            .sorted(Comparator.comparing(Enum::ordinal))
-            .limit(MaxErrorListLength)
-            .forEach(m -> LOGGER.severe(
-                "|  - %s%s |".formatted(m.name(),
-                    " ".repeat(ErrorPrintWidth - 7 - m.name().length()))));
-    }
-
-    private Set<Material> getObtainableItems() {
-        return new HashSet<>(List.of(Material.values())).stream()
-            .filter(m -> !m.isLegacy())
-            .filter(m -> !UNOBTAINIUM.contains(m))
-            .filter(Material::isItem)
-            .collect(Collectors.toSet());
-    }
-
-    private boolean hasMissingMaterials() {
-        Set<Material> missingMaterials = getObtainableItems();
+    private boolean hasUnobtainablePotions() {
+        Set<PotionType> unobtainablePotions = new HashSet<>();
 
         this.forEach(tree -> tree.traverse(node -> {
-            if (!(node.getValue() instanceof ItemAdvancement itemAdvancement)) {
+            if (!(node.getValue() instanceof PotionItemAdvancement potionAdvancement)) {
                 return;
             }
 
-            missingMaterials.remove(itemAdvancement.getTargetMaterial());
-        }));
+            PotionType potionType = potionAdvancement.getPotionType();
 
-        boolean hasMissingMaterials = !missingMaterials.isEmpty();
-
-        if (hasMissingMaterials) {
-            PrintErrorList(
-                missingMaterials,
-                "MISSING MATERIAL DETECTED",
-                "missing materials"
-            );
-        }
-
-        return hasMissingMaterials;
-    }
-
-    private boolean hasUnobtainableMaterials() {
-        Set<Material> unobtainableMaterials = new HashSet<>();
-
-        this.forEach(tree -> tree.traverse(node -> {
-            if (!(node.getValue() instanceof ItemAdvancement itemAdvancement)) {
-                return;
-            }
-
-            Material targetMaterial = itemAdvancement.getTargetMaterial();
-
-            if (UNOBTAINIUM.contains(targetMaterial)) {
-                unobtainableMaterials.add(targetMaterial);
+            if (POTION_UNOBTAINIUM.contains(potionType)) {
+                unobtainablePotions.add(potionType);
             }
         }));
 
-        boolean isBad = !unobtainableMaterials.isEmpty();
+        boolean isBad = !unobtainablePotions.isEmpty();
 
         if (isBad) {
             PrintErrorList(
-                unobtainableMaterials,
-                "UNOBTAINABLE MATERIAL DETECTED",
-                "unobtainable materials"
-            );
-        }
-
-        return isBad;
-    }
-
-    private boolean hasUnallowedDuplicateMaterials() {
-        Map<Material, Integer> materialCount = new HashMap<>();
-        Map<Material, Boolean> duplicatesAllowed = new HashMap<>();
-
-        this.forEach(tree -> tree.traverse(node -> {
-            if (!(node.getValue() instanceof ItemAdvancement itemAdvancement)) {
-                return;
-            }
-
-            Material targetMaterial = itemAdvancement.getTargetMaterial();
-
-            int num = materialCount.getOrDefault(targetMaterial, 0);
-            boolean duplicateAllowed = duplicatesAllowed.getOrDefault(targetMaterial, true);
-
-            materialCount.put(targetMaterial, num + 1);
-            duplicatesAllowed.put(targetMaterial,
-                duplicateAllowed && itemAdvancement.duplicatesAllowed());
-        }));
-
-        Set<Material> unauthorisedDuplicates = materialCount.entrySet().stream()
-            .filter(entry -> entry.getValue() > 1)
-            .filter(entry -> !duplicatesAllowed.get(entry.getKey()))
-            .map(Entry::getKey)
-            .collect(Collectors.toSet());
-
-        boolean isBad = !unauthorisedDuplicates.isEmpty();
-
-        if (isBad) {
-            PrintErrorList(
-                unauthorisedDuplicates,
-                "UNAUTHORISED DUPLICATES DETECTED",
-                "unauthorised duplicates"
-            );
-        }
-
-        return isBad;
-    }
-
-    private boolean hasUnusedDuplicateMaterials() {
-        Map<Material, Integer> materialCount = new HashMap<>();
-        Map<Material, Boolean> duplicatesAllowed = new HashMap<>();
-
-        this.forEach(tree -> tree.traverse(node -> {
-            if (!(node instanceof ItemAdvancement itemAdvancement)) {
-                return;
-            }
-
-            Material targetMaterial = itemAdvancement.getTargetMaterial();
-
-            int num = materialCount.getOrDefault(targetMaterial, 0);
-            boolean duplicateAllowed = duplicatesAllowed.getOrDefault(targetMaterial, true);
-
-            materialCount.put(targetMaterial, num + 1);
-            duplicatesAllowed.put(targetMaterial,
-                duplicateAllowed && itemAdvancement.duplicatesAllowed());
-        }));
-
-        Set<Material> unusedDuplicates = materialCount.entrySet().stream()
-            .filter(entry -> entry.getValue() <= 1)
-            .filter(entry -> duplicatesAllowed.get(entry.getKey()))
-            .map(Entry::getKey)
-            .collect(Collectors.toSet());
-
-        boolean isBad = !unusedDuplicates.isEmpty();
-
-        if (isBad) {
-            PrintErrorList(
-                unusedDuplicates,
-                "UNUSED DUPLICATES DETECTED",
-                "unused duplicates"
+                    unobtainablePotions,
+                    "UNOBTAINABLE POTION DETECTED",
+                    "unobtainable potions"
             );
         }
 
         return isBad;
     }
+
+  private boolean hasUnallowedDuplicateMaterials() {
+    Map<Material, Integer> materialCount = new HashMap<>();
+    Map<Material, Boolean> duplicatesAllowed = new HashMap<>();
+
+    this.forEach(tree -> tree.traverse(node -> {
+      if (!(node.getValue() instanceof ItemAdvancement itemAdvancement)) {
+        return;
+      }
+
+      if (node.getValue() instanceof PotionItemAdvancement) {
+          return;
+      }
+
+      Material targetMaterial = itemAdvancement.getTargetMaterial();
+
+      int num = materialCount.getOrDefault(targetMaterial, 0);
+      boolean duplicateAllowed = duplicatesAllowed.getOrDefault(targetMaterial, true);
+
+      materialCount.put(targetMaterial, num + 1);
+      duplicatesAllowed.put(targetMaterial,
+          duplicateAllowed && itemAdvancement.duplicatesAllowed());
+    }));
+
+    Set<Material> unauthorisedDuplicates = materialCount.entrySet().stream()
+        .filter(entry -> entry.getValue() > 1)
+        .filter(entry -> !duplicatesAllowed.get(entry.getKey()))
+        .map(Entry::getKey)
+        .collect(Collectors.toSet());
+
+    boolean isBad = !unauthorisedDuplicates.isEmpty();
+
+    if (isBad) {
+      PrintErrorList(
+          unauthorisedDuplicates,
+          "UNAUTHORISED DUPLICATES DETECTED",
+          "unauthorised duplicates"
+      );
+    }
+
+    return isBad;
+  }
+
+  private boolean hasUnusedDuplicateMaterials() {
+    Map<Material, Integer> materialCount = new HashMap<>();
+    Map<Material, Boolean> duplicatesAllowed = new HashMap<>();
+
+    this.forEach(tree -> tree.traverse(node -> {
+      if (!(node instanceof ItemAdvancement itemAdvancement)) {
+        return;
+      }
+
+      Material targetMaterial = itemAdvancement.getTargetMaterial();
+
+      int num = materialCount.getOrDefault(targetMaterial, 0);
+      boolean duplicateAllowed = duplicatesAllowed.getOrDefault(targetMaterial, true);
+
+      materialCount.put(targetMaterial, num + 1);
+      duplicatesAllowed.put(targetMaterial,
+          duplicateAllowed && itemAdvancement.duplicatesAllowed());
+    }));
+
+    Set<Material> unusedDuplicates = materialCount.entrySet().stream()
+        .filter(entry -> entry.getValue() <= 1)
+        .filter(entry -> duplicatesAllowed.get(entry.getKey()))
+        .map(Entry::getKey)
+        .collect(Collectors.toSet());
+
+    boolean isBad = !unusedDuplicates.isEmpty();
+
+    if (isBad) {
+      PrintErrorList(
+          unusedDuplicates,
+          "UNUSED DUPLICATES DETECTED",
+          "unused duplicates"
+      );
+    }
+
+    return isBad;
+  }
 }

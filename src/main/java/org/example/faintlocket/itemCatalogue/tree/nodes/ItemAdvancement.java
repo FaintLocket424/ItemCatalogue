@@ -61,12 +61,12 @@ public class ItemAdvancement extends AdvancementTreeData {
 
     @Override
     protected JsonElement getTitle() {
-        JsonArray titleObj = new JsonArray();
+        JsonArray titleArray = new JsonArray();
         JsonObject translationObject = new JsonObject();
         translationObject.addProperty("translate", getTranslationKey().getKey());
-        titleObj.add(translationObject);
+        titleArray.add(translationObject);
 
-        return titleObj;
+        return titleArray;
     }
 
     @Override
